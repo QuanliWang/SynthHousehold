@@ -11,7 +11,12 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
 	double *coef = mxGetPr(plhs[0]);
 
 	double *datah = new double[10];
-
+    //1 = head/householder, 2 = spouse, 3 = child, 4 = child-in-law, 5 = parent, 6 = parent-in- law, 7 = sibling, 8 = sibling-in-law,
+    //9 = grandchild, 
+    
+    //10 = other relatives,
+    //11 = partner, friend, visitor,
+    //12 = other non-relatives
 	for (int m = 1; m <= number; m++){		
 
 		datah[1] = datah1[16*(m-1)+3-1];
@@ -52,7 +57,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
 
 		else if (datah[5]==1 && datah[6]==11 && (datah[3] >= 17))// type 10
 			coef[m-1] = 1;
-
+        
 		else if (datah[5]==1 && datah[6]==12 && (datah[3] >= 17)) // type 11
 			coef[m-1] = 1;
 		}
