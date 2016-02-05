@@ -2,3 +2,5 @@
 .Rhistory
 .RData
 *.mexmaci64
+
+R/SynthHousehold/SynthHousehold.Rproj
