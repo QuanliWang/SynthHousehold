@@ -1,93 +1,45 @@
 function dummy = master()
+addpath dist
 
-size234alldata = load('ACShouseholddata_size234all.mat');
-newdata = size234alldata.newdata;
+n = 10000;
+[SS,origdata] = PrepareData(n);
 
-HHindex = unique(newdata(:,1)); 
-SSfull = hist(newdata(:,1),HHindex); 
-
-
-randindex = randsample(length(SSfull),10000);
-SS = SSfull(randindex);
-
-totalcount = 10000;
-origdata00 = zeros(1,8);
-for i=1:totalcount
-    index_i = find(newdata(:,1)==randindex(i));
-    origdata00 = [origdata00;newdata(index_i,:)];
-    i;
-end
-
-origdata0 = [origdata00(2:length(origdata00),:),zeros(length(origdata00)-1,1)];
-
-for i=1:totalcount
-    origdata0((sum(SS(1:i))-SS(i)+1):(sum(SS(1:i))),1) = i;
-    origdata0((sum(SS(1:i))-SS(i)+1):(sum(SS(1:i))),9) = SS(i);
-end
-    
-ACSdatasample = origdata0;
-sizeACSdata1 = size(ACSdatasample);
-sizeACSdata = sizeACSdata1(1);
-
-ACSsize2_count = sum(SS==2);
-ACSsize3_count = sum(SS==3);
-ACSsize4_count = sum(SS==4);
-%{
-ACSdatasample_try = ACSdatasample;
-[Y,I]=sort(ACSdatasample_try(:,1));
-ACSdatasample=ACSdatasample_try(I,:); %use the column indices from sort() to sort all columns of A.
-%}
 %%
-HHindex = unique(ACSdatasample(:,1)); % serial from 1 to n=23331, total 10000 households
-SS = hist(ACSdatasample(:,1),HHindex); % sizes of each HH
-
-% SizeSerial = [HHindex,SS];
-
-for i=1:10000
-    ACSdatasample(sum(SS(1:(i-1)))+1:sum(SS(1:i)),1) = i;
-end
-
 % variables: HHindex 1, pernum 2, sex 3, race 4, ethn 5, age 6, relate 7(ind level) ownership 8 (binary, HH level)
-[n_s,p] = size(ACSdatasample);
-nn = size(SS);
-n = nn(2);
+[n_s,p] = size(origdata);
 p = p-4;
-ACS = ACSdatasample;
 
-data = ACS(:,3:7);
-HHdatafull = ACS(:,8:9);
-HHdataorig = zeros(n,2);
-for i=1:n
-    HHdataorig(i,:) = HHdatafull(sum(SS(1:i-1))+1,:);
-end
-
+HHrowIndex = [1 cumsum(SS)+1]; 
+HHdataorig = origdata(HHrowIndex(1: (end -1)),8:9);
 HHdata1 = HHdataorig(:,1);
 HHdata2 = HHdataorig(:,2)-1;
-origdata = ACS;
-first2data = ACS(:,1:2);
-
-HHserial = ACS(:,1);
+HHserial = origdata(:,1);
+clear HHrowIndex
 
 % variables: HHindex 1, pernum 2, sex 3, race 4, ethn 5, age 6, relate
 % 7(ind level) ownership 8 (binary, HH level) household size 
-d = [2,9,5,94,12];
+
+d = [2,9,5,94,12]; %number of levels for each variable (5 variables all together)
+data = origdata(:,3:7);
+dataT = origdata(:,3:7)';
+maxd = max(d);
+
+% what are those?
 dHH1 = 2;
 dHH2 = 3;
-maxd = max(d);
 
 %%
 %%%%---global parameters---%%
 
 %nrun=10000; burn=8000; thin=10; %50;
-
-nrun=25; burn=20; thin=1; %50;
+nrun=25; burn=20; thin=1;
 eff.sam=(nrun-burn)/thin;
 
-K=40;%5 %50;                      
+K=40;                     
 L=15;
-
 aa=0.25; ab=0.25;                  % gamma hyperparameters for alpha
 ba=0.25; bb=0.25;
+
 %%%%---define output files---%%
 alphaout = zeros(nrun,1); 
 betaout = zeros(nrun,1);
@@ -95,36 +47,37 @@ piout = zeros(eff.sam,K);
 wout = zeros(eff.sam,K,L);
 nout = zeros(nrun,1);
 n_sout = zeros(nrun,1);
+
 size2extrasize = zeros(nrun,1);
 size3extrasize = zeros(nrun,1);
 size4extrasize = zeros(nrun,1);
-%kout = zeros(eff.sam,1); 
-%lout = zeros(eff.sam,1);
+
 z_HH_save = zeros(nrun,n_s);
 z_member_save = zeros(nrun,n_s);
 elapsed_time = zeros(1,nrun);
+
 newphiout = zeros(eff.sam,maxd*p,K*L);
 lambda1out = zeros(eff.sam,K,dHH1);
 lambda2out = zeros(eff.sam,K,dHH2);
-%%%%---initial values---%%
 
+%%%%---initial values---%%
 alpha=1;        % hyperparameters for stick-breaking weights
 beta=1;
 
+%initialize phi, rewrite as a 3D matrix to save space
+% from 94*5 * K * L to sum(d) * (K*L)
+% this will save 74% of space for this particular one
 phi=zeros(K*L,p,maxd);      % cell probabilities
-
-for l=1:L
-    for j=1:p
-        for c=1:d(j)
-        phi(l,j,c)=sum(data(:,j)==c)/n_s;
-        end
+for j=1:p
+    for c=1:d(j)
+        phi(1,j,c)=sum(data(:,j)==c)/n_s;
     end
 end
-
-for k=1:(K-1)
-    phi((k*L+1):(k*L+L),:,:) = phi(1:L,:,:);
+for count = 2:K*L
+    phi(count,:,:) = phi(1,:,:);
 end
 
+%initialize lambda
 lambda1 = zeros(K,dHH1);
 for c=1:dHH1
     lambda1(:,c) = sum(HHdata1==c)/n;
@@ -135,11 +88,9 @@ for c=1:dHH2
     lambda2(:,c) = sum(HHdata2==c)/n;
 end
 
-
 u=[betarnd(1,alpha,[K-1,1]);1];
 pi=zeros(K,1);
 pi(1:K)=u.*cumprod([1;1-u(1:K-1)]);
-
 
 v=[betarnd(1,beta,[K,L-1]),ones(K,1)];
 w=zeros(K,L);
@@ -149,6 +100,11 @@ for k=1:K
     v1 = (v(k,:))';
     w(k,1:L)=v1.*cumprod([1;1-v1(1:L-1)]);
 end
+
+ACS_count = zeros(3,1);
+ACS_count(1) = sum(SS==2);
+ACS_count(2) = sum(SS==3);
+ACS_count(3) = sum(SS==4);
 
 %profile on
 %%%%---Blocked sampler---%%
@@ -173,8 +129,7 @@ for i = 1:nrun
            trueextras_size3 = extras_size3;
            trueextras_size4 = extras_size4;
            trueextras = [trueextras_size2;trueextras_size3;trueextras_size4];
-           sizeextras1 = size(trueextras);
-           sizeextras = sizeextras1(1);
+           
            trueextras_HHindex = unique(trueextras(:,1));
            trueextras_SS = hist(trueextras(:,1),trueextras_HHindex); 
            trueextras_ownership = zeros(size_extras_size2_old+size_extras_size3_old+size_extras_size4_old,1);
@@ -194,14 +149,8 @@ for i = 1:nrun
            HHdata2 = [HHdataorig(:,2)-1;ones(size_extras_size2_old,1);2*ones(size_extras_size3_old,1);3*ones(size_extras_size4_old,1)];
        end
        
-       HHserial_new = data_full(:,1);
-       
+ 
        data = data_full(:,3:7);
-       
-       %size_data1 = size(data);
-       %size_data = size_data1(1);
-       % also need to transpose data
-       dataT = origdata(:,3:7)';
        
        HHindex_new = unique(data_full(:,1)); 
        SS_new = hist(data_full(:,1),HHindex_new); 
@@ -364,60 +313,22 @@ for i = 1:nrun
     %tic;
    
     %% checking constraints
+    cum_number_of_generation = 0;
      %% size2
-    size2data_to_check_all = zeros(150000,8*2+1+2);
+    hh_size = 2;
+    size2data_to_check_all = zeros(150000,8*hh_size+1+hh_size);
     size2outcome_to_save = zeros(150000,1);
-    size2number_of_generation = 0;
-    while (sum(size2outcome_to_save)<=ACSsize2_count)
-    size2number_of_generation = size2number_of_generation + 1;
-    %tic;
-    size2data_to_check = zeros(10000,8*2+1+2);
-    for m=1:10000
-        pi_size2 = pi.*lambda2(:,1);
-        pi_size2_renorm = pi_size2./sum(pi_size2);
-        hhindexh = randomsample(pi_size2_renorm,rand);
-        size2data_to_check(m,17) = hhindexh;
-        syn = zeros(2,p+1);
-        for hh = 1:2
-            memberindexhh = randomsample(w(hhindexh,:),rand);
-            size2data_to_check(m,17+hh) = memberindexhh;
-            % generating individual level data
-            for j = 1:p
-                phimj = reshape(phi((hhindexh-1)*L+memberindexhh,j,1:d(j)),1,d(j));
-                syn(hh,j) = randomsample(phimj,rand);
-            end
-        end
-        % generating household level data
-        lambda1mj = lambda1(hhindexh,:);
-        syn(:,p+1) = randomsample(lambda1mj,rand);
-        syn_sorted = sortrows(syn,5);
-        size2data_to_check(m,3:8) = syn_sorted(1,:);
-        size2data_to_check(m,11:16) = syn_sorted(2,:);
-        size2data_to_check(m,1) = m + (size2number_of_generation)*10000;
-        size2data_to_check(m,9) = m + (size2number_of_generation)*10000;
-        size2data_to_check(m,2) = 1;
-        size2data_to_check(m,10) = 2;
-        size2data_to_check(m,17) = hhindexh;
-    end
     
-    % transpose the data to check
-    size2data_to_checkT = size2data_to_check(:,1:16)';
-    %toc   
-    %mex checkingconstraints_new.cpp       
-    size2outcome = checkingconstraints_size2_sorted(size2data_to_checkT,10000);
-    size2startindex1 = min(find(size2data_to_check_all(:,1)==0));
-    % startindex2 = min(find(outcome_to_save==0));
-    size2startindex2 = (size2number_of_generation-1)*10000 + 1;
-    size2data_to_check_all(size2startindex1:size2startindex1+10000-1,:) = size2data_to_check;
-    size2outcome_to_save(size2startindex2:(size2startindex2+10000-1)) = size2outcome;
-    %sum(outcome)
-    end
-    
+    [size2data_to_check_all,size2outcome_to_save, size2number_of_generation] = ...
+    GenerateData2Check_all(hh_size,lambda1, lambda2, w, ...
+    phi,pi, d, p, cum_number_of_generation,L,size2outcome_to_save,size2data_to_check_all,ACS_count);
+
+
     syndatao_size2_old = size2data_to_check_all(find(size2outcome_to_save==1),:);
     extras_size2_old2 = size2data_to_check_all(find(size2outcome_to_save==0),:);
    
-    syndatao_size2 = syndatao_size2_old(1:ACSsize2_count,:);
-    size2exceeding_index = syndatao_size2(ACSsize2_count,1);
+    syndatao_size2 = syndatao_size2_old(1:ACS_count(hh_size-1),:);
+    size2exceeding_index = syndatao_size2(ACS_count(hh_size-1),1);
     
     while (isempty(find(extras_size2_old2(:,1)==size2exceeding_index))==1)
     	size2exceeding_index = size2exceeding_index - 1;
@@ -438,62 +349,21 @@ for i = 1:nrun
         extras_size2(2*(s-1)+2,10) = extras_size2_old(s,19);
     end
     
+    cum_number_of_generation = cum_number_of_generation + size2number_of_generation;
+    
     %% size3
-    size3data_to_check_all = zeros(500000,8*3+1+3);
+    hh_size = 3;
+    size3data_to_check_all = zeros(500000,8*hh_size+1+hh_size);
     size3outcome_to_save = zeros(500000,1);
-    size3number_of_generation = 0;
-    while (sum(size3outcome_to_save)<=ACSsize3_count)
-    size3number_of_generation = size3number_of_generation + 1;
-    %tic;
-    size3data_to_check = zeros(10000,8*3+1+3);
-    for m=1:10000
-        pi_size3 = pi.*lambda2(:,2);
-        pi_size3_renorm = pi_size3./sum(pi_size3);
-        hhindexh = randomsample(pi_size3_renorm,rand);
-        size3data_to_check(m,25) = hhindexh;
-        syn = zeros(3,p+1);
-        for hh = 1:3
-            memberindexhh = randomsample(w(hhindexh,:),rand);
-            size3data_to_check(m,25+hh) = memberindexhh;
-            % generating individual level data
-            for j = 1:p
-                phimj = reshape(phi((hhindexh-1)*L+memberindexhh,j,1:d(j)),1,d(j));
-                syn(hh,j) = randomsample(phimj,rand);
-            end
-        end
-        % generating household level data
-        lambda1mj = lambda1(hhindexh,:);
-        syn(:,p+1) = randomsample(lambda1mj,rand);
-        syn_sorted = sortrows(syn,5);
-        size3data_to_check(m,3:8) = syn_sorted(1,:);
-        size3data_to_check(m,11:16) = syn_sorted(2,:);
-        size3data_to_check(m,19:24) = syn_sorted(3,:);
-        size3data_to_check(m,1) = m + (size2number_of_generation+size3number_of_generation)*10000;
-        size3data_to_check(m,9) = m + (size2number_of_generation+size3number_of_generation)*10000;
-        size3data_to_check(m,17) = m + (size2number_of_generation+size3number_of_generation)*10000;
-        size3data_to_check(m,2) = 1;
-        size3data_to_check(m,10) = 2;
-        size3data_to_check(m,18) = 3;
-    end
-    
-    % transpose the data to check
-    size3data_to_checkT = size3data_to_check(:,1:24)';
-    %toc   
-    %mex checkingconstraints_new.cpp       
-    size3outcome = checkingconstraints_size3_sorted(size3data_to_checkT,10000);
-    size3startindex1 = min(find(size3data_to_check_all(:,1)==0));
-    % startindex2 = min(find(outcome_to_save==0));
-    size3startindex2 = (size3number_of_generation-1)*10000 + 1;
-    size3data_to_check_all(size3startindex1:size3startindex1+10000-1,:) = size3data_to_check;
-    size3outcome_to_save(size3startindex2:(size3startindex2+10000-1)) = size3outcome;
-    %sum(outcome)
-    end
-    
+    [size3data_to_check_all,size3outcome_to_save, size3number_of_generation] = ...
+    GenerateData2Check_all(hh_size,lambda1, lambda2, w, ...
+    phi,pi, d, p, cum_number_of_generation,L,size3outcome_to_save,size3data_to_check_all,ACS_count);
+
     syndatao_size3_old = size3data_to_check_all(find(size3outcome_to_save==1),:);
     extras_size3_old2 = size3data_to_check_all(find(size3outcome_to_save==0),:);
    
-    syndatao_size3 = syndatao_size3_old(1:ACSsize3_count,:);
-    size3exceeding_index = syndatao_size3(ACSsize3_count,1);
+    syndatao_size3 = syndatao_size3_old(1:ACS_count(hh_size-1),:);
+    size3exceeding_index = syndatao_size3(ACS_count(hh_size-1),1);
 
     while (isempty(find(extras_size3_old2(:,1)==size3exceeding_index))==1)
     	size3exceeding_index = size3exceeding_index - 1;
@@ -515,69 +385,22 @@ for i = 1:nrun
         extras_size3(3*(s-1)+2,10) = extras_size3_old(s,27);
         extras_size3(3*(s-1)+3,10) = extras_size3_old(s,28);
     end
+    cum_number_of_generation = cum_number_of_generation + size3number_of_generation;
     
     %% size4
-    size4data_to_check_all = zeros(5000000,8*4+1+4);
+    hh_size = 4;
+    size4data_to_check_all = zeros(5000000,8*hh_size+1+hh_size);
     size4outcome_to_save = zeros(5000000,1);
-    size4number_of_generation = 0;
-    while (sum(size4outcome_to_save)<=ACSsize4_count)
-    size4number_of_generation = size4number_of_generation + 1;
-    %tic;
-    size4data_to_check = zeros(10000,8*4+1+4);
-    for m=1:10000
-        pi_size4 = pi.*lambda2(:,3);
-        pi_size4_renorm = pi_size4./sum(pi_size4);
-        hhindexh = randomsample(pi_size4_renorm,rand);
-        size4data_to_check(m,33) = hhindexh;
-        syn = zeros(4,p+1);
-        for hh = 1:4
-            memberindexhh = randomsample(w(hhindexh,:),rand);
-            size4data_to_check(m,33+hh) = memberindexhh;
-            % generating individual level data
-            for j = 1:p
-                phimj = reshape(phi((hhindexh-1)*L+memberindexhh,j,1:d(j)),1,d(j));
-                syn(hh,j) = randomsample(phimj,rand);
-            end
-        end
-        % generating household level data
-        lambda1mj = lambda1(hhindexh,:);
-        syn(:,p+1) = randomsample(lambda1mj,rand);
-        syn_sorted = sortrows(syn,5);
-        size4data_to_check(m,3:8) = syn_sorted(1,:);
-        size4data_to_check(m,11:16) = syn_sorted(2,:);
-        size4data_to_check(m,19:24) = syn_sorted(3,:);
-        size4data_to_check(m,27:32) = syn_sorted(4,:);
-        size4data_to_check(m,1) = m + (size2number_of_generation+size3number_of_generation+size4number_of_generation)*10000;
-        size4data_to_check(m,9) = m + (size2number_of_generation+size3number_of_generation+size4number_of_generation)*10000;
-        size4data_to_check(m,17) = m + (size2number_of_generation+size3number_of_generation+size4number_of_generation)*10000;
-        size4data_to_check(m,25) = m + (size2number_of_generation+size3number_of_generation+size4number_of_generation)*10000;
-        size4data_to_check(m,2) = 1;
-        size4data_to_check(m,10) = 2;
-        size4data_to_check(m,18) = 3;
-        size4data_to_check(m,26) = 4;
-    end
     
-    % transpose the data to check
-    size4data_to_checkT = size4data_to_check(:,1:32)';
-    %toc   
-    %mex checkingconstraints_new.cpp       
-    size4outcome1 = checkingconstraints_size4_sorted_part1(size4data_to_checkT,10000);
-    size4outcome2 = checkingconstraints_size4_sorted_part2(size4data_to_checkT,10000);
-    size4outcome3 = checkingconstraints_size4_sorted_part3(size4data_to_checkT,10000);
-    size4outcome = size4outcome1+size4outcome2+size4outcome3;
-    size4startindex1 = min(find(size4data_to_check_all(:,1)==0));
-    % startindex2 = min(find(outcome_to_save==0));
-    size4startindex2 = (size4number_of_generation-1)*10000 + 1;
-    size4data_to_check_all(size4startindex1:size4startindex1+10000-1,:) = size4data_to_check;
-    size4outcome_to_save(size4startindex2:(size4startindex2+10000-1)) = size4outcome;
-    %sum(outcome)
-    end
+    [size4data_to_check_all,size4outcome_to_save, size4number_of_generation] = ...
+    GenerateData2Check_all(hh_size,lambda1, lambda2, w, ...
+    phi,pi, d, p, cum_number_of_generation,L,size4outcome_to_save,size4data_to_check_all,ACS_count);
     
     syndatao_size4_old = size4data_to_check_all(find(size4outcome_to_save==1),:);
     extras_size4_old2 = size4data_to_check_all(find(size4outcome_to_save==0),:);
    
-    syndatao_size4 = syndatao_size4_old(1:ACSsize4_count,:);
-    size4exceeding_index = syndatao_size4(ACSsize4_count,1);
+    syndatao_size4 = syndatao_size4_old(1:ACS_count(hh_size-1),:);
+    size4exceeding_index = syndatao_size4(ACS_count(hh_size-1),1);
     
     while (isempty(find(extras_size4_old2(:,1)==size4exceeding_index))==1)
     	size4exceeding_index = size4exceeding_index - 1;
@@ -604,17 +427,15 @@ for i = 1:nrun
     
     
     %%    
-    %truesyndatao = syndatao(1:min(find(syndatao(:,1)==0))-1,:);
-    %toc
     disp('synthesis updated');
     
        %syndata{i} = syndatao;
        if (mod(i,thin) == 0 && i > burn) 
-       piout((i-burn)/thin,:) = pi';
-       wout((i-burn)/thin,:,:) = w;
-       newphiout((i-burn)/thin,:,:) = newphi;
-       lambda1out((i-burn)/thin,:,:) = lambda1;
-       lambda2out((i-burn)/thin,:,:) = lambda2;
+           piout((i-burn)/thin,:) = pi';
+           wout((i-burn)/thin,:,:) = w;
+           newphiout((i-burn)/thin,:,:) = newphi;
+           lambda1out((i-burn)/thin,:,:) = lambda1;
+           lambda2out((i-burn)/thin,:,:) = lambda2;
        end
        i
        n_new
@@ -631,8 +452,5 @@ for i = 1:nrun
        betaout(i) = beta;
        disp('saving done'); 
 end
-
-HHindex = unique(ACSdatasample(:,1)); 
-SSorig = hist(ACSdatasample(:,1),HHindex); 
 
 toc    
