@@ -1,9 +1,13 @@
 function [data_to_check_all,outcome_to_save, number_of_generation] = ...
     GenerateData2Check_all(hh_size,lambda1, lambda2, w, ...
-    phi,pi, d, p, cum_number_of_generation,L,outcome_to_save,data_to_check_all,ACS_count)
+    phi,pi, d, p, cum_number_of_generation,L,ACS_count,nextras)
+    data_to_check_all = zeros(nextras,8*hh_size+1+hh_size);
+    outcome_to_save = zeros(nextras,1);
     number_of_generation = 0;
     while (sum(outcome_to_save)<=ACS_count(hh_size-1))
         number_of_generation = number_of_generation + 1;
+        
+        %generate a batch of 10K household
         data_to_check = GenerateData2Check(hh_size,lambda1, lambda2, w, ...
             phi,pi, d, p, number_of_generation,cum_number_of_generation, L);
         
@@ -22,10 +26,9 @@ function [data_to_check_all,outcome_to_save, number_of_generation] = ...
             error( ['Household size ' num2str(hh_size) ' not considered']);
         end
             
-        startindex1 = min(find(data_to_check_all(:,1)==0));
-        startindex2 = (number_of_generation-1)*10000 + 1;
-        data_to_check_all(startindex1:startindex1+10000-1,:) = data_to_check;
-        outcome_to_save(startindex2:(startindex2+10000-1)) = outcome;
+        startindex = (number_of_generation-1)*10000 + 1;
+        endindex = (startindex+10000-1);
+        data_to_check_all(startindex:endindex,:) = data_to_check;
+        outcome_to_save(startindex:endindex) = outcome;
     end
 end
-
