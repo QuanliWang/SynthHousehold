@@ -15,9 +15,9 @@
        elapsed_time(i) = toc;
        n_sout(i) = n_s_new;
        nout(i) = n_new;
-       size2extrasize(i) = size_extras_size2_old;
-       size3extrasize(i) = size_extras_size3_old;
-       size4extrasize(i) = size_extras_size4_old;
+       size2extrasize(i) = hh_size_new(2);
+       size3extrasize(i) = hh_size_new(3);
+       size4extrasize(i) = hh_size_new(4);
        z_HH_save(i,1:n_s) = z_HH_all;
        z_member_save(i,1:n_s) = z_member;
        alphaout(i) = alpha;

@@ -104,3 +104,10 @@ ACS_count = zeros(3,1);
 ACS_count(1) = sum(SS==2);
 ACS_count(2) = sum(SS==3);
 ACS_count(3) = sum(SS==4);
+
+%
+data_full = origdata;
+HHdata1 = HHdataorig(:,1);
+HHdata2 = HHdataorig(:,2)-1;
+
+trueextras = [];z_HH_new = [];

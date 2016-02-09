@@ -9,39 +9,13 @@ tic;
            end
        end
             
-       if (i==1)
-           data_full = origdata;
-           HHdata1 = HHdataorig(:,1);
-           HHdata2 = HHdataorig(:,2)-1;
-       else
-           trueextras = [extras_size2;extras_size3;extras_size4];
-           trueextras_HHindex = unique(trueextras(:,1));
-           trueextras_SS = hist(trueextras(:,1),trueextras_HHindex); 
-           trueextras_ownership = zeros(size_extras_size2_old+size_extras_size3_old+size_extras_size4_old,1);
-           z_HH_new = zeros(size_extras_size2_old+size_extras_size3_old+size_extras_size4_old,1);
-           trueextras_HHdatafull = trueextras(:,8);
-           trueextras_HH = trueextras(:,9);
-           
-           cumSS = cumsum(trueextras_SS);
-           trueextras(1:cumSS(1),1) = 10001;
-           for s=2:size_extras_size2_old+size_extras_size3_old+size_extras_size4_old
-                trueextras(cumSS(s-1)+1:cumSS(s),1) = s+10000;
-                trueextras_ownership(s) = trueextras_HHdatafull(cumSS(s));
-                z_HH_new(s) = trueextras_HH(cumSS(s));
-           end
-           data_full = [origdata(:,1:8);trueextras(:,1:8)];
-           HHdata1 = [HHdataorig(:,1);trueextras_ownership];
-           HHdata2 = [HHdataorig(:,2)-1;ones(size_extras_size2_old,1);2*ones(size_extras_size3_old,1);3*ones(size_extras_size4_old,1)];
-       end
-       
- 
        data = data_full(:,3:7);
        
        HHindex_new = unique(data_full(:,1)); 
        SS_new = hist(data_full(:,1),HHindex_new); 
        
        SSsize_new = size(SS_new);
-       n_new = SSsize_new(2);
+       n_new = size(SS_new,2);
        n_s_new0 = size(data);
        n_s_new = n_s_new0(1);
 
@@ -60,26 +34,25 @@ tic;
            z_HH_all(cumsumSS(h)+1:cumsumSS(h+1)) = z_HH(h);
        end
        
-       if (i==1)
-           z_HH_all_every = z_HH_all;
-           z_HH_every = z_HH;
+       if isempty(trueextras)
+            z_HH_all_every = z_HH_all;
        else
-           z_HH_all_every = [z_HH_all;trueextras(:,9)];
-           z_HH_every = [z_HH;z_HH_new];
+            z_HH_all_every = [z_HH_all;trueextras(:,9)];
        end
        
+       z_HH_every = [z_HH;z_HH_new];
        disp('zHH updated');
+
        %% update zmember
        %%% to work in C++
-       
        z_member_prob = samplezmemberv1(newphi,dataT,w,K,L,p,maxd,n_s,z_HH,HHserial);
 
        for m = 1:n_s
            zupdateprob_m = z_member_prob(L*(m-1)+1:L*m);
            z_member(m) = randomsample(zupdateprob_m,rand);
        end
-
-       if (i==1)
+       
+       if isempty(trueextras)
            z_member_every = z_member;
        else
            z_member_every = [z_member;trueextras(:,10)];
