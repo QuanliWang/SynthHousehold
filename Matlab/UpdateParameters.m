@@ -9,10 +9,10 @@ tic;
            end
        end
             
-       data = data_full(:,3:7);
+       data = data_full_all(:,3:7);
        
-       HHindex_new = unique(data_full(:,1)); 
-       SS_new = hist(data_full(:,1),HHindex_new); 
+       HHindex_new = unique(data_full_all(:,1)); 
+       SS_new = hist(data_full_all(:,1),HHindex_new); 
        
        SSsize_new = size(SS_new);
        n_new = size(SS_new,2);
@@ -22,7 +22,7 @@ tic;
        z_HH= zeros(n,1);                   %cluster indicators for household; K
        z_member = zeros(n_s,1);             %cluster indicators for household member; L
        
-       z_HH_prob = samplezHHwithHHnewv1_2HHvar(newphi,dataT,w,pi,SS',K,L,p,maxd,n,HHdata1(1:n),lambda1,HHdata2(1:n),lambda2);
+       z_HH_prob = samplezHHwithHHnewv1_2HHvar(newphi,dataT,w,pi,SS',K,L,p,maxd,n,HHdata1_all(1:n),lambda1,HHdata2_all(1:n),lambda2);
        for h = 1:n
            zupdateprob_h = z_HH_prob(K*(h-1)+1:K*h);
            z_HH(h) = randomsample(zupdateprob_h,rand);
@@ -40,7 +40,7 @@ tic;
             z_HH_all_every = [z_HH_all;trueextras(:,9)];
        end
        
-       z_HH_every = [z_HH;z_HH_new];
+       z_HH_all = [z_HH;z_HH_extra];
        disp('zHH updated');
 
        %% update zmember
@@ -94,7 +94,7 @@ tic;
         end
      
         levelk = 1:K;
-        kcount = sum(hist(z_HH_every,levelk),1);
+        kcount = sum(hist(z_HH_all,levelk),1);
         
         disp('phi updated');
 
@@ -103,9 +103,9 @@ tic;
         %tic;
         lambda1count = zeros(K,dHH1);
         for k = 1:K
-            lam1 = (z_HH_every==k); 
+            lam1 = (z_HH_all==k); 
             for c = 1:dHH1
-                value = (HHdata1==c);
+                value = (HHdata1_all==c);
                 lambda1count(k,c) = lambda1count(k,c)+sum(lam1&value);
             end
             lam11 = gamrnd(lambda1count(k,1:dHH1)+1,1); % variable j, z_HH k, z_member L
@@ -115,9 +115,9 @@ tic;
         
         lambda2count = zeros(K,dHH2);
         for k = 1:K
-            lam1 = (z_HH_every==k); 
+            lam1 = (z_HH_all==k); 
             for c = 1:dHH2
-                value = (HHdata2==c);
+                value = (HHdata2_all==c);
                 lambda2count(k,c) = lambda2count(k,c)+sum(lam1&value);
             end
             lam11 = gamrnd(lambda2count(k,1:dHH2)+1,1); % variable j, z_HH k, z_member L
