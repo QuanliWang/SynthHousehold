@@ -10,8 +10,8 @@ p = p-4;
 
 HHrowIndex = [1 cumsum(SS)+1]; 
 HHdataorig = origdata(HHrowIndex(1: (end -1)),8:9);
-HHdata1 = HHdataorig(:,1);
-HHdata2 = HHdataorig(:,2)-1;
+HHdata1_all = HHdataorig(:,1);
+HHdata2_all = HHdataorig(:,2)-1;
 HHserial = origdata(:,1);
 clear HHrowIndex
 
@@ -79,12 +79,12 @@ end
 %initialize lambda
 lambda1 = zeros(K,dHH1);
 for c=1:dHH1
-    lambda1(:,c) = sum(HHdata1==c)/n;
+    lambda1(:,c) = sum(HHdata1_all==c)/n;
 end
 
 lambda2 = zeros(K,dHH2);
 for c=1:dHH2
-    lambda2(:,c) = sum(HHdata2==c)/n;
+    lambda2(:,c) = sum(HHdata2_all==c)/n;
 end
 
 u=[betarnd(1,alpha,[K-1,1]);1];
@@ -106,8 +106,8 @@ ACS_count(2) = sum(SS==3);
 ACS_count(3) = sum(SS==4);
 
 %
-data_full = origdata;
-HHdata1 = HHdataorig(:,1);
-HHdata2 = HHdataorig(:,2)-1;
+data_full_all = origdata;
+HHdata1_all = HHdataorig(:,1);
+HHdata2_all = HHdataorig(:,2)-1;
 
-trueextras = [];z_HH_new = [];
+trueextras = [];z_HH_extra = [];

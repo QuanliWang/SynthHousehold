@@ -40,7 +40,7 @@ tic;
             z_HH_all_every = [z_HH_all;trueextras(:,9)];
        end
        
-       z_HH_all = [z_HH;z_HH_extra];
+       z_HH_every = [z_HH;z_HH_extra];
        disp('zHH updated');
 
        %% update zmember
@@ -94,7 +94,7 @@ tic;
         end
      
         levelk = 1:K;
-        kcount = sum(hist(z_HH_all,levelk),1);
+        kcount = sum(hist(z_HH_every,levelk),1);
         
         disp('phi updated');
 
@@ -103,7 +103,7 @@ tic;
         %tic;
         lambda1count = zeros(K,dHH1);
         for k = 1:K
-            lam1 = (z_HH_all==k); 
+            lam1 = (z_HH_every==k); 
             for c = 1:dHH1
                 value = (HHdata1_all==c);
                 lambda1count(k,c) = lambda1count(k,c)+sum(lam1&value);
@@ -115,7 +115,7 @@ tic;
         
         lambda2count = zeros(K,dHH2);
         for k = 1:K
-            lam1 = (z_HH_all==k); 
+            lam1 = (z_HH_every==k); 
             for c = 1:dHH2
                 value = (HHdata2_all==c);
                 lambda2count(k,c) = lambda2count(k,c)+sum(lam1&value);
