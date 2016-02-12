@@ -5,7 +5,7 @@ n = 10000;
 
 %%
 % variables: HHindex 1, pernum 2, sex 3, race 4, ethn 5, age 6, relate 7(ind level) ownership 8 (binary, HH level)
-[n_s,p] = size(origdata);
+[n_individuals,p] = size(origdata);
 p = p-4;
 
 HHrowIndex = [1 cumsum(SS)+1]; 
@@ -47,12 +47,10 @@ wout = zeros(eff.sam,K,L);
 nout = zeros(nrun,1);
 n_sout = zeros(nrun,1);
 
-size2extrasize = zeros(nrun,1);
-size3extrasize = zeros(nrun,1);
-size4extrasize = zeros(nrun,1);
+extrasize = zeros(nrun,3);
 
-z_HH_save = zeros(nrun,n_s);
-z_member_save = zeros(nrun,n_s);
+z_HH_save = zeros(nrun,n_individuals);
+z_member_save = zeros(nrun,n_individuals);
 elapsed_time = zeros(1,nrun);
 
 newphiout = zeros(eff.sam,maxd*p,K*L);
@@ -69,7 +67,7 @@ beta=1;
 phi=zeros(K*L,p,maxd);      % cell probabilities
 for j=1:p
     for c=1:d(j)
-        phi(1,j,c)=sum(data(:,j)==c)/n_s;
+        phi(1,j,c)=sum(data(:,j)==c)/n_individuals;
     end
 end
 for count = 2:K*L
@@ -110,4 +108,4 @@ data_full_all = origdata;
 HHdata1_all = HHdataorig(:,1);
 HHdata2_all = HHdataorig(:,2)-1;
 
-trueextras = [];z_HH_extra = [];
+ImpossibleIndividuals = [];z_HH_extra = [];
