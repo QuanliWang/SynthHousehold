@@ -1,6 +1,9 @@
 #include "mex.h"
 #include <vector>
-
+#include <cmath>
+inline bool IsHead(double relate, double age) {
+    return (relate == 1 && age >=17);
+}
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
 
 	/* pointers to input matrices/vectors */
@@ -28,285 +31,285 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
 		datah[12] = datah1[32*(m-1)+31-1]; //relate4
 
 		coef[m-1] = 0;
-	
+        if (!IsHead(datah[9], datah[5])) { continue; }
 		//type181
-		if(datah[9]==1 && datah[10]==5 && datah[11] ==9 && datah[12]==9 && (datah[5] >= 33) && ((datah[6] - datah[5])>=13)  && ((datah[5] - datah[7])>=30) && ((datah[5] - datah[8])>=30))
+		if(datah[10]==5 && datah[11] ==9 && datah[12]==9 && (datah[5] >= 33) && ((datah[6] - datah[5])>=13)  && ((datah[5] - datah[7])>=30) && ((datah[5] - datah[8])>=30))
 			coef[m-1] = 1;
 		//type182
-		else if(datah[9]==1 && datah[10]==5 && datah[11] ==9 && datah[12]==10 && (datah[5] >= 33) && ((datah[6] - datah[5])>=13)  && ((datah[5] - datah[7])>=30))
+		else if(datah[10]==5 && datah[11] ==9 && datah[12]==10 && (datah[5] >= 33) && ((datah[6] - datah[5])>=13)  && ((datah[5] - datah[7])>=30))
 			coef[m-1] = 1;
 		//type183
-		else if(datah[9]==1 && datah[10]==5 && datah[11] ==9 && datah[12]==11 && (datah[5] >= 33) && ((datah[6] - datah[5])>=13)  && ((datah[5] - datah[7])>=30))
+		else if(datah[10]==5 && datah[11] ==9 && datah[12]==11 && (datah[5] >= 33) && ((datah[6] - datah[5])>=13)  && ((datah[5] - datah[7])>=30))
 			coef[m-1] = 1;
 		//type184
-		else if(datah[9]==1 && datah[10]==5 && datah[11] ==9 && datah[12]==12 && (datah[5] >= 33) && ((datah[6] - datah[5])>=13)  && ((datah[5] - datah[7])>=30))
+		else if(datah[10]==5 && datah[11] ==9 && datah[12]==12 && (datah[5] >= 33) && ((datah[6] - datah[5])>=13)  && ((datah[5] - datah[7])>=30))
 			coef[m-1] = 1;
 		//type185
-		else if(datah[9]==1 && datah[10]==5 && datah[11] ==10 && datah[12]==10 && (datah[5] >= 17) && ((datah[6] - datah[5])>=13))
+		else if(datah[10]==5 && datah[11] ==10 && datah[12]==10 && ((datah[6] - datah[5])>=13))
 			coef[m-1] = 1;
 		//type186
-		else if(datah[9]==1 && datah[10]==5 && datah[11] ==10 && datah[12]==11 && (datah[5] >= 17) && ((datah[6] - datah[5])>=13))
+		else if(datah[10]==5 && datah[11] ==10 && datah[12]==11 && ((datah[6] - datah[5])>=13))
 			coef[m-1] = 1;
 		//type187
-		else if(datah[9]==1 && datah[10]==5 && datah[11] ==10 && datah[12]==12 && (datah[5] >= 17) && ((datah[6] - datah[5])>=13))
+		else if(datah[10]==5 && datah[11] ==10 && datah[12]==12 && ((datah[6] - datah[5])>=13))
 			coef[m-1] = 1;
 		//type188
-		else if(datah[9]==1 && datah[10]==5 && datah[11] ==11 && datah[12]==11 && (datah[5] >= 17) && ((datah[6] - datah[5])>=13))
+		else if(datah[10]==5 && datah[11] ==11 && datah[12]==11  && ((datah[6] - datah[5])>=13))
 			coef[m-1] = 1;
 		//type189
-		else if(datah[9]==1 && datah[10]==5 && datah[11] ==11 && datah[12]==12 && (datah[5] >= 17) && ((datah[6] - datah[5])>=13))
+		else if(datah[10]==5 && datah[11] ==11 && datah[12]==12 && ((datah[6] - datah[5])>=13))
 			coef[m-1] = 1;
 		//type190
-		else if(datah[9]==1 && datah[10]==5 && datah[11] ==12 && datah[12]==12 && (datah[5] >= 17) && ((datah[6] - datah[5])>=13))
+		else if(datah[10]==5 && datah[11] ==12 && datah[12]==12 && ((datah[6] - datah[5])>=13))
 			coef[m-1] = 1;
 		//type191
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==6 && datah[12]==7 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9)  && ((datah[7] - datah[5])>=9) && (abs(datah[5] - datah[8])<=33))
+		else if(datah[10]==6 && datah[11] ==6 && datah[12]==7 && ((datah[6] - datah[5])>=9)  && ((datah[7] - datah[5])>=9) && (std::abs(datah[5] - datah[8])<=33))
 			coef[m-1] = 1;
 		//type182
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==6 && datah[12]==8 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9)  && ((datah[7] - datah[5])>=9) && (abs(datah[5] - datah[8])<=33))
+		else if(datah[10]==6 && datah[11] ==6 && datah[12]==8 && ((datah[6] - datah[5])>=9)  && ((datah[7] - datah[5])>=9) && (std::abs(datah[5] - datah[8])<=33))
 			coef[m-1] = 1;
 		//type193
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==6 && datah[12]==9 && (datah[5] >= 33) && ((datah[6] - datah[5])>=9)  && ((datah[7] - datah[5])>=9) && ((datah[5] - datah[8])>=30))
+		else if(datah[10]==6 && datah[11] ==6 && datah[12]==9 && (datah[5] >= 33) && ((datah[6] - datah[5])>=9)  && ((datah[7] - datah[5])>=9) && ((datah[5] - datah[8])>=30))
 			coef[m-1] = 1;
 		//type194
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==6 && datah[12]==10 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9)  && ((datah[7] - datah[5])>=9))
+		else if(datah[10]==6 && datah[11] ==6 && datah[12]==10 && ((datah[6] - datah[5])>=9)  && ((datah[7] - datah[5])>=9))
 			coef[m-1] = 1;
 		//type195
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==6 && datah[12]==11 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9)  && ((datah[7] - datah[5])>=9))
+		else if(datah[10]==6 && datah[11] ==6 && datah[12]==11 && ((datah[6] - datah[5])>=9)  && ((datah[7] - datah[5])>=9))
 			coef[m-1] = 1;
 		//type196
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==6 && datah[12]==12 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9)  && ((datah[7] - datah[5])>=9))
+		else if(datah[10]==6 && datah[11] ==6 && datah[12]==12 && ((datah[6] - datah[5])>=9)  && ((datah[7] - datah[5])>=9))
 			coef[m-1] = 1;
 		//type197
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==7 && datah[12]==7 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9)  && (abs(datah[5] - datah[7])<=33) && (abs(datah[5] - datah[8])<=33))
+		else if(datah[10]==6 && datah[11] ==7 && datah[12]==7 && ((datah[6] - datah[5])>=9)  && (std::abs(datah[5] - datah[7])<=33) && (std::abs(datah[5] - datah[8])<=33))
 			coef[m-1] = 1;
 		//type198
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==7 && datah[12]==8 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9)  && (abs(datah[5] - datah[7])<=33) && (abs(datah[5] - datah[8])<=33))
+		else if(datah[10]==6 && datah[11] ==7 && datah[12]==8 && ((datah[6] - datah[5])>=9)  && (std::abs(datah[5] - datah[7])<=33) && (std::abs(datah[5] - datah[8])<=33))
 			coef[m-1] = 1;
 		//type199
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==7 && datah[12]==9 && (datah[5] >= 33) && ((datah[6] - datah[5])>=9)  && (abs(datah[5] - datah[7])<=33) && ((datah[5] - datah[8])>=30))
+		else if(datah[10]==6 && datah[11] ==7 && datah[12]==9 && (datah[5] >= 33) && ((datah[6] - datah[5])>=9)  && (std::abs(datah[5] - datah[7])<=33) && ((datah[5] - datah[8])>=30))
 			coef[m-1] = 1;
 		//type200
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==7 && datah[12]==10 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9)  && (abs(datah[5] - datah[7])<=33))
+		else if(datah[10]==6 && datah[11] ==7 && datah[12]==10 && ((datah[6] - datah[5])>=9)  && (std::abs(datah[5] - datah[7])<=33))
 			coef[m-1] = 1;
 		//type201
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==7 && datah[12]==11 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9)  && (abs(datah[5] - datah[7])<=33))
+		else if(datah[10]==6 && datah[11] ==7 && datah[12]==11 && ((datah[6] - datah[5])>=9)  && (std::abs(datah[5] - datah[7])<=33))
 			coef[m-1] = 1;
 		//type202
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==7 && datah[12]==12 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9)  && (abs(datah[5] - datah[7])<=33))
+		else if(datah[10]==6 && datah[11] ==7 && datah[12]==12 && ((datah[6] - datah[5])>=9)  && (std::abs(datah[5] - datah[7])<=33))
 			coef[m-1] = 1;
 		//type203
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==8 && datah[12]==8 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9)  && (abs(datah[5] - datah[7])<=33) && (abs(datah[5] - datah[8])<=33))
+		else if(datah[10]==6 && datah[11] ==8 && datah[12]==8 && ((datah[6] - datah[5])>=9)  && (std::abs(datah[5] - datah[7])<=33) && (std::abs(datah[5] - datah[8])<=33))
 			coef[m-1] = 1;
 		//type204
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==8 && datah[12]==9 && (datah[5] >= 33) && ((datah[6] - datah[5])>=9)  && (abs(datah[5] - datah[7])<=33) && ((datah[5] - datah[8])>=30))
+		else if(datah[10]==6 && datah[11] ==8 && datah[12]==9 && (datah[5] >= 33) && ((datah[6] - datah[5])>=9)  && (std::abs(datah[5] - datah[7])<=33) && ((datah[5] - datah[8])>=30))
 			coef[m-1] = 1;
 		//type205
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==8 && datah[12]==10 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9)  && (abs(datah[5] - datah[7])<=33))
+		else if(datah[10]==6 && datah[11] ==8 && datah[12]==10 && ((datah[6] - datah[5])>=9)  && (std::abs(datah[5] - datah[7])<=33))
 			coef[m-1] = 1;
 		//type206
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==8 && datah[12]==11 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9)  && (abs(datah[5] - datah[7])<=33))
+		else if(datah[10]==6 && datah[11] ==8 && datah[12]==11 && ((datah[6] - datah[5])>=9)  && (std::abs(datah[5] - datah[7])<=33))
 			coef[m-1] = 1;
 		//type207
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==8 && datah[12]==12 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9)  && (abs(datah[5] - datah[7])<=33))
+		else if(datah[10]==6 && datah[11] ==8 && datah[12]==12 && ((datah[6] - datah[5])>=9)  && (std::abs(datah[5] - datah[7])<=33))
 			coef[m-1] = 1;
 		//type208
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==9 && datah[12]==9 && (datah[5] >= 33) && ((datah[6] - datah[5])>=9)  && ((datah[5] - datah[7])>=30) && ((datah[5] - datah[8])>=30))
+		else if(datah[10]==6 && datah[11] ==9 && datah[12]==9 && (datah[5] >= 33) && ((datah[6] - datah[5])>=9)  && ((datah[5] - datah[7])>=30) && ((datah[5] - datah[8])>=30))
 			coef[m-1] = 1;
 		//type209
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==9 && datah[12]==10 && (datah[5] >= 33) && ((datah[6] - datah[5])>=9)  && ((datah[5] - datah[7])>=30))
+		else if(datah[10]==6 && datah[11] ==9 && datah[12]==10 && (datah[5] >= 33) && ((datah[6] - datah[5])>=9)  && ((datah[5] - datah[7])>=30))
 			coef[m-1] = 1;
 		//type210
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==9 && datah[12]==11 && (datah[5] >= 33) && ((datah[6] - datah[5])>=9)  && ((datah[5] - datah[7])>=30))
+		else if(datah[10]==6 && datah[11] ==9 && datah[12]==11 && (datah[5] >= 33) && ((datah[6] - datah[5])>=9)  && ((datah[5] - datah[7])>=30))
 			coef[m-1] = 1;
 		//type211
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==9 && datah[12]==12 && (datah[5] >= 33) && ((datah[6] - datah[5])>=9)  && ((datah[5] - datah[7])>=30))
+		else if(datah[10]==6 && datah[11] ==9 && datah[12]==12 && (datah[5] >= 33) && ((datah[6] - datah[5])>=9)  && ((datah[5] - datah[7])>=30))
 			coef[m-1] = 1;
 		//type212
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==10 && datah[12]==10 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9))
+		else if(datah[10]==6 && datah[11] ==10 && datah[12]==10 && ((datah[6] - datah[5])>=9))
 			coef[m-1] = 1;
 		//type213
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==10 && datah[12]==11 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9))
+		else if(datah[10]==6 && datah[11] ==10 && datah[12]==11 && ((datah[6] - datah[5])>=9))
 			coef[m-1] = 1;
 		//type214
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==10 && datah[12]==12 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9))
+		else if(datah[10]==6 && datah[11] ==10 && datah[12]==12 && ((datah[6] - datah[5])>=9))
 			coef[m-1] = 1;
 		//type215
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==11 && datah[12]==11 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9))
+		else if(datah[10]==6 && datah[11] ==11 && datah[12]==11 && ((datah[6] - datah[5])>=9))
 			coef[m-1] = 1;
 		//type216
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==11 && datah[12]==12 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9))
+		else if(datah[10]==6 && datah[11] ==11 && datah[12]==12 && ((datah[6] - datah[5])>=9))
 			coef[m-1] = 1;
 		//type217
-		else if(datah[9]==1 && datah[10]==6 && datah[11] ==12 && datah[12]==12 && (datah[5] >= 17) && ((datah[6] - datah[5])>=9))
+		else if(datah[10]==6 && datah[11] ==12 && datah[12]==12 && ((datah[6] - datah[5])>=9))
 			coef[m-1] = 1;
 		//type218
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==7 && datah[12]==7 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && (abs(datah[5] - datah[7])<=33) && (abs(datah[5] - datah[8])<=33))
+		else if(datah[10]==7 && datah[11] ==7 && datah[12]==7 && (std::abs(datah[5] - datah[6])<=33)  && (std::abs(datah[5] - datah[7])<=33) && (std::abs(datah[5] - datah[8])<=33))
 			coef[m-1] = 1;
 		//type219
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==7 && datah[12]==8 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && (abs(datah[5] - datah[7])<=33) && (abs(datah[5] - datah[8])<=33))
+		else if(datah[10]==7 && datah[11] ==7 && datah[12]==8 && (std::abs(datah[5] - datah[6])<=33)  && (std::abs(datah[5] - datah[7])<=33) && (std::abs(datah[5] - datah[8])<=33))
 			coef[m-1] = 1;
 		//type220
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==7 && datah[12]==9 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && (abs(datah[5] - datah[7])<=33) && (datah[5] - datah[8])>=30)
+		else if(datah[10]==7 && datah[11] ==7 && datah[12]==9 && (std::abs(datah[5] - datah[6])<=33)  && (std::abs(datah[5] - datah[7])<=33) && (datah[5] - datah[8])>=30)
 			coef[m-1] = 1;
 		//type221
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==7 && datah[12]==10 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && (abs(datah[5] - datah[7])<=33))
+		else if(datah[10]==7 && datah[11] ==7 && datah[12]==10 && (std::abs(datah[5] - datah[6])<=33)  && (std::abs(datah[5] - datah[7])<=33))
 			coef[m-1] = 1;
 		//type222
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==7 && datah[12]==11 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && (abs(datah[5] - datah[7])<=33))
+		else if(datah[10]==7 && datah[11] ==7 && datah[12]==11 && (std::abs(datah[5] - datah[6])<=33)  && (std::abs(datah[5] - datah[7])<=33))
 			coef[m-1] = 1;
 		//type223
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==7 && datah[12]==12 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && (abs(datah[5] - datah[7])<=33))
+		else if(datah[10]==7 && datah[11] ==7 && datah[12]==12 && (std::abs(datah[5] - datah[6])<=33)  && (std::abs(datah[5] - datah[7])<=33))
 			coef[m-1] = 1;
 		//type224
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==8 && datah[12]==8 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && (abs(datah[5] - datah[7])<=33) && (abs(datah[5] - datah[8])<=33))
+		else if(datah[10]==7 && datah[11] ==8 && datah[12]==8 && (std::abs(datah[5] - datah[6])<=33)  && (std::abs(datah[5] - datah[7])<=33) && (std::abs(datah[5] - datah[8])<=33))
 			coef[m-1] = 1;
 		//type225
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==8 && datah[12]==9 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && (abs(datah[5] - datah[7])<=33) && (datah[5] - datah[8])>=30)
+		else if(datah[10]==7 && datah[11] ==8 && datah[12]==9 && (std::abs(datah[5] - datah[6])<=33)  && (std::abs(datah[5] - datah[7])<=33) && (datah[5] - datah[8])>=30)
 			coef[m-1] = 1;
 		//type226
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==8 && datah[12]==10 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && (abs(datah[5] - datah[7])<=33))
+		else if(datah[10]==7 && datah[11] ==8 && datah[12]==10 && (std::abs(datah[5] - datah[6])<=33)  && (std::abs(datah[5] - datah[7])<=33))
 			coef[m-1] = 1;
 		//type227
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==8 && datah[12]==11 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && (abs(datah[5] - datah[7])<=33))
+		else if(datah[10]==7 && datah[11] ==8 && datah[12]==11 && (std::abs(datah[5] - datah[6])<=33)  && (std::abs(datah[5] - datah[7])<=33))
 			coef[m-1] = 1;
 		//type228
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==8 && datah[12]==12 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && (abs(datah[5] - datah[7])<=33))
+		else if(datah[10]==7 && datah[11] ==8 && datah[12]==12 && (std::abs(datah[5] - datah[6])<=33)  && (std::abs(datah[5] - datah[7])<=33))
 			coef[m-1] = 1;
 		//type229
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==9 && datah[12]==9 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && ((datah[5] - datah[7])>=30) && (datah[5] - datah[8])>=30)
+		else if(datah[10]==7 && datah[11] ==9 && datah[12]==9  && (std::abs(datah[5] - datah[6])<=33)  && ((datah[5] - datah[7])>=30) && (datah[5] - datah[8])>=30)
 			coef[m-1] = 1;
 		//type230
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==9 && datah[12]==10 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && ((datah[5] - datah[7])>=30))
+		else if(datah[10]==7 && datah[11] ==9 && datah[12]==10 && (std::abs(datah[5] - datah[6])<=33)  && ((datah[5] - datah[7])>=30))
 			coef[m-1] = 1;
 		//type231
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==9 && datah[12]==11 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && ((datah[5] - datah[7])>=30))
+		else if(datah[10]==7 && datah[11] ==9 && datah[12]==11 && (std::abs(datah[5] - datah[6])<=33)  && ((datah[5] - datah[7])>=30))
 			coef[m-1] = 1;
 		//type232
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==9 && datah[12]==12 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && ((datah[5] - datah[7])>=30))
+		else if(datah[10]==7 && datah[11] ==9 && datah[12]==12 && (std::abs(datah[5] - datah[6])<=33)  && ((datah[5] - datah[7])>=30))
 			coef[m-1] = 1;
 		//type233
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==10 && datah[12]==10 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33))
+		else if(datah[10]==7 && datah[11] ==10 && datah[12]==10 && (std::abs(datah[5] - datah[6])<=33))
 			coef[m-1] = 1;
 		//type234
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==10 && datah[12]==11 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33))
+		else if(datah[10]==7 && datah[11] ==10 && datah[12]==11 && (std::abs(datah[5] - datah[6])<=33))
 			coef[m-1] = 1;
 		//type235
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==10 && datah[12]==12 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33))
+		else if(datah[10]==7 && datah[11] ==10 && datah[12]==12 && (std::abs(datah[5] - datah[6])<=33))
 			coef[m-1] = 1;
 		//type236
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==11 && datah[12]==11 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33))
+		else if(datah[10]==7 && datah[11] ==11 && datah[12]==11 && (std::abs(datah[5] - datah[6])<=33))
 			coef[m-1] = 1;
 		//type237
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==11 && datah[12]==12 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33))
+		else if(datah[10]==7 && datah[11] ==11 && datah[12]==12 && (std::abs(datah[5] - datah[6])<=33))
 			coef[m-1] = 1;
 		//type238
-		else if(datah[9]==1 && datah[10]==7 && datah[11] ==12 && datah[12]==12 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33))
+		else if(datah[10]==7 && datah[11] ==12 && datah[12]==12 && (std::abs(datah[5] - datah[6])<=33))
 			coef[m-1] = 1;
 		//type239
-		else if(datah[9]==1 && datah[10]==8 && datah[11] ==8 && datah[12]==8 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && (abs(datah[5] - datah[7])<=33) && (abs(datah[5] - datah[8])<=33))
+		else if(datah[10]==8 && datah[11] ==8 && datah[12]==8 && (std::abs(datah[5] - datah[6])<=33)  && (std::abs(datah[5] - datah[7])<=33) && (std::abs(datah[5] - datah[8])<=33))
 			coef[m-1] = 1;
 		//type240
-		else if(datah[9]==1 && datah[10]==8 && datah[11] ==8 && datah[12]==9 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && (abs(datah[5] - datah[7])<=33) && (datah[5] - datah[8])>=30)
+		else if(datah[10]==8 && datah[11] ==8 && datah[12]==9 && (std::abs(datah[5] - datah[6])<=33)  && (std::abs(datah[5] - datah[7])<=33) && (datah[5] - datah[8])>=30)
 			coef[m-1] = 1;
 		//type241
-		else if(datah[9]==1 && datah[10]==8 && datah[11] ==8 && datah[12]==10 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && (abs(datah[5] - datah[7])<=33))
+		else if(datah[10]==8 && datah[11] ==8 && datah[12]==10 && (std::abs(datah[5] - datah[6])<=33)  && (std::abs(datah[5] - datah[7])<=33))
 			coef[m-1] = 1;
 		//type242
-		else if(datah[9]==1 && datah[10]==8 && datah[11] ==8 && datah[12]==11 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && (abs(datah[5] - datah[7])<=33))
+		else if(datah[10]==8 && datah[11] ==8 && datah[12]==11 && (std::abs(datah[5] - datah[6])<=33)  && (std::abs(datah[5] - datah[7])<=33))
 			coef[m-1] = 1;
 		//type243
-		else if(datah[9]==1 && datah[10]==8 && datah[11] ==8 && datah[12]==12 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && (abs(datah[5] - datah[7])<=33))
+		else if(datah[10]==8 && datah[11] ==8 && datah[12]==12 && (std::abs(datah[5] - datah[6])<=33)  && (std::abs(datah[5] - datah[7])<=33))
 			coef[m-1] = 1;
 		//type244
-		else if(datah[9]==1 && datah[10]==8 && datah[11] ==9 && datah[12]==9 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && ((datah[5] - datah[7])>=30) && (datah[5] - datah[8])>=30)
+		else if(datah[10]==8 && datah[11] ==9 && datah[12]==9 && (std::abs(datah[5] - datah[6])<=33)  && ((datah[5] - datah[7])>=30) && (datah[5] - datah[8])>=30)
 			coef[m-1] = 1;
 		//type245
-		else if(datah[9]==1 && datah[10]==8 && datah[11] ==9 && datah[12]==10 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && ((datah[5] - datah[7])>=30))
+		else if(datah[10]==8 && datah[11] ==9 && datah[12]==10 && (std::abs(datah[5] - datah[6])<=33)  && ((datah[5] - datah[7])>=30))
 			coef[m-1] = 1;
 		//type246
-		else if(datah[9]==1 && datah[10]==8 && datah[11] ==9 && datah[12]==11 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && ((datah[5] - datah[7])>=30))
+		else if(datah[10]==8 && datah[11] ==9 && datah[12]==11 && (std::abs(datah[5] - datah[6])<=33)  && ((datah[5] - datah[7])>=30))
 			coef[m-1] = 1;
 		//type247
-		else if(datah[9]==1 && datah[10]==8 && datah[11] ==9 && datah[12]==12 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33)  && ((datah[5] - datah[7])>=30))
+		else if(datah[10]==8 && datah[11] ==9 && datah[12]==12 && (std::abs(datah[5] - datah[6])<=33)  && ((datah[5] - datah[7])>=30))
 			coef[m-1] = 1;
 		//type248
-		else if(datah[9]==1 && datah[10]==8 && datah[11] ==10 && datah[12]==10 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33))
+		else if(datah[10]==8 && datah[11] ==10 && datah[12]==10 && (std::abs(datah[5] - datah[6])<=33))
 			coef[m-1] = 1;
 		//type249
-		else if(datah[9]==1 && datah[10]==8 && datah[11] ==10 && datah[12]==11 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33))
+		else if(datah[10]==8 && datah[11] ==10 && datah[12]==11 && (std::abs(datah[5] - datah[6])<=33))
 			coef[m-1] = 1;
 		//type250
-		else if(datah[9]==1 && datah[10]==8 && datah[11] ==10 && datah[12]==12 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33))
+		else if(datah[10]==8 && datah[11] ==10 && datah[12]==12 && (std::abs(datah[5] - datah[6])<=33))
 			coef[m-1] = 1;
 		//type251
-		else if(datah[9]==1 && datah[10]==8 && datah[11] ==11 && datah[12]==11 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33))
+		else if(datah[10]==8 && datah[11] ==11 && datah[12]==11 && (std::abs(datah[5] - datah[6])<=33))
 			coef[m-1] = 1;
 		//type252
-		else if(datah[9]==1 && datah[10]==8 && datah[11] ==11 && datah[12]==12 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33))
+		else if(datah[10]==8 && datah[11] ==11 && datah[12]==12 && (std::abs(datah[5] - datah[6])<=33))
 			coef[m-1] = 1;
 		//type253
-		else if(datah[9]==1 && datah[10]==8 && datah[11] ==12 && datah[12]==12 && (datah[5] >= 17) && (abs(datah[5] - datah[6])<=33))
+		else if(datah[10]==8 && datah[11] ==12 && datah[12]==12 && (std::abs(datah[5] - datah[6])<=33))
 			coef[m-1] = 1;
 		//type254
-		else if(datah[9]==1 && datah[10]==9 && datah[11] ==9 && datah[12]==9 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30)  && ((datah[5] - datah[7])>=30) && (datah[5] - datah[8])>=30)
+		else if(datah[10]==9 && datah[11] ==9 && datah[12]==9 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30)  && ((datah[5] - datah[7])>=30) && (datah[5] - datah[8])>=30)
 			coef[m-1] = 1;
 		//type255
-		else if(datah[9]==1 && datah[10]==9 && datah[11] ==9 && datah[12]==10 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30)  && ((datah[5] - datah[7])>=30))
+		else if(datah[10]==9 && datah[11] ==9 && datah[12]==10 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30)  && ((datah[5] - datah[7])>=30))
 			coef[m-1] = 1;
 		//type256
-		else if(datah[9]==1 && datah[10]==9 && datah[11] ==9 && datah[12]==11 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30)  && ((datah[5] - datah[7])>=30))
+		else if(datah[10]==9 && datah[11] ==9 && datah[12]==11 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30)  && ((datah[5] - datah[7])>=30))
 			coef[m-1] = 1;
 		//type257
-		else if(datah[9]==1 && datah[10]==9 && datah[11] ==9 && datah[12]==12 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30)  && ((datah[5] - datah[7])>=30))
+		else if(datah[10]==9 && datah[11] ==9 && datah[12]==12 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30)  && ((datah[5] - datah[7])>=30))
 			coef[m-1] = 1;
 		//type258
-		else if(datah[9]==1 && datah[10]==9 && datah[11] ==10 && datah[12]==10 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30))
+		else if(datah[10]==9 && datah[11] ==10 && datah[12]==10 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30))
 			coef[m-1] = 1;
 		//type259
-		else if(datah[9]==1 && datah[10]==9 && datah[11] ==10 && datah[12]==11 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30))
+		else if(datah[10]==9 && datah[11] ==10 && datah[12]==11 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30))
 			coef[m-1] = 1;
 		//type260
-		else if(datah[9]==1 && datah[10]==9 && datah[11] ==10 && datah[12]==12 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30))
+		else if(datah[10]==9 && datah[11] ==10 && datah[12]==12 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30))
 			coef[m-1] = 1;
 		//type261
-		else if(datah[9]==1 && datah[10]==9 && datah[11] ==11 && datah[12]==11 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30))
+		else if(datah[10]==9 && datah[11] ==11 && datah[12]==11 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30))
 			coef[m-1] = 1;
 		//type262
-		else if(datah[9]==1 && datah[10]==9 && datah[11] ==11 && datah[12]==12 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30))
+		else if(datah[10]==9 && datah[11] ==11 && datah[12]==12 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30))
 			coef[m-1] = 1;
 		//type263
-		else if(datah[9]==1 && datah[10]==9 && datah[11] ==12 && datah[12]==12 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30))
+		else if(datah[10]==9 && datah[11] ==12 && datah[12]==12 && (datah[5] >= 33) && ((datah[5] - datah[6])>=30))
 			coef[m-1] = 1;
 		//type264
-		else if(datah[9]==1 && datah[10]==10 && datah[11] ==10 && datah[12]==10 && (datah[5] >= 17))
+		else if(datah[10]==10 && datah[11] ==10 && datah[12]==10)
 			coef[m-1] = 1;
 		//type265
-		else if(datah[9]==1 && datah[10]==10 && datah[11] ==10 && datah[12]==11 && (datah[5] >= 17))
+		else if(datah[10]==10 && datah[11] ==10 && datah[12]==11)
 			coef[m-1] = 1;
 		//type266
-		else if(datah[9]==1 && datah[10]==10 && datah[11] ==10 && datah[12]==12 && (datah[5] >= 17))
+		else if(datah[10]==10 && datah[11] ==10 && datah[12]==12)
 			coef[m-1] = 1;
 		//type267
-		else if(datah[9]==1 && datah[10]==10 && datah[11] ==11 && datah[12]==11 && (datah[5] >= 17))
+		else if(datah[10]==10 && datah[11] ==11 && datah[12]==11)
 			coef[m-1] = 1;
 		//type268
-		else if(datah[9]==1 && datah[10]==10 && datah[11] ==11 && datah[12]==12 && (datah[5] >= 17))
+		else if(datah[10]==10 && datah[11] ==11 && datah[12]==12)
 			coef[m-1] = 1;
 		//type269
-		else if(datah[9]==1 && datah[10]==10 && datah[11] ==12 && datah[12]==12 && (datah[5] >= 17))
+		else if(datah[10]==10 && datah[11] ==12 && datah[12]==12)
 			coef[m-1] = 1;
 		//type270
-		else if(datah[9]==1 && datah[10]==11 && datah[11] ==11 && datah[12]==11 && (datah[5] >= 17))
+		else if(datah[10]==11 && datah[11] ==11 && datah[12]==11)
 			coef[m-1] = 1;
 		//type271
-		else if(datah[9]==1 && datah[10]==11 && datah[11] ==11 && datah[12]==12 && (datah[5] >= 17))
+		else if(datah[10]==11 && datah[11] ==11 && datah[12]==12)
 			coef[m-1] = 1;
 		//type272
-		else if(datah[9]==1 && datah[10]==11 && datah[11] ==12 && datah[12]==12 && (datah[5] >= 17))
+		else if(datah[10]==11 && datah[11] ==12 && datah[12]==12)
 			coef[m-1] = 1;
 		//type273
-		else if(datah[9]==1 && datah[10]==12 && datah[11] ==12 && datah[12]==12 && (datah[5] >= 17))
+		else if(datah[10]==12 && datah[11] ==12 && datah[12]==12)
 			coef[m-1] = 1;
 		}
 		delete [] datah;

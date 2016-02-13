@@ -14,7 +14,7 @@ for i = 1:nrun
     newphi,dataT,w,K,L,p,maxd,z_HH_all,HHserial,ImpossibleIndividuals);
 
     %% update phi
-    [phi,phicountcluster,kcount] = UpdatePhi(data_full_all,K,L,p,d,maxd,...
+    [phi,phicountcluster,kcount,phicount] = UpdatePhi(data_full_all,K,L,p,d,maxd,...
         z_HH_Individuals_all,z_Individual_all,z_HH_all);
     
     %% update lambda
