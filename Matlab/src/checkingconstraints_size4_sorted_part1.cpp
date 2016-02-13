@@ -15,7 +15,6 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
 	double *coef = mxGetPr(plhs[0]);
 
 	double *datah = new double[13];
-
 	for (int m = 1; m <= number; m++){		
 
 		datah[1] = datah1[32*(m-1)+3-1]; //sex1
@@ -30,7 +29,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
 		datah[10] = datah1[32*(m-1)+15-1]; //relate2
 		datah[11] = datah1[32*(m-1)+23-1]; //relate3
 		datah[12] = datah1[32*(m-1)+31-1]; //relate4
-
+       
 		coef[m-1] = 0;
         if (!IsHead(datah[9], datah[5])) { continue; }
 		//type1
