@@ -24,32 +24,23 @@ function data_to_check = GenerateData2Check(hh_size,lambda1, lambda2, w, ...
             randomsample_new(lambda1mj,rand(cluster_count(i),1));
     end
     
-    syn = zeros(hh_size,p+1,10000);
     for hh = 1:hh_size
+        syn = zeros(10000,p);
         for j = 1:p
             group_index = (hhindexh-1)*L+data_to_check(:,hh_size * 8 +1 + hh);
             levelGroup = unique(group_index);
             groupCount = hist(group_index,levelGroup);
             for mg = 1: length(levelGroup)
                 phimj = phi(1:d(j),j,levelGroup(mg));
-                syn(hh,j,group_index == levelGroup(mg)) = ...
+                syn(group_index == levelGroup(mg),j) = ...
                     randomsample_new(phimj,rand(groupCount(mg),1));
             end
         end
-    end
         
-    for m=1:10000
-        syn(:,p+1,m) = synPlusOne(m);
-        syn_sorted = sortrows(syn(:,:,m),5);
-
-        for hh = 1:hh_size
-            data_to_check(m, (hh-1) * 8 + (3:8)) = syn_sorted(hh,:);    
-        end
-    end    
-    
-    for hh = 1:hh_size
+        data_to_check(:, (hh-1) * 8 + (3:7)) = syn; 
+        data_to_check(:,hh * 8) = synPlusOne;
         data_to_check(:,(hh-1) * 8 + 1) = (1:10000) + current_number_of_generation*10000;
-        data_to_check(:,(hh-1) * 8 + 2) = hh;   
+        data_to_check(:,(hh-1) * 8 + 2) = hh;  
     end
 end
 
