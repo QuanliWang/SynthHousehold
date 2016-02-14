@@ -189,11 +189,17 @@ for i = 1:nrun
            
            cumSS = cumsum(trueextras_SS);
            trueextras(1:cumSS(1),1) = 10001;
+           %
+           trueextras_ownership(1) = trueextras_HHdatafull(1);
+           z_HH_new(1) = trueextras_HH(1);
+           %added by Quanli to fix the first household
            for s=2:size_extras_size2_old+size_extras_size3_old+size_extras_size4_old
                 trueextras(cumSS(s-1)+1:cumSS(s),1) = s+10000;
                 trueextras_ownership(s) = trueextras_HHdatafull(cumSS(s));
                 z_HH_new(s) = trueextras_HH(cumSS(s));
            end
+           
+           
            data_full = [origdata(:,1:8);trueextras(:,1:8)];
            HHdata1 = [HHdataorig(:,1);trueextras_ownership];
            HHdata2 = [HHdataorig(:,2)-1;ones(size_extras_size2_old,1);2*ones(size_extras_size3_old,1);3*ones(size_extras_size4_old,1)];

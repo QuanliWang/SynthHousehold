@@ -2,4 +2,4 @@ profile on
 master
 profile viewer
 profile off
-profsave(profile('info'),'myprofile_results1')
+profsave(profile('info'),'myprofile_results2')
