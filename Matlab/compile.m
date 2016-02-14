@@ -8,11 +8,7 @@ cd src
 mex samplezHHwithHHnewv1_2HHvar.cpp
 mex samplezmemberv1.cpp
 mex randomsample.cpp
-%mex checkingconstraints_size2_sorted.cpp
-%mex checkingconstraints_size3_sorted.cpp
-%mex checkingconstraints_size4_sorted_part1.cpp
-%mex checkingconstraints_size4_sorted_part2.cpp
-%mex checkingconstraints_size4_sorted_part3.cpp
+mex randomsample_new.cpp
 mex checkingconstraints.cpp
 
 !mv *.mexmaci64 ../dist/.

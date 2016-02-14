@@ -1,3 +1,4 @@
+clear all
 init;
 
 for i = 1:nrun  
