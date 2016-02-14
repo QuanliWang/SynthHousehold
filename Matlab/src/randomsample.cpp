@@ -34,5 +34,4 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[])
     k = samplew(p,n,d);
     plhs[0] = mxCreateDoubleScalar(k);
 	
-    
 }
