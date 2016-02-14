@@ -61,17 +61,14 @@ lambda2out = zeros(eff.sam,K,dHH2);
 alpha=1;        % hyperparameters for stick-breaking weights
 beta=1;
 
-%initialize phi, rewrite as a 3D matrix to save space
-% from 94*5 * K * L to sum(d) * (K*L)
-% this will save 74% of space for this particular one
-phi=zeros(K*L,p,maxd);      % cell probabilities
+phi=zeros(maxd,p,K*L);      % cell probabilities
 for j=1:p
     for c=1:d(j)
-        phi(1,j,c)=sum(data(:,j)==c)/n_individuals;
+        phi(c,j,1)=sum(data(:,j)==c)/n_individuals;
     end
 end
 for count = 2:K*L
-    phi(count,:,:) = phi(1,:,:);
+    phi(:,:,count) = phi(:,:,1);
 end
 
 %initialize lambda

@@ -13,7 +13,7 @@ function data_to_check = GenerateData2Check(hh_size,lambda1, lambda2, w, ...
             data_to_check(m,hh_size * 8 +1 + hh) = memberindexhh;
             % generating individual level data
             for j = 1:p
-                phimj = reshape(phi((hhindexh-1)*L+memberindexhh,j,1:d(j)),1,d(j));
+                phimj = phi(1:d(j),j,(hhindexh-1)*L+memberindexhh);
                 syn(hh,j) = randomsample(phimj,rand);
             end
         end

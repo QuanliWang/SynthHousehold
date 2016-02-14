@@ -3,7 +3,7 @@ function [phi,phicountcluster,kcount,phicount] = UpdatePhi(data_full_all,K,L,p,d
     %%      
     % -- update phi-- %
     %tic;
-    phi=zeros(K*L,p,maxd);      % cell probabilities
+    phi=zeros(maxd,p,K*L);      % cell probabilities
     data = data_full_all(:,3:7);
     phicount = zeros(K*L,p,maxd);
     for m = 1:size(data,1)
@@ -21,7 +21,7 @@ function [phi,phicountcluster,kcount,phicount] = UpdatePhi(data_full_all,K,L,p,d
             for l = 1:L
                 phi1 = gamrnd(phicountp(L*(k-1)+l,1:d(j))+1,1); % variable j, z_HH k, z_member L
                 phi11 = bsxfun(@times,phi1(1:d(j)),1./sum(phi1(1:d(j))));
-                phi(L*(k-1)+l,j,1:d(j)) = phi11;
+                phi(1:d(j),j,L*(k-1)+l) = phi11;
             end
         end
     end
