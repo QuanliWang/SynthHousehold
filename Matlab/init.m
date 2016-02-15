@@ -32,6 +32,8 @@ dHH2 = 3;
 
 %nrun=10000; burn=8000; thin=10; %50;
 nrun=25; burn=20; thin=1;
+
+%nrun=1000; burn=800; thin=10; %50;
 eff.sam=(nrun-burn)/thin;
 
 K=40;                     
