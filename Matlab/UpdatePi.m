@@ -1,5 +1,5 @@
-function [pi,u] = UpdatePi(alpha,K,kcount)
-    %tic;
+function [pi,u] = UpdatePi(alpha,kcount)
+    K = length(kcount);
     u = zeros(K,1);
     pi = zeros(K,1);
     for k = 1:K-1

@@ -1,4 +1,5 @@
-function [w,v] = UpdateW(beta,K,L,phicountcluster)
+function [w,v] = UpdateW(beta,phicountcluster)
+    [K,L] = size(phicountcluster);
     v = zeros(K,L);
     w=zeros(K,L);
     for k = 1:K
