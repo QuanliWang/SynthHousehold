@@ -16,15 +16,17 @@ function [phi,phicountcluster,kcount] = UpdatePhi(data_full_all,K,L,p,d,maxd,...
         end        
     end
     
-    phicountcluster = zeros(K,L);
-    for k = 1:K
-        zh1 = (z_HH_Individuals_all==k);
-        for l = 1:L
-            zh2 = (z_Individual_all==l);
-            phicountcluster(k,l) = sum(zh1&zh2);
-        end
-    end
-
+%     phicountcluster = zeros(K,L);
+%     for k = 1:K
+%         zh1 = (z_HH_Individuals_all==k);
+%         for l = 1:L
+%             zh2 = (z_Individual_all==l);
+%             phicountcluster(k,l) = sum(zh1&zh2);
+%         end
+%     end
+    
+    phicountcluster = groupcount(z_HH_Individuals_all,z_Individual_all,K,L);
+    
     levelk = 1:K;
     kcount = sum(hist(z_HH_all,levelk),1);
 

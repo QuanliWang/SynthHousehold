@@ -2,7 +2,8 @@
 function [Individuals,HouseHolds] = GetExtraIndividualAndHousehold(...
     data_to_check_all,outcome_to_save,hh_size,ACS_count)
     %impossible household
-    extras_old2 = data_to_check_all(outcome_to_save==0,:);
+    extras_old2 = data_to_check_all(outcome_to_save==0 &...
+        data_to_check_all(:,1) > 0,:);
 
     %possible household
     possiblehh = data_to_check_all(outcome_to_save==1,1);
@@ -14,16 +15,10 @@ function [Individuals,HouseHolds] = GetExtraIndividualAndHousehold(...
     HouseHolds = extras_old2(extras_old2(:,1) < exceeding_index ...
         & extras_old2(:,1) >0,:);
      
-    extra_hh = size(HouseHolds,1);
-    Individuals = zeros(hh_size*extra_hh,8+2);
-    hh_index = hh_size * 8 + 1;
-    temp = 1:8;
-    for s = 1:extra_hh
-        ibase = hh_size*(s-1);
-        for hm = 1: hh_size
-            Individuals(ibase+hm,1:8) = HouseHolds(s, (hm-1)*8 + temp);
-            Individuals(ibase+hm,9) = HouseHolds(s,hh_index);
-            Individuals(ibase+hm,10)= HouseHolds(s,hh_index + hm);
-        end
-    end 
+    t1 = HouseHolds(:,1:hh_size * 8)';
+    t2 = HouseHolds(:,hh_size * 8 +1)';
+    t3 = HouseHolds(:,hh_size * 8 +1 + (1:hh_size))';
+    
+    Individuals = [reshape(t1,8,[])' reshape(repmat(t2,hh_size,1),[],1)...
+        reshape(t3,[],1)];
 end
