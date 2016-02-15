@@ -17,4 +17,3 @@ z_HH_save(i,1:n_individuals) = z_HH_Individuals_all(1:n_individuals);
 z_member_save(i,1:n_individuals) = z_Individual_all(1:n_individuals);
 alphaout(i) = alpha;
 betaout(i) = beta;
-disp('saving done'); 

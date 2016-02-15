@@ -15,8 +15,5 @@ function [z_Individual_all] = UpdateIndividualIndicator(n,n_individuals,...
     else
        z_Individual_all = [z_member;ImpossibleIndividuals(:,10)];
     end
-
-    %toc
-    disp('zmember updated');
 end
 

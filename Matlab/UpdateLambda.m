@@ -1,5 +1,4 @@
-function [lambda1,lambda2] = UpdateLambda(K,dHH1,dHH2,z_HH_all,HHdata1_all,HHdata2_all)
-    %tic;
+function [lambda1,lambda2] = UpdateLambda(dHH1,dHH2,K,z_HH_all,HHdata1_all,HHdata2_all)
     lambda1 = zeros(K,dHH1);
     lambda1count = zeros(K,dHH1);
     for k = 1:K
@@ -25,8 +24,5 @@ function [lambda1,lambda2] = UpdateLambda(K,dHH1,dHH2,z_HH_all,HHdata1_all,HHdat
         lam111 = bsxfun(@times,lam11(1:dHH2),1./sum(lam11(1:dHH2)));
         lambda2(k,1:dHH2) = lam111;
     end
-
-    %toc
-    disp('lambda updated');
 end
 

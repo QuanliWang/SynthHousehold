@@ -23,8 +23,5 @@ function [z_HH_all, z_HH_Individuals_all,newphi] = UpdateHouseholdIndicator(n,n_
     else
         z_HH_Individuals_all = [z_HH_Individuals;ImpossibleIndividuals(:,9)];
     end
-
-    
-    disp('zHH updated');
 end
 

@@ -19,19 +19,19 @@ for i = 1:nrun
         z_HH_Individuals_all,z_Individual_all,z_HH_all);
     
     %% update lambda
-    [lambda1,lambda2] = UpdateLambda(K,dHH1,dHH2,z_HH_all,HHdata1_all,HHdata2_all);
+    [lambda1,lambda2] = UpdateLambda(dHH1,dHH2,K,z_HH_all,HHdata1_all,HHdata2_all);
     
     %% update pi
-    [pi,u] = UpdatePi(K,kcount,alpha);
+    [pi,u] = UpdatePi(alpha,K,kcount);
         
     %% update w
-    [w,v] = UpdateW(K,L,phicountcluster,beta);
+    [w,v] = UpdateW(beta,K,L,phicountcluster);
      
     %% update alpha
     alpha = UpdateAlpha(aa,ab,K,u);
     
     %% update alpha
-    beta = UpdateBeta(K,L,v,ba,bb);
+    beta = UpdateBeta(ba,bb,K,L,v);
     
     %% generate impossible house hold
     [hh_size_new,ImpossibleIndividuals,data_full_all,z_HH_extra,HHdata1_all,HHdata2_all] = ...
