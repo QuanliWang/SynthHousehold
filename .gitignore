@@ -4,3 +4,5 @@
 *.mexmaci64
 
 R/SynthHousehold/SynthHousehold.Rproj
+
+*.m~
