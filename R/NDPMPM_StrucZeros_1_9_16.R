@@ -1,5 +1,6 @@
 #Fit the model
 #library(gtools)
+library(SynthHousehold)
 library(DirichletReg)
 library(matrixStats)
 library(coda)

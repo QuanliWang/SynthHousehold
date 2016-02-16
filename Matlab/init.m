@@ -1,8 +1,15 @@
 addpath dist
 
-n = 10000;
-[SS,origdata] = PrepareData(n);
-%dlmwrite('data.txt',origdata,'delimiter','\t');
+if exist('household.mat', 'file') == 2
+    disp('using existing data')
+    load household
+else
+    disp('random sampling new data')
+    n = 10000;
+    [SS,origdata] = PrepareData('Monica/ACShouseholddata_size234all.mat',n);
+    save household
+    %dlmwrite('data.txt',origdata,'delimiter','\t');
+end
 
 %%
 % variables: HHindex 1, pernum 2, sex 3, race 4, ethn 5, age 6, relate 7(ind level) ownership 8 (binary, HH level)

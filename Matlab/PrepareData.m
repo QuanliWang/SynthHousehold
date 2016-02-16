@@ -1,5 +1,5 @@
-function [SS,origdata00] = PrepareData(Household)
-    size234alldata = load('ACShouseholddata_size234all.mat');
+function [SS,origdata00] = PrepareData(file,Household)
+    size234alldata = load(file);
     newdata = size234alldata.newdata;
 
     HHindex = unique(newdata(:,1)); 
