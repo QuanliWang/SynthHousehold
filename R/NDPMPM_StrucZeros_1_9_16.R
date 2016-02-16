@@ -3,7 +3,6 @@
 library(DirichletReg)
 library(matrixStats)
 library(coda)
-#source("Rcpp_Struc_Zeros.R")
 
 X_house = read.csv("X_house.csv",header=TRUE)
 X_indiv = read.csv("X_indiv.csv",header=TRUE)

@@ -2,6 +2,7 @@ addpath dist
 
 n = 10000;
 [SS,origdata] = PrepareData(n);
+%dlmwrite('data.txt',origdata,'delimiter','\t');
 
 %%
 % variables: HHindex 1, pernum 2, sex 3, race 4, ethn 5, age 6, relate 7(ind level) ownership 8 (binary, HH level)
