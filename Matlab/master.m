@@ -4,22 +4,23 @@ init;
 for i = 1:nrun  
     
     tic;   
-    n_household_all = length(HHdata1_all); %total number of household 
+    n_household_all = size(HHdata_all,1); %total number of household 
     
     %% update zHH
-    [z_HH_all, z_HH_Individuals_all,newphi] = UpdateHouseholdIndicator(n,n_individuals,maxd,p, K,L,...
-    phi,dataT,SS,w,pi,HHdata1_all,lambda1,HHdata2_all,lambda2,ImpossibleIndividuals,z_HH_extra);
+    [z_HH_all, z_HH_Individuals_all,newphi] = UpdateHouseholdIndicator(...
+        orig.n,orig.n_individuals,orig.maxd,orig.p, K,L,...
+    phi,orig.dataT,orig.SS,w,pi,HHdata_all,lambda1,lambda2,ImpossibleIndividuals,z_HH_extra);
 
     %% update zmember
-    z_Individual_all = UpdateIndividualIndicator(n,n_individuals,...
-    newphi,dataT,w,K,L,p,maxd,z_HH_all,HHserial,ImpossibleIndividuals);
+    z_Individual_all = UpdateIndividualIndicator(orig.n,orig.n_individuals,...
+    newphi,orig.dataT,w,K,L,orig.p,orig.maxd,z_HH_all,orig.HHserial,ImpossibleIndividuals);
 
     %% update phi
-    [phi,phicountcluster,kcount] = UpdatePhi(data_full_all,K,L,p,d,maxd,...
+    [phi,phicountcluster,kcount] = UpdatePhi(data_full_all,K,L,orig.p,orig.d,orig.maxd,...
         z_HH_Individuals_all,z_Individual_all,z_HH_all);
     
     %% update lambda
-    [lambda1,lambda2] = UpdateLambda(dHH1,dHH2,K,z_HH_all,HHdata1_all,HHdata2_all);
+    [lambda1,lambda2] = UpdateLambda(dHH,K,z_HH_all,HHdata_all);
     
     %% update pi
     [pi,u] = UpdatePi(alpha,kcount);
@@ -34,9 +35,9 @@ for i = 1:nrun
     beta = UpdateBeta(ba,bb,v);
     
     %% generate impossible house hold
-    [hh_size_new,ImpossibleIndividuals,data_full_all,z_HH_extra,HHdata1_all,HHdata2_all] = ...
-    GetImpossibleHouseholds(lambda1,lambda2,w,phi,d,p,L, ACS_count,pi,...
-    origdata,HHdataorig);
+    [hh_size_new,ImpossibleIndividuals,data_full_all,z_HH_extra,HHdata_all] = ...
+    GetImpossibleHouseholds(lambda1,lambda2,w,phi,orig.d,orig.p,L, orig.ACS_count,pi,...
+    orig.origdata,orig.HHdataorig);
    
     postsave;
     

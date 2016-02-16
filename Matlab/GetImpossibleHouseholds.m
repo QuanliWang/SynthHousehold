@@ -1,4 +1,4 @@
-function [hh_size_new,ImpossibleIndividuals,data_full_all,z_HH_extra,HHdata1_all,HHdata2_all] = ...
+function [hh_size_new,ImpossibleIndividuals,data_full_all,z_HH_extra,HHdata_all] = ...
     GetImpossibleHouseholds(lambda1,lambda2,w,phi,d,p,L, ACS_count,pi,...
     origdata,HHdataorig)
     
@@ -21,8 +21,7 @@ function [hh_size_new,ImpossibleIndividuals,data_full_all,z_HH_extra,HHdata1_all
     hh_index = [];
     ImpossibleIndividuals = [];
     z_HH_extra = [];
-    HHdata1_all = HHdataorig(:,1);
-    HHdata2_all = HHdataorig(:,2)-1;
+    HHdata_all = HHdataorig; HHdata_all(:,2) = HHdata_all(:,2) - 1;
     for hh = 2:4
         hh_size_new(hh) = size(HouseHolds{hh},1); 
         hh_index = [hh_index; cumsize + reshape(repmat(1:hh_size_new(hh),hh,1),[],1)];
@@ -30,8 +29,8 @@ function [hh_size_new,ImpossibleIndividuals,data_full_all,z_HH_extra,HHdata1_all
         cumsize = cumsize + hh_size_new(hh);
         ImpossibleIndividuals = [ImpossibleIndividuals;Individuals{hh}];
         z_HH_extra = [z_HH_extra; current_household(:,hh * 8 + 1)];
-        HHdata1_all = [HHdata1_all; current_household(:,8)];
-        HHdata2_all = [HHdata2_all; ones(hh_size_new(hh),1) * (hh -1)];
+        
+        HHdata_all = [HHdata_all ; [current_household(:,8) ones(hh_size_new(hh),1) * (hh -1)]];
     end 
     ImpossibleIndividuals(:,1) = 10000 + hh_index;
     data_full_all = [origdata(:,1:8);ImpossibleIndividuals(:,1:8)];
