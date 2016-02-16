@@ -10,14 +10,7 @@ initInputData;
 nrun=25; burn=20; thin=1;
 eff.sam=(nrun-burn)/thin;
 
-
-% what are those?
-hyper.dHH = [2 3];
-
-hyper.K=40;                     
-hyper.L=15;
-hyper.aa=0.25; hyper.ab=0.25;                  % gamma hyperparameters for alpha
-hyper.ba=0.25; hyper.bb=0.25;
+initHyperParameters;
 
 %%%%---initial values---%%
 alpha=1;        % hyperparameters for stick-breaking weights
@@ -64,21 +57,4 @@ data_full_all = orig.origdata;
 
 ImpossibleIndividuals = [];z_HH_extra = [];
 
-
-%%%%---define output files---%%
-alphaout = zeros(nrun,1); 
-betaout = zeros(nrun,1);
-piout = zeros(eff.sam,hyper.K); 
-wout = zeros(eff.sam,hyper.K,hyper.L);
-nout = zeros(nrun,1);
-n_sout = zeros(nrun,1);
-
-extrasize = zeros(nrun,3);
-
-z_HH_save = zeros(nrun,orig.n_individuals);
-z_member_save = zeros(nrun,orig.n_individuals);
-elapsed_time = zeros(1,nrun);
-
-newphiout = zeros(eff.sam,orig.maxd*orig.p,hyper.K*hyper.L);
-lambda1out = zeros(eff.sam,hyper.K,hyper.dHH(1));
-lambda2out = zeros(eff.sam,hyper.K,hyper.dHH(2));
+initOutput;
