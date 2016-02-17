@@ -42,7 +42,21 @@ for i=1:hyper.K
 end
 clear v1
 
-%
-para.data_full_all = orig.origdata;
+para.z_HH= zeros(orig.n,1);                  %cluster indicators for household; K
+z_HH_prob = samplezHHwithHHnewv1_2HHvar(para.phi,orig.dataT,para.w,...
+    para.pi,orig.SS',hyper.K,hyper.L,orig.p,orig.maxd,orig.n,...
+    para.HHdata_all(:,1),para.lambda{1},para.HHdata_all(:,2),para.lambda{2});
+for h = 1:orig.n
+   zupdateprob_h = z_HH_prob(hyper.K*(h-1)+1:hyper.K*h);
+   para.z_HH(h) = randomsample(zupdateprob_h,rand);
+end
+para.z_HH_all = para.z_HH;
 
-para.ImpossibleIndividuals = [];para.z_HH_extra = [];
+para.z_HH_Individuals = zeros(orig.n_individuals,1);
+cumsumSS = [0 cumsum(orig.SS)];
+for h = 1:orig.n
+   para.z_HH_Individuals(cumsumSS(h)+1:cumsumSS(h+1)) = para.z_HH(h);
+end
+clear zupdateprob_h z_HH_prob cumsumSS h
+
+para.data_full_all = orig.origdata;

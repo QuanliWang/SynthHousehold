@@ -13,11 +13,6 @@ function [z_HH_all, z_HH_Individuals_all] = UpdateHouseholdIndicator(n,n_individ
     for h = 1:n
        z_HH_Individuals(cumsumSS(h)+1:cumsumSS(h+1)) = z_HH(h);
     end
-   
-    if isempty(ImpossibleIndividuals)
-        z_HH_Individuals_all = z_HH_Individuals;
-    else
-        z_HH_Individuals_all = [z_HH_Individuals;ImpossibleIndividuals(:,9)];
-    end
+    z_HH_Individuals_all = [z_HH_Individuals;ImpossibleIndividuals(:,9)];
 end
 

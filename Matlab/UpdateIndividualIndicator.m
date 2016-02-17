@@ -9,11 +9,6 @@ function [z_Individual_all] = UpdateIndividualIndicator(n,n_individuals,...
        zupdateprob_m = z_member_prob(L*(m-1)+1:L*m);
        z_member(m) = randomsample(zupdateprob_m,rand);
     end
-
-    if isempty(ImpossibleIndividuals)
-       z_Individual_all = z_member;
-    else
-       z_Individual_all = [z_member;ImpossibleIndividuals(:,10)];
-    end
+    z_Individual_all = [z_member;ImpossibleIndividuals(:,10)];
 end
 
