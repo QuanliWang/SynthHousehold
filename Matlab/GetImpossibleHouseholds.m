@@ -1,4 +1,4 @@
-function [hh_size_new,ImpossibleIndividuals,data_full_all,z_HH_extra,HHdata_all] = ...
+function [hh_size_new,HHdata_individual_extra,data_full_all,z_HH_extra,HHdata_all] = ...
     GetImpossibleHouseholds(lambda,w,phi,d,p,L, ACS_count,pi,...
     origdata,HHdataorig)
     
@@ -34,6 +34,6 @@ function [hh_size_new,ImpossibleIndividuals,data_full_all,z_HH_extra,HHdata_all]
     end 
     ImpossibleIndividuals(:,1) = 10000 + hh_index;
     data_full_all = [origdata(:,1:8);ImpossibleIndividuals(:,1:8)];
-    disp('synthesis updated');
+    HHdata_individual_extra = ImpossibleIndividuals(:,9:10);
 end
 
