@@ -15,7 +15,7 @@ function [phi,phicountcluster,kcount] = UpdatePhi(data_full_all,K,L,p,d,maxd,...
             end
         end        
     end
-
+    phi = reshape(phi,maxd*p, K * L); %reshape to a 2D matrix 
     phicountcluster = groupcount(z_HH_Individuals_all,z_Individual_all,K,L);
     
     levelk = 1:K;

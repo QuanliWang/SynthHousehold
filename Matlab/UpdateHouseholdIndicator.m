@@ -1,11 +1,7 @@
-function [z_HH_all, z_HH_Individuals_all,newphi] = UpdateHouseholdIndicator(n,n_individuals,maxd,p, K,L,...
+function [z_HH_all, z_HH_Individuals_all] = UpdateHouseholdIndicator(n,n_individuals,maxd,p, K,L,...
     phi,dataT,SS,w,pi,HHdata_all,lambda,ImpossibleIndividuals,z_HH_extra)
     z_HH= zeros(n,1);                  %cluster indicators for household; K
-   
-    %%% to work in C++, consider make phi into a 2-d matrix maxd*p-by-K*L
-    newphi = reshape(phi, maxd * p, K * L); %don't really need this. !!!
-    
-    z_HH_prob = samplezHHwithHHnewv1_2HHvar(newphi,dataT,w,pi,SS',K,L,p,maxd,n,HHdata_all(1:n,1),lambda{1},HHdata_all(1:n,2),lambda{2});
+    z_HH_prob = samplezHHwithHHnewv1_2HHvar(phi,dataT,w,pi,SS',K,L,p,maxd,n,HHdata_all(1:n,1),lambda{1},HHdata_all(1:n,2),lambda{2});
     for h = 1:n
        zupdateprob_h = z_HH_prob(K*(h-1)+1:K*h);
        z_HH(h) = randomsample(zupdateprob_h,rand);

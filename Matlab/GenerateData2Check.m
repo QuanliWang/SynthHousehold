@@ -7,7 +7,7 @@ function data_to_check = GenerateData2Check(hh_size,lambda, w, ...
     pi_size_renorm = pi_size./sum(pi_size);
     hhindexh = randomsample_new(pi_size_renorm,rand(10000,1));
     data_to_check(:,hh_size * 8 + 1) = hhindexh;
-    
+    phi = reshape(phi,[],p,size(phi,2));
     %memberindexhh
     %do random samples for the same probs at the same time
     levelhh = unique(hhindexh);

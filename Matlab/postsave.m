@@ -2,7 +2,7 @@
 if (mod(i,mc.thin) == 0 && i > mc.burn) 
    output.piout((i-mc.burn)/mc.thin,:) = para.pi';
    output.wout((i-mc.burn)/mc.thin,:,:) = para.w;
-   output.newphiout((i-mc.burn)/mc.thin,:,:) = para.newphi;
+   output.newphiout((i-mc.burn)/mc.thin,:,:) = para.phi;
    output.lambda1out((i-mc.burn)/mc.thin,:,:) = para.lambda{1};
    output.lambda2out((i-mc.burn)/mc.thin,:,:) = para.lambda{2};
 end
