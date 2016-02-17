@@ -1,7 +1,7 @@
 clear all
 init;
 
-for i = 1:nrun  
+for i = 1:mc.nrun  
     
     tic;   
     n_household_all = size(HHdata_all,1); %total number of household 

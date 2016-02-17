@@ -1,10 +1,10 @@
  %%    
-if (mod(i,thin) == 0 && i > burn) 
-   output.piout((i-burn)/thin,:) = pi';
-   output.wout((i-burn)/thin,:,:) = w;
-   output.newphiout((i-burn)/thin,:,:) = newphi;
-   output.lambda1out((i-burn)/thin,:,:) = lambda1;
-   output.lambda2out((i-burn)/thin,:,:) = lambda2;
+if (mod(i,mc.thin) == 0 && i > mc.burn) 
+   output.piout((i-mc.burn)/mc.thin,:) = pi';
+   output.wout((i-mc.burn)/mc.thin,:,:) = w;
+   output.newphiout((i-mc.burn)/mc.thin,:,:) = newphi;
+   output.lambda1out((i-mc.burn)/mc.thin,:,:) = lambda1;
+   output.lambda2out((i-mc.burn)/mc.thin,:,:) = lambda2;
 end
 i
 n_household_all
