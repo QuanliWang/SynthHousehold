@@ -1,5 +1,5 @@
-function [w,v] = UpdateW(beta,phicountcluster)
-    [K,L] = size(phicountcluster);
+function [w,v] = UpdateW(beta,z_Individual_all, K, L)
+    phicountcluster = groupcount(z_Individual_all(:,1),z_Individual_all(:,2),K,L);
     v = zeros(K,L);
     w=zeros(K,L);
     for k = 1:K

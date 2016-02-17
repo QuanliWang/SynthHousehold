@@ -1,5 +1,7 @@
-function [pi,u] = UpdatePi(alpha,kcount)
-    K = length(kcount);
+function [pi,u] = UpdatePi(alpha,z_HH_all,K)
+    levelk = 1:K;
+    kcount = sum(hist(z_HH_all,levelk),1);
+    
     u = zeros(K,1);
     pi = zeros(K,1);
     for k = 1:K-1

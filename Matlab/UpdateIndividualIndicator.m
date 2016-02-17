@@ -1,4 +1,5 @@
-function z_Individuals = UpdateIndividualIndicator(phi,dataT,w,K,L,p,maxd,z_HH,HHserial)
+function z_Individuals = UpdateIndividualIndicator(p,maxd,dataT,HHserial,...
+    K,L,z_HH,phi,w)
     n_individuals = size(dataT,2);
     %% update zmember
     %%% to work in C++
