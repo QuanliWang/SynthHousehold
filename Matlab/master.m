@@ -18,14 +18,16 @@ for i = 1:mc.nrun
     GetImpossibleHouseholds(para.lambda,para.w,para.phi,orig.d,orig.p,hyper.L, orig.ACS_count,para.pi,...
     orig.origdata,orig.HHdataorig);
     
+    %% combine data and indicators
     para.z_HH_all = [z_HH;z_HH_extra];
     para.z_HH_Individuals_all = [z_HH_Individuals;z_Individual_extra(:,1)];  
     para.z_Individual_all = [z_Individuals;z_Individual_extra(:,2)];
+    clear z_HH z_HH_extra z_Individuals z_HH_Individuals z_Individual_extra
     
     %% update phi
-    [para.phi,para.phicountcluster,para.kcount] = UpdatePhi(para.IndividualData_all,...
+    [para.phi,para.phicountcluster,para.kcount] = UpdatePhi(...
         hyper.K,hyper.L,orig.p,orig.d,orig.maxd,...
-        para.z_HH_Individuals_all,para.z_Individual_all,para.z_HH_all);
+        para.IndividualData_all,para.z_Individual_all,para.z_HH_all,para.z_HH_Individuals_all);
     
      %% update lambda
     [para.lambda] = UpdateLambda(hyper.dHH,hyper.K,para.z_HH_all,para.HHdata_all);

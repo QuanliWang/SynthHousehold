@@ -17,20 +17,20 @@ function [HHdata_individual_extra,z_HH_extra,data_full_all,HHdata_all,hh_size_ne
     
     %%    
     cumsize = 0;
-    hh_size_new= zeros(4,1);
+    hh_size_new= zeros(3,1);
     hh_index = [];
     ImpossibleIndividuals = [];
     z_HH_extra = [];
     HHdata_all = HHdataorig; HHdata_all(:,2) = HHdata_all(:,2) - 1;
     for hh = 2:4
-        hh_size_new(hh) = size(HouseHolds{hh},1); 
-        hh_index = [hh_index; cumsize + reshape(repmat(1:hh_size_new(hh),hh,1),[],1)];
+        hh_size_new(hh-1) = size(HouseHolds{hh},1); 
+        hh_index = [hh_index; cumsize + reshape(repmat(1:hh_size_new(hh-1),hh,1),[],1)];
         current_household = HouseHolds{hh};
-        cumsize = cumsize + hh_size_new(hh);
+        cumsize = cumsize + hh_size_new(hh-1);
         ImpossibleIndividuals = [ImpossibleIndividuals;Individuals{hh}];
         z_HH_extra = [z_HH_extra; current_household(:,hh * 8 + 1)];
         
-        HHdata_all = [HHdata_all ; [current_household(:,8) ones(hh_size_new(hh),1) * (hh -1)]];
+        HHdata_all = [HHdata_all ; [current_household(:,8) ones(hh_size_new(hh-1),1) * (hh -1)]];
     end 
     ImpossibleIndividuals(:,1) = 10000 + hh_index;
     data_full_all = [origdata(:,1:8);ImpossibleIndividuals(:,1:8)];

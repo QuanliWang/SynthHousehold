@@ -1,8 +1,8 @@
-function [phi,phicountcluster,kcount] = UpdatePhi(data_full_all,K,L,p,d,maxd,...
-    z_HH_Individuals_all,z_Individual_all,z_HH_all)
+function [phi,phicountcluster,kcount] = UpdatePhi(K,L,p,d,maxd,...
+    IndividualData_all, z_Individual_all,z_HH_all,z_HH_Individuals_all)
 
     phi=zeros(maxd,p,K*L);      % cell probabilities
-    data = data_full_all(:,3:7);
+    data = IndividualData_all(:,3:7);
        
     groupIndex = L*(z_HH_Individuals_all-1)+z_Individual_all;
     for j = 1:p
