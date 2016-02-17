@@ -1,7 +1,8 @@
-function data_to_check = GenerateData2Check(hh_size,lambda1, lambda2, w, ...
+function data_to_check = GenerateData2Check(hh_size,lambda, w, ...
     phi,pi, d, p, current_number_of_generation,L)
 
     data_to_check = zeros(10000,8*hh_size+1+hh_size);
+    lambda2 = lambda{2};
     pi_size = pi.*lambda2(:,hh_size-1);
     pi_size_renorm = pi_size./sum(pi_size);
     hhindexh = randomsample_new(pi_size_renorm,rand(10000,1));
@@ -13,6 +14,7 @@ function data_to_check = GenerateData2Check(hh_size,lambda1, lambda2, w, ...
     synPlusOne = zeros(10000,1);
     
     cluster_count = hist(hhindexh,levelhh);
+    lambda1 = lambda{1};
     for i = 1:length(levelhh)
         memberindexhh = randomsample_new(w(levelhh(i),:),rand(hh_size*cluster_count(i),1));
         data_to_check(hhindexh == levelhh(i),hh_size * 8 +1 + (1:hh_size))=...
