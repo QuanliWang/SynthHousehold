@@ -1,43 +1,54 @@
 clear all
 init;
 
-for i = 1:nrun  
+for i = 1:mc.nrun  
     
     tic;   
-    n_household_all = length(HHdata1_all); %total number of household 
+     %% update zHH
+    [z_HH_Individuals,z_HH] = UpdateHouseholdIndicator(...
+        orig.n,orig.n_individuals,orig.maxd,orig.p, orig.dataT,orig.SS,...
+        hyper.K,hyper.L,...
+        para.phi,para.w,para.pi,para.HHdata_all(1:orig.n,:),para.lambda);
+
+    %% update zIndividual
+    z_Individuals = UpdateIndividualIndicator(orig.p,orig.maxd,orig.dataT,...
+        orig.HHserial, hyper.K,hyper.L,z_HH,para.phi,para.w);
+ 
+    %% generate impossible house hold
+    [z_Individual_extra,z_HH_extra,IndividualData_extra,HHdata_extra,para.hh_size_new] = ...
+    GetImpossibleHouseholds(orig.d,orig.ACS_count,...
+                            para.lambda,para.w,para.phi, para.pi);
     
-    %% update zHH
-    [z_HH_all, z_HH_Individuals_all,newphi] = UpdateHouseholdIndicator(n,n_individuals,maxd,p, K,L,...
-    phi,dataT,SS,w,pi,HHdata1_all,lambda1,HHdata2_all,lambda2,ImpossibleIndividuals,z_HH_extra);
-
-    %% update zmember
-    z_Individual_all = UpdateIndividualIndicator(n,n_individuals,...
-    newphi,dataT,w,K,L,p,maxd,z_HH_all,HHserial,ImpossibleIndividuals);
-
+    %% combine data and indicators
+    para.z_HH_all = [z_HH;z_HH_extra];
+    para.HHdata_all = orig.HHdataorig; para.HHdata_all(:,2) = para.HHdata_all(:,2) - 1;
+    para.HHdata_all = [para.HHdata_all;HHdata_extra];
+    para.IndividualData_all = [orig.origdata(:,1:8);IndividualData_extra(:,1:8)];
+    %column 1 for K groups and column 2 for L groups
+    para.z_Individual_all = [[z_HH_Individuals;z_Individual_extra(:,1)]...
+                               [z_Individuals;z_Individual_extra(:,2)]];
+                           
+    clear z_HH z_HH_extra z_Individuals z_HH_Individuals z_Individual_extra IndividualData_extra HHdata_extra
+    
     %% update phi
-    [phi,phicountcluster,kcount] = UpdatePhi(data_full_all,K,L,p,d,maxd,...
-        z_HH_Individuals_all,z_Individual_all,z_HH_all);
+    para.phi = UpdatePhi(hyper.K,hyper.L,orig.p,orig.d,orig.maxd,...
+                para.IndividualData_all,para.z_Individual_all);
     
-    %% update lambda
-    [lambda1,lambda2] = UpdateLambda(K,dHH1,dHH2,z_HH_all,HHdata1_all,HHdata2_all);
+     %% update lambda
+    [para.lambda] = UpdateLambda(hyper.dHH,hyper.K,para.z_HH_all,para.HHdata_all);
     
-    %% update pi
-    [pi,u] = UpdatePi(K,kcount,alpha);
+     %% update pi
+    [para.pi,para.u] = UpdatePi(para.alpha,para.z_HH_all,hyper.K);
         
     %% update w
-    [w,v] = UpdateW(K,L,phicountcluster,beta);
-     
-    %% update alpha
-    alpha = UpdateAlpha(aa,ab,K,u);
+    [para.w,para.v] = UpdateW(para.beta,para.z_Individual_all, hyper.K, hyper.L);
     
-    %% update alpha
-    beta = UpdateBeta(K,L,v,ba,bb);
+     %% update alpha
+    para.alpha = UpdateAlpha(hyper.aa,hyper.ab,para.u);
     
-    %% generate impossible house hold
-    [hh_size_new,ImpossibleIndividuals,data_full_all,z_HH_extra,HHdata1_all,HHdata2_all] = ...
-    GetImpossibleHouseholds(lambda1,lambda2,w,phi,d,p,L, ACS_count,pi,...
-    origdata,HHdataorig);
-   
+    %% update beta
+    para.beta = UpdateBeta(hyper.ba,hyper.bb,para.v);
+    
     postsave;
     
 end

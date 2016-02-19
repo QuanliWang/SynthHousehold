@@ -1,5 +1,7 @@
-function [pi,u] = UpdatePi(K,kcount,alpha)
-    %tic;
+function [pi,u] = UpdatePi(alpha,z_HH_all,K)
+    levelk = 1:K;
+    kcount = sum(hist(z_HH_all,levelk),1);
+    
     u = zeros(K,1);
     pi = zeros(K,1);
     for k = 1:K-1
@@ -11,8 +13,5 @@ function [pi,u] = UpdatePi(K,kcount,alpha)
     u(K) = 1;
 
     pi(1:K)=u.*cumprod([1;1-u(1:K-1)]);
-
-    %toc
-    disp('pi updated');
 end
 

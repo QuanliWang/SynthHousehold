@@ -1,5 +1,5 @@
-function [w,v] = UpdateW(K,L,phicountcluster,beta)
-    %tic;
+function [w,v] = UpdateW(beta,z_Individual_all, K, L)
+    phicountcluster = groupcount(z_Individual_all(:,1),z_Individual_all(:,2),K,L);
     v = zeros(K,L);
     w=zeros(K,L);
     for k = 1:K
@@ -14,7 +14,5 @@ function [w,v] = UpdateW(K,L,phicountcluster,beta)
         v(k,:) = vk;
         w(k,1:L) = vk.*cumprod([1,1-vk(1:L-1)]);
     end
-    %toc
-    disp('w updated');
 end
 

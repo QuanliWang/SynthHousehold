@@ -1,10 +1,9 @@
-function [phi,phicountcluster,kcount] = UpdatePhi(data_full_all,K,L,p,d,maxd,...
-    z_HH_Individuals_all,z_Individual_all,z_HH_all)
+function phi = UpdatePhi(K,L,p,d,maxd, IndividualData_all, z_Individual_all)
 
     phi=zeros(maxd,p,K*L);      % cell probabilities
-    data = data_full_all(:,3:7);
+    data = IndividualData_all(:,3:7);
        
-    groupIndex = L*(z_HH_Individuals_all-1)+z_Individual_all;
+    groupIndex = L*(z_Individual_all(:,1)-1)+z_Individual_all(:,2);
     for j = 1:p
         phicount = groupcount(groupIndex,data(:,j),K*L, d(j));
         for k = 1:K
@@ -15,21 +14,6 @@ function [phi,phicountcluster,kcount] = UpdatePhi(data_full_all,K,L,p,d,maxd,...
             end
         end        
     end
-    
-%     phicountcluster = zeros(K,L);
-%     for k = 1:K
-%         zh1 = (z_HH_Individuals_all==k);
-%         for l = 1:L
-%             zh2 = (z_Individual_all==l);
-%             phicountcluster(k,l) = sum(zh1&zh2);
-%         end
-%     end
-    
-    phicountcluster = groupcount(z_HH_Individuals_all,z_Individual_all,K,L);
-    
-    levelk = 1:K;
-    kcount = sum(hist(z_HH_all,levelk),1);
-
-    disp('phi updated');
+    phi = reshape(phi,maxd*p, K * L); %reshape to a 2D matrix 
 end
 

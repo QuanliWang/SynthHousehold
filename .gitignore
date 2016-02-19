@@ -6,3 +6,7 @@
 R/SynthHousehold/SynthHousehold.Rproj
 
 *.m~
+
+*.o
+
+*.so

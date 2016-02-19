@@ -1,20 +1,19 @@
  %%    
-if (mod(i,thin) == 0 && i > burn) 
-   piout((i-burn)/thin,:) = pi';
-   wout((i-burn)/thin,:,:) = w;
-   newphiout((i-burn)/thin,:,:) = newphi;
-   lambda1out((i-burn)/thin,:,:) = lambda1;
-   lambda2out((i-burn)/thin,:,:) = lambda2;
+if (mod(i,mc.thin) == 0 && i > mc.burn) 
+   output.piout((i-mc.burn)/mc.thin,:) = para.pi';
+   output.wout((i-mc.burn)/mc.thin,:,:) = para.w;
+   output.newphiout((i-mc.burn)/mc.thin,:,:) = para.phi;
+   output.lambda1out((i-mc.burn)/mc.thin,:,:) = para.lambda{1};
+   output.lambda2out((i-mc.burn)/mc.thin,:,:) = para.lambda{2};
 end
 i
-n_household_all
+total_household = size(para.HHdata_all,1)
 toc
-elapsed_time(i) = toc;
-n_sout(i) = size(data_full_all,1);
-nout(i) = n_household_all;
-extrasize(i,:) = hh_size_new(2:4);
-z_HH_save(i,1:n_individuals) = z_HH_Individuals_all(1:n_individuals);
-z_member_save(i,1:n_individuals) = z_Individual_all(1:n_individuals);
-alphaout(i) = alpha;
-betaout(i) = beta;
-disp('saving done'); 
+output.elapsed_time(i) = toc;
+output.n_sout(i) = size(para.IndividualData_all,1);
+output.nout(i) = total_household;
+output.extrasize(i,:) = para.hh_size_new;
+output.z_HH_save(i,:) = para.z_Individual_all(1:orig.n_individuals,1);
+output.z_member_save(i,:) =para. z_Individual_all(1:orig.n_individuals,2);
+output.alphaout(i) = para.alpha;
+output.betaout(i) = para.beta;

@@ -5,6 +5,98 @@
 
 using namespace Rcpp;
 
+// prGpostFunc
+NumericMatrix prGpostFunc(NumericMatrix phi_index, NumericMatrix lambda_index, NumericMatrix phi, NumericMatrix lambda, NumericMatrix omega, NumericVector pii, int FF, int SS, NumericVector cn_i);
+RcppExport SEXP SynthHousehold_prGpostFunc(SEXP phi_indexSEXP, SEXP lambda_indexSEXP, SEXP phiSEXP, SEXP lambdaSEXP, SEXP omegaSEXP, SEXP piiSEXP, SEXP FFSEXP, SEXP SSSEXP, SEXP cn_iSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type phi_index(phi_indexSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type lambda_index(lambda_indexSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type phi(phiSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type omega(omegaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type pii(piiSEXP);
+    Rcpp::traits::input_parameter< int >::type FF(FFSEXP);
+    Rcpp::traits::input_parameter< int >::type SS(SSSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type cn_i(cn_iSEXP);
+    __result = Rcpp::wrap(prGpostFunc(phi_index, lambda_index, phi, lambda, omega, pii, FF, SS, cn_i));
+    return __result;
+END_RCPP
+}
+// prMpostFunc
+NumericMatrix prMpostFunc(NumericMatrix phi_index, NumericMatrix phi, NumericMatrix omega, NumericVector rep_G, int FF, int SS);
+RcppExport SEXP SynthHousehold_prMpostFunc(SEXP phi_indexSEXP, SEXP phiSEXP, SEXP omegaSEXP, SEXP rep_GSEXP, SEXP FFSEXP, SEXP SSSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type phi_index(phi_indexSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type phi(phiSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type omega(omegaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type rep_G(rep_GSEXP);
+    Rcpp::traits::input_parameter< int >::type FF(FFSEXP);
+    Rcpp::traits::input_parameter< int >::type SS(SSSEXP);
+    __result = Rcpp::wrap(prMpostFunc(phi_index, phi, omega, rep_G, FF, SS));
+    return __result;
+END_RCPP
+}
+// prEachComb02Func
+NumericVector prEachComb02Func(NumericMatrix phi_index_02, NumericMatrix lambda_index_02, NumericMatrix phi, NumericMatrix lambda, NumericMatrix omega, NumericVector pii, int FF, int SS, NumericVector cn_i_02);
+RcppExport SEXP SynthHousehold_prEachComb02Func(SEXP phi_index_02SEXP, SEXP lambda_index_02SEXP, SEXP phiSEXP, SEXP lambdaSEXP, SEXP omegaSEXP, SEXP piiSEXP, SEXP FFSEXP, SEXP SSSEXP, SEXP cn_i_02SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type phi_index_02(phi_index_02SEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type lambda_index_02(lambda_index_02SEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type phi(phiSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type omega(omegaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type pii(piiSEXP);
+    Rcpp::traits::input_parameter< int >::type FF(FFSEXP);
+    Rcpp::traits::input_parameter< int >::type SS(SSSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type cn_i_02(cn_i_02SEXP);
+    __result = Rcpp::wrap(prEachComb02Func(phi_index_02, lambda_index_02, phi, lambda, omega, pii, FF, SS, cn_i_02));
+    return __result;
+END_RCPP
+}
+// prGpost02Func
+NumericMatrix prGpost02Func(NumericMatrix phi_index_02, NumericMatrix lambda_index_02, NumericMatrix phi, NumericMatrix lambda, NumericMatrix omega, NumericVector pii, int FF, int SS, NumericVector cn_i_02);
+RcppExport SEXP SynthHousehold_prGpost02Func(SEXP phi_index_02SEXP, SEXP lambda_index_02SEXP, SEXP phiSEXP, SEXP lambdaSEXP, SEXP omegaSEXP, SEXP piiSEXP, SEXP FFSEXP, SEXP SSSEXP, SEXP cn_i_02SEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type phi_index_02(phi_index_02SEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type lambda_index_02(lambda_index_02SEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type phi(phiSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type omega(omegaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type pii(piiSEXP);
+    Rcpp::traits::input_parameter< int >::type FF(FFSEXP);
+    Rcpp::traits::input_parameter< int >::type SS(SSSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type cn_i_02(cn_i_02SEXP);
+    __result = Rcpp::wrap(prGpost02Func(phi_index_02, lambda_index_02, phi, lambda, omega, pii, FF, SS, cn_i_02));
+    return __result;
+END_RCPP
+}
+// sampleXMiss02Func
+NumericMatrix sampleXMiss02Func(NumericMatrix lambda_index_house_miss_02, NumericMatrix phi_index_struc_zero_pass_02, NumericMatrix lambda, NumericVector pii, NumericMatrix phi, NumericMatrix omega, NumericVector G_X_miss_02, NumericVector M_X_miss_02, int FF);
+RcppExport SEXP SynthHousehold_sampleXMiss02Func(SEXP lambda_index_house_miss_02SEXP, SEXP phi_index_struc_zero_pass_02SEXP, SEXP lambdaSEXP, SEXP piiSEXP, SEXP phiSEXP, SEXP omegaSEXP, SEXP G_X_miss_02SEXP, SEXP M_X_miss_02SEXP, SEXP FFSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type lambda_index_house_miss_02(lambda_index_house_miss_02SEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type phi_index_struc_zero_pass_02(phi_index_struc_zero_pass_02SEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type pii(piiSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type phi(phiSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type omega(omegaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type G_X_miss_02(G_X_miss_02SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type M_X_miss_02(M_X_miss_02SEXP);
+    Rcpp::traits::input_parameter< int >::type FF(FFSEXP);
+    __result = Rcpp::wrap(sampleXMiss02Func(lambda_index_house_miss_02, phi_index_struc_zero_pass_02, lambda, pii, phi, omega, G_X_miss_02, M_X_miss_02, FF));
+    return __result;
+END_RCPP
+}
 // rcpp_hello
 List rcpp_hello();
 RcppExport SEXP SynthHousehold_rcpp_hello() {
