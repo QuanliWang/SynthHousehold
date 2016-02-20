@@ -1,7 +1,5 @@
 #include "mex.h"
 #include "sampleW.cpp"
-
-
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 	/* pointers to input matrices/vectors */
 	const double* const newphi = mxGetPr(prhs[0]); // pointer to newphi
@@ -9,11 +7,10 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 	const double* const w = mxGetPr(prhs[2]); // pointer to w
 	const double* const pi = mxGetPr(prhs[3]); // pointer to pi
 	const double* const S = mxGetPr(prhs[4]); // pointer to S
-    const double* const HHdata1 = mxGetPr(prhs[5]); // pointer to HHdata1
+    const double* const HHdata = mxGetPr(prhs[5]); // pointer to HHdata1
     const double* const lambda1 = mxGetPr(prhs[6]); // pointer to lambda1
-    const double* const HHdata2 = mxGetPr(prhs[7]); // pointer to HHdata2
-    const double* const lambda2 = mxGetPr(prhs[8]); // pointer to lambda2
-    const double* const rand = mxGetPr(prhs[9]); // pointer to random number
+    const double* const lambda2 = mxGetPr(prhs[7]); // pointer to lambda2
+    const double* const rand = mxGetPr(prhs[8]); // pointer to random number
     
     const int p = (int)mxGetM(prhs[1]);
     const int nIndividuals = (int)mxGetN(prhs[1]); // number of individuals
@@ -40,8 +37,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 	}
 	int maxDDtP = maxdd*p;
 	for (int h = 0; h < n; h++) {
-		int HHdata_base1 = (HHdata1[h]-1)*K;
-		int HHdata_base2 = (HHdata2[h]-1)*K;
+		int HHdata_base1 = (HHdata[h]-1)*K;
+		int HHdata_base2 = (HHdata[h+n]-1)*K;
 		for (int k=0; k < K; k++) {
 			double zupdateprod = 1.0;
 			for (int memberindex=0; memberindex < S[h]; memberindex++){
