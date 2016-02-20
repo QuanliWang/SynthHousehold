@@ -1,6 +1,6 @@
 #include "mex.h"
 #include <vector>
-#include "matrix.h"
+
 
 //copy from randomsample.cpp for now.
 int samplew(double *p, int n, double d) {

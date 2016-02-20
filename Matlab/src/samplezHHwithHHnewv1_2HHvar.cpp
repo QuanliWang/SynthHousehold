@@ -1,4 +1,25 @@
 #include "mex.h"
+//copy from randomsample.cpp for now.
+int samplew(double *p, int n, double d) {
+    double dsum;
+    int i,k;
+    dsum = 0;
+    double *myw;
+    myw = new double[n];
+    for (i = 0; i < n;i++) {
+        dsum+=p[i];
+    }
+    myw[0] = p[0] / dsum;
+    for (i = 1; i < n;i++) {
+        myw[i] = p[i] / dsum + myw[i-1];
+    }
+    
+    for(k=0;k < n && d>myw[k];k++)
+        ;
+    delete [] myw;
+    return k+1;
+}
+
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 	/* pointers to input matrices/vectors */
@@ -7,18 +28,28 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 	const double* const w = mxGetPr(prhs[2]); // pointer to w
 	const double* const pi = mxGetPr(prhs[3]); // pointer to pi
 	const double* const S = mxGetPr(prhs[4]); // pointer to S
-	const int K = (int)mxGetScalar(prhs[5]);
-	const int L = (int)mxGetScalar(prhs[6]);
-	const int p = (int)mxGetScalar(prhs[7]);
-	const int maxdd = (int)mxGetScalar(prhs[8]);
-	const int n = (int)mxGetScalar(prhs[9]);
-	const double* const HHdata1 = mxGetPr(prhs[10]); // pointer to HHdata1
-	const double* const lambda1 = mxGetPr(prhs[11]); // pointer to lambda1
-	const double* const HHdata2 = mxGetPr(prhs[12]); // pointer to HHdata2
-	const double* const lambda2 = mxGetPr(prhs[13]); // pointer to lambda2
+    const double* const HHdata1 = mxGetPr(prhs[5]); // pointer to HHdata1
+    const double* const lambda1 = mxGetPr(prhs[6]); // pointer to lambda1
+    const double* const HHdata2 = mxGetPr(prhs[7]); // pointer to HHdata2
+    const double* const lambda2 = mxGetPr(prhs[8]); // pointer to lambda2
+    const double* const rand = mxGetPr(prhs[9]); // pointer to random number
+    
+    const int p = (int)mxGetM(prhs[1]);
+    const int nIndividuals = (int)mxGetN(prhs[1]); // number of individuals
+    const int K = (int)mxGetM(prhs[2]);
+    const int L = (int)mxGetN(prhs[2]);
+    const int maxdd =(int) mxGetM(prhs[0]) / p;
+    const int n = (int)mxGetNumberOfElements(prhs[4]);
+    
+    //mexPrintf("K = %d, L = %d, p = %d, maxd = %d, nIndividuals = %d, n=%d\n", K, L, p, maxdd, nIndividuals,n);
+
 	
-	plhs[0] = mxCreateDoubleMatrix(n*K, 1, mxREAL);
-	double *coef = mxGetPr(plhs[0]);
+	plhs[0] = mxCreateDoubleMatrix(n, 1, mxREAL);
+    plhs[1] = mxCreateDoubleMatrix(nIndividuals, 1, mxREAL);
+    
+    int count = 0;
+	double *group = mxGetPr(plhs[0]);
+    double *indi = mxGetPr(plhs[1]);
 
 	double *zupdateprob1 = new double[K];
 	int *cumS = new int[n];
@@ -30,17 +61,17 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 	for (int h = 0; h < n; h++) {
 		int HHdata_base1 = (HHdata1[h]-1)*K;
 		int HHdata_base2 = (HHdata2[h]-1)*K;
-		double updatesum = 0.0;
 		for (int k=0; k < K; k++) {
 			double zupdateprod = 1.0;
 			for (int memberindex=0; memberindex < S[h]; memberindex++){
-				int base = (cumS[h]+memberindex)*p;
+				int base = (cumS[h]+memberindex)*p; //base for data
 				double add = 0.0;
 				for (int l=0; l < L; l++) {
 					double phiprod = 1.0;
+                    int phi_base = (int)(maxDDtP*(k*L+l));
 					for (int j=0; j < p; j++) {
 						int u = (int)data[base+j]-1;
-						phiprod *= newphi[maxDDtP*(k*L+l)+j*maxdd+u];
+						phiprod *= newphi[phi_base+j*maxdd+u];
 					}
 					add += w[K*l+k]*phiprod;
 				} // closing l++
@@ -50,12 +81,11 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
 			zupdateprod *= lambda2[HHdata_base2+k];
 
 			zupdateprob1[k] = pi[k]*zupdateprod;
-			updatesum += zupdateprob1[k];
 		} // closing k++
-		
-		for (int k=0; k < K; k++){
-			*coef++ = zupdateprob1[k]/updatesum;
-		}
+        group[h] = samplew(zupdateprob1, K, rand[h]);
+        for (int m=0; m < S[h];m++) {
+            indi[count++] = group[h];
+        }
 	}
 	delete [] cumS;
 	delete [] zupdateprob1;
