@@ -11,9 +11,8 @@ for i = 1:mc.nrun
         para.phi,para.w,para.pi,para.HHdata_all(1:orig.n,:),para.lambda);
 
     %% update zIndividual
-    z_Individuals = UpdateIndividualIndicator(orig.p,orig.maxd,orig.dataT,...
-        orig.HHserial, hyper.K,hyper.L,z_HH,para.phi,para.w);
- 
+    z_Individuals = samplezmemberv1(para.phi,orig.dataT,para.w,z_HH,orig.HHserial,rand(size(orig.dataT,2),1));
+    
     %% generate impossible house hold
     [z_Individual_extra,z_HH_extra,IndividualData_extra,HHdata_extra,para.hh_size_new] = ...
     GetImpossibleHouseholds(orig.d,orig.ACS_count,...

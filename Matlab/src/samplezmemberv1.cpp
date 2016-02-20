@@ -1,40 +1,61 @@
 #include "mex.h"
 #include <vector>
+#include "matrix.h"
+
+//copy from randomsample.cpp for now.
+int samplew(double *p, int n, double d) {
+    double dsum;
+    int i,k;
+    dsum = 0;
+    double *myw;
+    myw = new double[n];
+    for (i = 0; i < n;i++) {
+        dsum+=p[i];
+    }
+    myw[0] = p[0] / dsum;
+    for (i = 1; i < n;i++) {
+        myw[i] = p[i] / dsum + myw[i-1];
+    }
+    
+    for(k=0;k < n && d>myw[k];k++)
+        ;
+    delete [] myw;
+    return k+1;
+}
 
 void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
+    
+    /* pointers to input matrices/vectors */
+    const double* const newphi = mxGetPr(prhs[0]); // pointer to newphi
+    const double* const data = mxGetPr(prhs[1]); // pointer to data (transposed)
+    const double* const w = mxGetPr(prhs[2]); // pointer to w
 
-	/* pointers to input matrices/vectors */
-	const double* const newphi = mxGetPr(prhs[0]); // pointer to newphi
-	const double* const data = mxGetPr(prhs[1]); // pointer to data (transposed)
-	const double* const w = mxGetPr(prhs[2]); // pointer to w
-	const int K = (int)mxGetScalar(prhs[3]);
-	const int L = (int)mxGetScalar(prhs[4]);
-	const int p = (int)mxGetScalar(prhs[5]);
-	const int maxdd = (int)mxGetScalar(prhs[6]);
-	const int n_s = (int)mxGetScalar(prhs[7]);
-	const double* const zHH = mxGetPr(prhs[8]); // pointer to HHdata
-	const double* const serial = mxGetPr(prhs[9]); // pointer to lambda
-	
-	plhs[0] = mxCreateDoubleMatrix(n_s*L, 1, mxREAL);
-	double *coef = mxGetPr(plhs[0]);
-	int maxDDtp = maxdd*p;
-	double *zupdateprob2= new double[L];
-	for (int m = 0; m < n_s; m++) {
-		int zHHasg = zHH[int(serial[m])-1];
-		int base = m*p;
-		double updatesum = 0.0;
-		for (int l = 0; l < L; l++) {
-			double phiprod = 1.0;
-			for (int j = 0; j < p; j++) {
-				int u = (int)data[base+j]-1;
-				phiprod *= newphi[maxDDtp*((zHHasg-1)*L+l)+j*maxdd+u];
-				}
-				zupdateprob2[l] = w[K*l+zHHasg-1]*phiprod;
-				updatesum += zupdateprob2[l];
-		}
-		for (int l = 0; l < L; l++){
-			*coef++ = zupdateprob2[l]/updatesum;
-		}
-	}
-	delete [] zupdateprob2;
+    const double* const zHH = mxGetPr(prhs[3]); // pointer to HHdata
+    const double* const serial = mxGetPr(prhs[4]); // pointer to lambda
+    const double* const rand = mxGetPr(prhs[5]); // pointer to random number
+    const int nIndividuals = mxGetNumberOfElements(prhs[4]); // number of individuals
+    const int K = (int)mxGetM(prhs[2]);
+    const int L = (int)mxGetN(prhs[2]);
+    const int p = (int)mxGetM(prhs[1]);
+    const int maxdd =(int) mxGetM(prhs[0]) / p;
+    //mexPrintf("K = %d, L = %d, p = %d, maxd = %d, nIndividuals = %d\n", K, L, p, maxdd, nIndividuals);
+    plhs[0] = mxCreateDoubleMatrix(nIndividuals, 1, mxREAL);
+    double *group = mxGetPr(plhs[0]);
+    int maxDDtp = maxdd*p;
+    double *zupdateprob2= new double[L];
+    for (int m = 0; m < nIndividuals; m++) {
+        int zHHasg = zHH[int(serial[m])-1];
+        int base = m*p;
+        double updatesum = 0.0;
+        for (int l = 0; l < L; l++) {
+            double phiprod = 1.0;
+            for (int j = 0; j < p; j++) {
+                int u = (int)data[base+j]-1;
+                phiprod *= newphi[maxDDtp*((zHHasg-1)*L+l)+j*maxdd+u];
+            }
+            zupdateprob2[l] = w[K*l+zHHasg-1]*phiprod;
+        }
+        group[m] = samplew(zupdateprob2, L, rand[m]);
+    }
+    delete [] zupdateprob2;
 }

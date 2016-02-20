@@ -3,14 +3,13 @@ function [HHdata_individual_extra,z_HH_extra,IndividualData_extra,HHdata_extra,h
     L = size(w,2); %get 
     p = length(d);
     %%
-    list_size = [0 150000 500000 5000000];
     Individuals = cell(4,1);
     HouseHolds =cell(4,1);
     cum_number_of_generation = 0;
     for hh_size = 2:4
         [Individuals{hh_size},HouseHolds{hh_size}, cum_number_of_generation] = ...
             GenerateData2Check_all(hh_size,lambda, w, ...
-            phi,pi, d, p, cum_number_of_generation,L,ACS_count, list_size(hh_size)); 
+            phi,pi, d, p, cum_number_of_generation,L,ACS_count); 
     end
     
     %%    

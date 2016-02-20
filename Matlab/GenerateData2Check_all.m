@@ -1,6 +1,6 @@
 function [Individuals_all,HouseHolds_all, number_of_generation] = ...
     GenerateData2Check_all(hh_size,lambda, w, ...
-    phi,pi, d, p, cum_number_of_generation,L,ACS_count,newxtras)
+    phi,pi, d, p, cum_number_of_generation,L,ACS_count)
     
     Individuals_all = [];
     HouseHolds_all = [];
