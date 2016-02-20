@@ -13,8 +13,7 @@ for i = 1:mc.nrun
     
     %% generate impossible house hold
     [z_Individual_extra,z_HH_extra,IndividualData_extra,HHdata_extra,para.hh_size_new] = ...
-    GetImpossibleHouseholds(orig.d,orig.ACS_count,...
-                            para.lambda,para.w,para.phi, para.pi);
+    GetImpossibleHouseholds(orig.d,orig.ACS_count,para.lambda,para.w, para.phi,para.pi);
     
     %% combine data and indicators
     para.z_HH_all = [z_HH;z_HH_extra];
