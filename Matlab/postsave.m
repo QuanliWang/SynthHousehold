@@ -10,7 +10,7 @@ i
 total_household = size(para.HHdata_all,1)
 toc
 output.elapsed_time(i) = toc;
-output.n_sout(i) = size(para.IndividualData_all,1);
+%output.n_sout(i) = size(para.IndividualData_all,1);
 output.nout(i) = total_household;
 output.extrasize(i,:) = para.hh_size_new;
 output.z_HH_save(i,:) = para.z_Individual_all(1:orig.n_individuals,1);

@@ -1,9 +1,9 @@
-function [Individuals_all,HouseHolds_all, number_of_generation] = ...
-    GenerateData2Check_all(hh_size,lambda, w, ...
+function [Individuals_extra,HouseHolds_extra, number_of_generation] = ...
+    GenerateData(hh_size,lambda, w, ...
     phi,pi, d, p, cum_number_of_generation,L,ACS_count)
     
-    Individuals_all = [];
-    HouseHolds_all = [];
+    Individuals_extra = [];
+    HouseHolds_extra = [];
     number_of_generation = 0;
     n_possible_household = 0;
     while (n_possible_household< ACS_count(hh_size-1))
@@ -39,8 +39,8 @@ function [Individuals_all,HouseHolds_all, number_of_generation] = ...
         Individuals = [reshape(t1,8,[])' reshape(repmat(t2,hh_size,1),[],1)...
             reshape(t3,[],1)];
     
-        Individuals_all = [Individuals_all; Individuals];
-        HouseHolds_all = [HouseHolds_all;HouseHolds];
+        Individuals_extra = [Individuals_extra; Individuals];
+        HouseHolds_extra = [HouseHolds_extra;HouseHolds];
         
     end
     
