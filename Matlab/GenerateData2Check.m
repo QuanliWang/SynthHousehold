@@ -1,7 +1,8 @@
 function data_to_check = GenerateData2Check(hh_size,lambda, w, ...
-    phi,pi, d, p, current_number_of_generation,L)
-
+    phi,pi, d, p, current_number_of_generation)
+    L = size(w,2);
     data_to_check = zeros(10000,8*hh_size+1+hh_size);
+    
     %no need to normalize it as it is cared in randomsample_new function
     hhindexh = randomsample_new(pi.*lambda{2}(:,hh_size-1),rand(10000,1));
     data_to_check(:,hh_size * 8 + 1) = hhindexh;

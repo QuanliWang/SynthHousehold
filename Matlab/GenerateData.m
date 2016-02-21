@@ -1,6 +1,6 @@
 function [Individuals_extra,HouseHolds_extra, number_of_generation] = ...
     GenerateData(hh_size,lambda, w, ...
-    phi,pi, d, p, cum_number_of_generation,L,ACS_count)
+    phi,pi, d, p, cum_number_of_generation,ACS_count)
     
     Individuals_extra = [];
     HouseHolds_extra = [];
@@ -11,7 +11,7 @@ function [Individuals_extra,HouseHolds_extra, number_of_generation] = ...
         
         %generate a batch of 10K household
         data_to_check = GenerateData2Check(hh_size,lambda, w, ...
-            phi,pi, d, p, number_of_generation+cum_number_of_generation, L);
+            phi,pi, d, p, number_of_generation+cum_number_of_generation);
         
         % transpose the data to check
         data_to_checkT = data_to_check(:,1:(hh_size*8))';   
