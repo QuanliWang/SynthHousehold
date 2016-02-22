@@ -1,6 +1,6 @@
 clear all
 init;
-WithIndividual = true;
+
 
 for i = 1:mc.nrun  
     
@@ -12,11 +12,10 @@ for i = 1:mc.nrun
     %% update zIndividual
     z_Individuals = samplezmemberv1(para.phi,orig.dataT,para.w,z_HH,orig.HHserial,rand(size(orig.dataT,2),1));
     
-    
-    if WithIndividual
+
         %% generate impossible house hold
         [z_Individual_extra,z_HH_extra,IndividualData_extra,HHdata_extra,para.hh_size_new] = ...
-        GetImpossibleHouseholds(orig.d,orig.ACS_count,para.lambda,para.w, para.phi,para.pi);
+        GetImpossibleHouseholds(orig.d,orig.ACS_count,para.lambda,para.w, para.phi,para.pi,hyper.howmany,orig.n);
     
         %% combine data and indicators
         para.z_HH_all = [z_HH;z_HH_extra];
@@ -33,29 +32,7 @@ for i = 1:mc.nrun
                     para.IndividualData_all,para.z_Individual_all);
         %% update w
         [para.w,para.v] = UpdateW(para.beta,para.z_Individual_all, hyper.K, hyper.L);
-    else
-        %% generate impossible house hold
-        [z_Individual_extra,z_HH_extra,HHdata_extra,picount_extra,para.hh_size_new] = ...
-        GetImpossibleHouseholds2(orig.d,orig.ACS_count,para.lambda,para.w, para.phi,para.pi);
-    
-        %% combine data and indicators
-        para.z_HH_all = [z_HH;z_HH_extra];
-        
-        para.HHdata_all = orig.HHdataorig; para.HHdata_all(:,2) = para.HHdata_all(:,2) - 1;
-        para.HHdata_all = [para.HHdata_all;HHdata_extra];
-        
-        %column 1 for K groups and column 2 for L groups
-        z_Indicators = [z_HH_Individuals z_Individuals];
-        para.z_Individual_all = [z_Indicators;z_Individual_extra];
-
-        clear z_HH z_HH_extra z_Individuals z_HH_Individuals HHdata_extra
-
-        %% update phi
-        para.phi = UpdatePhi2(hyper.K,hyper.L,orig.p,orig.d,orig.maxd,...
-            orig.origdata(:,1:8),z_Indicators,picount_extra);
-        %% update w
-        [para.w,para.v] = UpdateW(para.beta,para.z_Individual_all, hyper.K, hyper.L);
-    end
+  
     
      %% update lambda
     [para.lambda] = UpdateLambda(hyper.dHH,hyper.K,para.z_HH_all,para.HHdata_all);

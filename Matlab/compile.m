@@ -5,6 +5,7 @@ else
 end
 
 cd src 
+mex sampleindividuals.cpp
 mex samplezHHwithHHnewv1_2HHvar.cpp
 mex samplezmemberv1.cpp
 mex randomsample.cpp
