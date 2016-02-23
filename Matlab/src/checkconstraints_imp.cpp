@@ -184,7 +184,7 @@ inline bool IsValidGrandChild(double *record, int hhsize, int spouse, int head) 
 }
 
 
-double isValid(double *datah, int hh_size) {
+int isValid(double *datah, int hh_size) {
     
     //mexPrintf("check head 0\n");
     int head = GetHead(datah,hh_size);
@@ -216,8 +216,9 @@ double isValid(double *datah, int hh_size) {
     
 }
 
-void checkconstraints(double *data, double *isPossible,int hh_size, int nHouseholds) {
+int checkconstraints(double *data, int *isPossible,int hh_size, int nHouseholds) {
     
+    int totalpossible = 0;
     double *datah = new double[hh_size * 3 + 1];
     //column 3, 6, 7 = sex, age and relte
     int column[COL]; column[0] = 3; column[1] = 6; column[2] = 7;
@@ -229,7 +230,9 @@ void checkconstraints(double *data, double *isPossible,int hh_size, int nHouseho
             }
         }
 		isPossible[m-1] = isValid(datah, hh_size);
+        totalpossible+= isPossible[m-1];
 	}
     
 	delete [] datah;
+    return totalpossible;
 }

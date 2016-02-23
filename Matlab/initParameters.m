@@ -6,7 +6,7 @@ para.phi=zeros(orig.maxd*orig.p,hyper.K*hyper.L);      % cell probabilities
 phi_1 = zeros(orig.maxd,orig.p);
 for i=1:orig.p
     for j=1:orig.d(i)
-        phi_1(j,i)=sum(orig.data(:,i)==j)/orig.n_individuals;
+        phi_1(j,i)=sum(orig.dataT(i,:)==j)/orig.n_individuals;
     end
 end
 para.phi(:,1) = reshape(phi_1,orig.maxd*orig.p,1);

@@ -15,32 +15,25 @@ function [Individuals_extra,HouseHolds_extra, number_of_generation] = ...
         data_to_check = samplehouseholds(phi,w, pi, d, ...
             lambda{1},lambda{2},number_of_generation+cum_number_of_generation, howmany,hh_size,rn);
 
-        outcome = checkconstraints(data_to_check);
-        possible = sum(outcome);
-        
         %impossible household
-        HouseHolds = data_to_check(outcome==0,:);
-
+        [Households, Index] = checkconstraints(data_to_check);
+        possible = howmany - size(Households,1);
         if ((n_possible_household + possible) >= possiblehhcount) 
-            %possible household
-            possiblehh = data_to_check(outcome==1,1);
-            %find the number possiblehhcount'th possible household 
-            exceeding_index = possiblehh(possiblehhcount - n_possible_household,1);
-            %Get all the impossible households we need
-            HouseHolds = HouseHolds(HouseHolds(:,1) < exceeding_index,:);
+            Households = Households(1:Index(possiblehhcount - n_possible_household),:);
+            
         end
         n_possible_household = n_possible_household + possible;
          
-        t1 = HouseHolds(:,1:hh_size * 8)';
-        t2 = HouseHolds(:,hh_size * 8 +1)';
-        t3 = HouseHolds(:,hh_size * 8 +1 + (1:hh_size))';
+        t1 = Households(:,1:hh_size * 8)';
+        t2 = Households(:,hh_size * 8 +1)';
+        t3 = Households(:,hh_size * 8 +1 + (1:hh_size))';
         
         
         Individuals = [reshape(t1,8,[])' reshape(repmat(t2,hh_size,1),[],1)...
             reshape(t3,[],1)];
     
         Individuals_extra = [Individuals_extra; Individuals];
-        HouseHolds_extra = [HouseHolds_extra;HouseHolds];
+        HouseHolds_extra = [HouseHolds_extra;Households];
         
     end
     
