@@ -1,9 +1,10 @@
-function [Individuals_extra,HouseHolds_extra, number_of_generation] = ...
+function [Individuals_extra,z_HH_extra_size, HHData_extra_size, number_of_generation] = ...
     GenerateData(hh_size,lambda, w, ...
     phi,pi, d, cum_number_of_generation,possiblehhcount,howmany)
     
     Individuals_extra = [];
-    HouseHolds_extra = [];
+    z_HH_extra_size = [];
+    HHData_extra_size = [];
     number_of_generation = 0;
     n_possible_household = 0;
     p = length(d);
@@ -33,7 +34,8 @@ function [Individuals_extra,HouseHolds_extra, number_of_generation] = ...
             reshape(t3,[],1)];
     
         Individuals_extra = [Individuals_extra; Individuals];
-        HouseHolds_extra = [HouseHolds_extra;Households];
+        z_HH_extra_size = [z_HH_extra_size  t2];
+        HHData_extra_size = [HHData_extra_size Households(:,8)'];
         
     end
     

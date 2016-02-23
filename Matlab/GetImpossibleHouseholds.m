@@ -13,16 +13,16 @@ function [HHdata_individual_extra,z_HH_extra,IndividualData_extra,HHdata_extra,h
     %%
     cum_number_of_generation = 0;
     for hh_size = 2:4
-        [Individuals,HouseHolds, cum_number_of_generation] = ...
+        [Individuals,z_HH_extra_size, HHData_extra_size, cum_number_of_generation] = ...
             GenerateData(hh_size,lambda, w, ...
             phi,pi, d, cum_number_of_generation,ACS_count(hh_size -1),howmany); 
         
-        hh_size_new(hh_size-1) = size(HouseHolds,1); 
+        hh_size_new(hh_size-1) = length(z_HH_extra_size); 
         hh_index = [hh_index; cumsize + reshape(repmat(1:hh_size_new(hh_size-1),hh_size,1),[],1)];
         cumsize = cumsize + hh_size_new(hh_size-1);
         ImpossibleIndividuals = [ImpossibleIndividuals;Individuals];
-        z_HH_extra = [z_HH_extra; HouseHolds(:,hh_size * 8 + 1)];
-        HHdata_extra = [HHdata_extra ; [HouseHolds(:,8) ones(hh_size_new(hh_size-1),1) * (hh_size -1)]];
+        z_HH_extra = [z_HH_extra z_HH_extra_size];
+        HHdata_extra = [HHdata_extra [HHData_extra_size; ones(1,hh_size_new(hh_size-1)) * (hh_size -1)]];
         
     end
     

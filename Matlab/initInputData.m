@@ -15,7 +15,7 @@ orig.origdata = origdata;
 orig.SS = SS;
 orig.n = length(orig.SS);
 HHrowIndex = [1 cumsum(orig.SS)+1]; 
-orig.HHdataorig = orig.origdata(HHrowIndex(1: (end -1)),8:9);
+orig.HHdataorigT = orig.origdata(HHrowIndex(1: (end -1)),8:9)';
 orig.HHserial = orig.origdata(:,1);
 clear origdata SS n desc HHrowIndex
 
