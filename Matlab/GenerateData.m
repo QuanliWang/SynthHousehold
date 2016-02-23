@@ -1,13 +1,13 @@
 function [Individuals_extra,HouseHolds_extra, number_of_generation] = ...
     GenerateData(hh_size,lambda, w, ...
-    phi,pi, d, cum_number_of_generation,ACS_count,howmany)
+    phi,pi, d, cum_number_of_generation,possiblehhcount,howmany)
     
     Individuals_extra = [];
     HouseHolds_extra = [];
     number_of_generation = 0;
     n_possible_household = 0;
     p = length(d);
-    while (n_possible_household< ACS_count(hh_size-1))
+    while (n_possible_household< possiblehhcount)
         number_of_generation = number_of_generation + 1;
         
         %generate a batch of 10K household
@@ -21,11 +21,11 @@ function [Individuals_extra,HouseHolds_extra, number_of_generation] = ...
         %impossible household
         HouseHolds = data_to_check(outcome==0,:);
 
-        if ((n_possible_household + possible) >= ACS_count(hh_size-1)) 
+        if ((n_possible_household + possible) >= possiblehhcount) 
             %possible household
             possiblehh = data_to_check(outcome==1,1);
-            %find the number ACS_count(hh_size-1)'th possible household 
-            exceeding_index = possiblehh(ACS_count(hh_size-1) - n_possible_household,1);
+            %find the number possiblehhcount'th possible household 
+            exceeding_index = possiblehh(possiblehhcount - n_possible_household,1);
             %Get all the impossible households we need
             HouseHolds = HouseHolds(HouseHolds(:,1) < exceeding_index,:);
         end
