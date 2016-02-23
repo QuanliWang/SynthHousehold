@@ -10,7 +10,7 @@ mex samplehouseholds.cpp
 mex samplezmemberv1.cpp
 mex randomsample.cpp
 mex randomsample_new.cpp
-mex checkingconstraints.cpp
+mex checkconstraints.cpp
 mex groupcount.cpp
 
 !mv *.mexmaci64 ../dist/.

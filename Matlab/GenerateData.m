@@ -15,7 +15,7 @@ function [Individuals_extra,HouseHolds_extra, number_of_generation] = ...
         data_to_check = samplehouseholds(phi,w, pi, d, ...
             lambda{1},lambda{2},number_of_generation+cum_number_of_generation, howmany,hh_size,rn);
 
-        outcome = checkingconstraints(data_to_check);
+        outcome = checkconstraints(data_to_check);
         possible = sum(outcome);
         
         %impossible household
