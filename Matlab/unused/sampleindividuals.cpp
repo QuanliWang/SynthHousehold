@@ -48,7 +48,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
     double** ps = new double*[p];
     for (int i = 0; i < p; i++) {
         int currentd = (int)d[i];
-        ps[i] = new double[currentd*nIndividuals];
+        ps[i] = new double[currentd*groups];
         
         double* currentp = ps[i];
         for (int j = 0; j <groups; j++) { //for each group/cluster

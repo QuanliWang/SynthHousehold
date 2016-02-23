@@ -15,7 +15,7 @@ function [HHdata_individual_extra,z_HH_extra,IndividualData_extra,HHdata_extra,h
     for hh_size = 2:4
         [Individuals,HouseHolds, cum_number_of_generation] = ...
             GenerateData(hh_size,lambda, w, ...
-            phi,pi, d, p, cum_number_of_generation,ACS_count,howmany); 
+            phi,pi, d, cum_number_of_generation,ACS_count,howmany); 
         
         hh_size_new(hh_size-1) = size(HouseHolds,1); 
         hh_index = [hh_index; cumsize + reshape(repmat(1:hh_size_new(hh_size-1),hh_size,1),[],1)];

@@ -1,18 +1,20 @@
 function [Individuals_extra,HouseHolds_extra, number_of_generation] = ...
     GenerateData(hh_size,lambda, w, ...
-    phi,pi, d, p, cum_number_of_generation,ACS_count,howmany)
+    phi,pi, d, cum_number_of_generation,ACS_count,howmany)
     
     Individuals_extra = [];
     HouseHolds_extra = [];
     number_of_generation = 0;
     n_possible_household = 0;
+    p = length(d);
     while (n_possible_household< ACS_count(hh_size-1))
         number_of_generation = number_of_generation + 1;
         
         %generate a batch of 10K household
-        data_to_check = GenerateData2Check(hh_size,lambda, w, ...
-            phi,pi, d, p, number_of_generation+cum_number_of_generation,howmany);
-        
+        rn = rand(howmany,hh_size *(1+p) + 2); %the exact number of random numbers needed
+        data_to_check = samplehouseholds(phi,w, pi, d, ...
+            lambda{1},lambda{2},number_of_generation+cum_number_of_generation, howmany,hh_size,rn);
+
         outcome = checkingconstraints(data_to_check);
         possible = sum(outcome);
         
