@@ -22,8 +22,8 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]) {
     //mexPrintf("K = %d, L = %d, p = %d, maxd = %d, nIndividuals = %d, n=%d\n", K, L, p, maxdd, nIndividuals,n);
 
 	
-	plhs[0] = mxCreateDoubleMatrix(n, 1, mxREAL);
-    plhs[1] = mxCreateDoubleMatrix(nIndividuals, 1, mxREAL);
+	plhs[0] = mxCreateDoubleMatrix(1, n, mxREAL);
+    plhs[1] = mxCreateDoubleMatrix(1,nIndividuals, mxREAL);
     
     int count = 0;
 	double *group = mxGetPr(plhs[0]);

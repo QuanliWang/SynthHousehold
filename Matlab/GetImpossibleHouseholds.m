@@ -20,15 +20,15 @@ function [HHdata_individual_extra,z_HH_extra,IndividualData_extra,HHdata_extra,h
         hh_size_new(hh_size-1) = length(z_HH_extra_size); 
         hh_index = [hh_index; cumsize + reshape(repmat(1:hh_size_new(hh_size-1),hh_size,1),[],1)];
         cumsize = cumsize + hh_size_new(hh_size-1);
-        ImpossibleIndividuals = [ImpossibleIndividuals;Individuals];
+        ImpossibleIndividuals = [ImpossibleIndividuals Individuals];
         z_HH_extra = [z_HH_extra z_HH_extra_size];
         HHdata_extra = [HHdata_extra [HHData_extra_size; ones(1,hh_size_new(hh_size-1)) * (hh_size -1)]];
         
     end
     
     %%    
-    ImpossibleIndividuals(:,1) = n + hh_index;
-    IndividualData_extra = ImpossibleIndividuals(:,1:8);
-    HHdata_individual_extra = ImpossibleIndividuals(:,9:10);
+    ImpossibleIndividuals(1,:) = n + hh_index;
+    IndividualData_extra = ImpossibleIndividuals(1:8,:);
+    HHdata_individual_extra = ImpossibleIndividuals(9:10,:);
 end
 

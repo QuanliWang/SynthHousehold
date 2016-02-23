@@ -1,11 +1,11 @@
 function phi = UpdatePhi(K,L,p,d,maxd, IndividualData_all, z_Individual_all)
 
     phi=zeros(maxd,p,K*L);      % cell probabilities
-    data = IndividualData_all(:,3:7);
+    data = IndividualData_all(3:7,:);
     
-    groupIndex = L*(z_Individual_all(:,1)-1)+z_Individual_all(:,2);
+    groupIndex = L*(z_Individual_all(1,:)-1)+z_Individual_all(2,:);
     for j = 1:p
-        phicount = groupcount(groupIndex,data(:,j),K*L, d(j));
+        phicount = groupcount(groupIndex,data(j,:),K*L, d(j));
         
         Phi_j = gamrnd(phicount + 1, 1);
         sumPhi_j = sum(Phi_j,2);

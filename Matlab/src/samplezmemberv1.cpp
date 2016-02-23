@@ -18,7 +18,7 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
     const int p = (int)mxGetM(prhs[1]);
     const int maxdd =(int) mxGetM(prhs[0]) / p;
     //mexPrintf("K = %d, L = %d, p = %d, maxd = %d, nIndividuals = %d\n", K, L, p, maxdd, nIndividuals);
-    plhs[0] = mxCreateDoubleMatrix(nIndividuals, 1, mxREAL);
+    plhs[0] = mxCreateDoubleMatrix(1,nIndividuals, mxREAL);
     double *group = mxGetPr(plhs[0]);
     int maxDDtp = maxdd*p;
     double *zupdateprob2= new double[L];
