@@ -17,12 +17,7 @@ function [Individuals_extra,z_HH_extra_size, HHData_extra_size, number_of_genera
             lambda{1},lambda{2},number_of_generation+cum_number_of_generation, howmany,hh_size,rn);
 
         %impossible household
-        [Households, Index] = checkconstraints(data_to_check,1);
-        possible = howmany - size(Households,2);
-        if ((n_possible_household + possible) >= possiblehhcount) 
-            Households = Households(:,1:Index(possiblehhcount - n_possible_household));
-            
-        end
+        [Households, Index, possible] = checkconstraints(data_to_check,possiblehhcount-n_possible_household);
         n_possible_household = n_possible_household + possible;
          
         t1 = Households(1:hh_size * 8,:);
