@@ -51,5 +51,9 @@ for i = 1:mc.nrun
     
     postsave;
     
+%    if mod(i,1000) == 0
+%        save -v7.3 last;
+%     end
 end
    
+

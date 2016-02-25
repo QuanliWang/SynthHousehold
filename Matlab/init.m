@@ -5,9 +5,10 @@ initInputData;
 
 %%
 %%%%---global parameters---%%
-%nrun=10000; burn=8000; thin=10; %50;
-%nrun=1000; burn=800; thin=10; %50;
-mc.nrun=25; mc.burn=20; mc.thin=1;
+%mc.nrun=10000; mc.burn=8000; mc.thin=10;   %long
+%mc.nrun=1000; mc.burn=800; mc.thin=10;     %mediun
+mc.nrun=25; mc.burn=20; mc.thin=1;          %short
+
 mc.eff.sam=(mc.nrun-mc.burn)/mc.thin;
 
 initHyperParameters;

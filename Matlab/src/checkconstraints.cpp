@@ -10,15 +10,18 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
     int hh_size = (columns -1) / (DIM+1);
     
     int neededpossiblehh = (int)mxGetScalar(prhs[1]);
-	int *isPossible = new int[nHouseholds];
+    
+    plhs[0] = mxCreateDoubleMatrix(nHouseholds, 1, mxREAL);
+	double* isPossible = mxGetPr(plhs[0]);
+    
     int totalpossible = checkconstraints(data, isPossible,hh_size, nHouseholds);
     
     int rows = nHouseholds-totalpossible;
-    plhs[0] = mxCreateDoubleMatrix(columns, rows, mxREAL);
-    plhs[1] = mxCreateDoubleMatrix(totalpossible, 1, mxREAL);
-    double* newdata = mxGetPr(plhs[0]);
+    plhs[1] = mxCreateDoubleMatrix(columns, rows, mxREAL);
+    plhs[2] = mxCreateDoubleMatrix(totalpossible, 1, mxREAL);
+    double* newdata = mxGetPr(plhs[1]);
     
-    double* impossible_counts = mxGetPr(plhs[1]);
+    double* impossible_counts = mxGetPr(plhs[2]);
     int count1 = 0;
     int count2 = 0;
     for (int i = 0; i < nHouseholds && count2 < neededpossiblehh; i++) {
@@ -37,10 +40,9 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
     if (count1 < rows) { //rows in C are the columns in the return matrix
         //need to resize the output matrix
         void *newptr = mxRealloc(newdata, count1 * columns * sizeof(double));
-        mxSetPr(plhs[0], (double *)newptr);
-        mxSetN(plhs[0], count1);
+        mxSetPr(plhs[1], (double *)newptr);
+        mxSetN(plhs[1], count1);
     }
     
-    delete [] isPossible;
-    plhs[2] = mxCreateDoubleScalar(count2);
+    plhs[3] = mxCreateDoubleScalar(count2);
 }

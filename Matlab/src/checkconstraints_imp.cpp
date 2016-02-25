@@ -216,7 +216,7 @@ int isValid(double *datah, int hh_size) {
     
 }
 
-int checkconstraints(double *data, int *isPossible,int hh_size, int nHouseholds) {
+int checkconstraints(double *data, double *isPossible,int hh_size, int nHouseholds) {
     
     int totalpossible = 0;
     double *datah = new double[hh_size * 3 + 1];
@@ -230,7 +230,7 @@ int checkconstraints(double *data, int *isPossible,int hh_size, int nHouseholds)
             }
         }
 		isPossible[m-1] = isValid(datah, hh_size);
-        totalpossible+= isPossible[m-1];
+        totalpossible+= (int)isPossible[m-1];
 	}
     
 	delete [] datah;
