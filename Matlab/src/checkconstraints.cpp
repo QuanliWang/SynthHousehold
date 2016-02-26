@@ -19,20 +19,25 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
     int rows = nHouseholds-totalpossible;
     plhs[1] = mxCreateDoubleMatrix(columns, rows, mxREAL);
     plhs[2] = mxCreateDoubleMatrix(totalpossible, 1, mxREAL);
+    plhs[3] = mxCreateDoubleMatrix(columns,totalpossible, mxREAL);
     double* newdata = mxGetPr(plhs[1]);
+    double* syndata = mxGetPr(plhs[3]);
     
     double* impossible_counts = mxGetPr(plhs[2]);
+    
     int count1 = 0;
     int count2 = 0;
     for (int i = 0; i < nHouseholds && count2 < neededpossiblehh; i++) {
         if (isPossible[i] == 0) { //found an impossible household
-            //std::memcpy(newdata + count1 * columns, source, sizeof dest); not working, need data to be transposed too. Do it later.
-            for (int j = 0; j < columns; j++) { //put impossible one at the begning
+            for (int j = 0; j < columns; j++) { //impossible ones
                 newdata[count1*columns+j] = data[j*nHouseholds+i];
             }
             count1++;
         } else {
             *impossible_counts++ = count1;
+            for (int j = 0; j < columns; j++) { //possible ones (syndata)
+                syndata[count2*columns+j] = data[j*nHouseholds+i];
+            }
             count2++;
         }
     }
@@ -44,5 +49,13 @@ void mexFunction(int nlhs, mxArray *plhs[], int nrhs, const mxArray *prhs[]){
         mxSetN(plhs[1], count1);
     }
     
-    plhs[3] = mxCreateDoubleScalar(count2);
+    if (count2 < totalpossible) { //truncate possible households if too many
+        //need to resize the output matrix
+        void *newptr = mxRealloc(syndata, count2 * columns * sizeof(double));
+        mxSetPr(plhs[3], (double *)newptr);
+        mxSetN(plhs[3], count2);
+    }
+    
+    plhs[4] = mxCreateDoubleScalar(count2);
+    
 }

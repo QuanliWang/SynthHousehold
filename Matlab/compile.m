@@ -7,6 +7,8 @@ end
 cd src 
 mex samplezHHwithHHnewv1_2HHvar.cpp
 mex samplehouseholds.cpp
+mex mergeindividuals.cpp
+mex households2individuals.cpp
 mex samplezmemberv1.cpp
 mex randomsample.cpp
 mex randomsample_new.cpp

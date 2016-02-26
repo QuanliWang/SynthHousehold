@@ -1,11 +1,4 @@
-%results = load('ACSsimulation_size2size3size4_10000HHs_040915output.mat');
-%results = load('ACSsimulation_size2size3size4_10000HHs_050715_rejsamp_output.mat');
-%results = load('ACS_size2size3size4_10000HHs_050715_untruncated_output.mat');
-%results = load('ACSsimulation_size2size3size4_10000HHs_041815output.mat');
 results = load('ACSsimulation_size2size3size4_10000HHs_060715output.mat');
-%results = load('ACS_size2size3size4_10000HHs_060715_untruncated_output.mat');
-%results = load('ACSsimulation_size2size3size4_10000HHs_060715_rejsamp_output.mat');
-%results = load('ACSsimulation_size2size3size4_10000HHs_060715_synaround9500output.mat');
 
 plot(results.alphaout);
 plot(results.betaout);
@@ -36,56 +29,14 @@ plot(results.nout(6001:10000));
 plot(results.nout(7001:10000));
 
 plot(results.elapsed_time);
-%{
-ACSsize2_count = 5398;
-ACSsize3_count = 2481;
-ACSsize4_count = 2121;
-syndatao_size2_new = zeros(2*ACSsize2_count,8);
-syndatao_size3_new = zeros(3*ACSsize3_count,8);
-syndatao_size4_new = zeros(4*ACSsize4_count,8);
-        
-syndatao_size2 = results.syndatao_size2;
-syndatao_size3 = results.syndatao_size3;
-syndatao_size4 = results.syndatao_size4;
-
-        for h=1:ACSsize2_count
-            syndatao_size2_new(2*(h-1)+1,:) = syndatao_size2(h,1:8);
-            syndatao_size2_new(2*h,:) = syndatao_size2(h,9:16);
-        end
-        
-        for h=1:ACSsize3_count
-            syndatao_size3_new(3*(h-1)+1,:) = syndatao_size3(h,1:8);
-            syndatao_size3_new(3*(h-1)+2,:) = syndatao_size3(h,9:16);
-            syndatao_size3_new(3*h,:) = syndatao_size3(h,17:24);
-        end
-        for h=1:ACSsize4_count
-            syndatao_size4_new(4*(h-1)+1,:) = syndatao_size4(h,1:8);
-            syndatao_size4_new(4*(h-1)+2,:) = syndatao_size4(h,9:16);
-            syndatao_size4_new(4*(h-1)+3,:) = syndatao_size4(h,17:24);
-            syndatao_size4_new(4*h,:) = syndatao_size4(h,25:32);
-        end
-        syndata9500 = [syndatao_size2_new;syndatao_size3_new;syndatao_size4_new];
-
-%}
 
 origdata = results.origdata(:,1:8);
-%origdata = results.ACSdatasample(:,1:8);
-% syndata1 = results.syndatao1;
-% syndata2 = results.syndatao2;
-% syndata3 = results.syndatao3;
-% syndata4 = results.syndatao4;
-% syndata5 = results.syndatao5;
 
 syndata1 = results.syndatao6;
 syndata2 = results.syndatao7;
 syndata3 = results.syndatao8;
 syndata4 = results.syndatao9;
 syndata5 = results.syndatao10;
-% syndata1 = results.syndata6;
-% syndata2 = results.syndata7;
-% syndata3 = results.syndata8;
-% syndata4 = results.syndata9;
-% syndata5 = results.syndata10;
 
 dlmwrite('ACSsimulation_size234_syndata1_060715.txt',syndata1,'delimiter',',','precision',5);
 dlmwrite('ACSsimulation_size234_syndata2_060715.txt',syndata2,'delimiter',',','precision',5);
@@ -113,6 +64,7 @@ dlmwrite('ACSsimulation_size234_syndata8_042214.txt',results.syndatao8,'delimite
 dlmwrite('ACSsimulation_size234_syndata9_042214.txt',results.syndatao9,'delimiter',',','precision',5);
 dlmwrite('ACSsimulation_size234_syndata10_042214.txt',results.syndatao10,'delimiter',',','precision',5);
 dlmwrite('ACSsimulation_size234_origdata_012915.txt',origdata,'delimiter',',','precision',5);
+
 %% 9910 - 10000: 10 synthetic datasets
 extra_count_9910_10000 = [results.nout_extend(9910),results.nout_extend(9920),results.nout_extend(9930),results.nout_extend(9940),results.nout_extend(9950),...
     results.nout_extend(9960),results.nout_extend(9970),results.nout_extend(9980),results.nout_extend(9990),results.nout_extend(10000)];
@@ -1691,13 +1643,6 @@ if (relate_vector_h(2,1)==2)
 end
 end
 
-% 
-% sum(one_spouseagediff_orig)/10000
-% sum(one_spouseagediff_syndata1)/10000
-% sum(one_spouseagediff_syndata2)/10000
-% sum(one_spouseagediff_syndata3)/10000
-% sum(one_spouseagediff_syndata4)/10000
-% sum(one_spouseagediff_syndata5)/10000
 
 dlmwrite('DA_spouseagediff_orig.txt',one_spouseagediff_orig','delimiter',',','precision',5);
 dlmwrite('DA_spouseagediff_syndata1.txt',one_spouseagediff_syndata1','delimiter',',','precision',5);
@@ -1714,13 +1659,6 @@ dlmwrite('RS_spouseagediff_syndata4.txt',one_spouseagediff_syndata4','delimiter'
 dlmwrite('RS_spouseagediff_syndata5.txt',one_spouseagediff_syndata5','delimiter',',','precision',5);
 
 %%
-% z_HH_save_HHonly = zeros(5000,10000);
-% SS = results.SSorig';
-% cumSS = cumsum(SS);
-% for i=1:5000
-%     z_HH_tocheck = results.z_HH_save(i+5000,:);
-%     for h=1:10000
-%         z_HH_save_HHonly(i,h) = z_HH_tocheck(
 zHHunique = zeros(1,500);
 zmemberunique = zeros(1,500);
 for i=1:500
@@ -1746,12 +1684,3 @@ for i=1:500
 end
 dlmwrite('ACSsimulation_nozeros_nout_042214.txt',nout,'delimiter',',','precision',7);
 
-
-% zHHunique = zeros(1,500);
-% for i=1:500
-%     zHHunique(i) = sum(results.z_HH_save((i-1)*10+10,:)==0);
-%     length(unique(results.z_HH_save((i-1)*10+5010,:)));
-% end
-% 
-% dlmwrite('ACSsimulation_nozeros_zHHunique_042214.txt',zHHunique,'delimiter',',','precision',5);
-% mean(zHHunique)

@@ -17,22 +17,20 @@ function [Individuals_extra,z_HH_extra_size, HHData_extra_size, number_of_genera
             lambda{1},lambda{2},number_of_generation+cum_number_of_generation, howmany,hh_size,rn);
 
         %impossible household
-        [outcome, Households, Index, possible] = checkconstraints(data_to_check,possiblehhcount-n_possible_household);
+        [outcome, Households, Index, synHouseholds, possible] = checkconstraints(data_to_check,possiblehhcount-n_possible_household);
         n_possible_household = n_possible_household + possible;
-         
-        t1 = Households(1:hh_size * 8,:);
-        t2 = Households(hh_size * 8 +1,:);
-        t3 = Households(hh_size * 8 +1 + (1:hh_size),:);
         
-        Individuals = [reshape(t1,8,[]); reshape(repmat(t2,hh_size,1),1,[]); reshape(t3,1,[])];
+        Individuals = households2individuals(Households);
+        
+        %the c code is actrually slower
+        %Individuals_extra = mergeindividuals(Individuals_extra,Individuals);
         Individuals_extra = [Individuals_extra Individuals];
-        z_HH_extra_size = [z_HH_extra_size  t2];
+        
+        z_HH_extra_size = [z_HH_extra_size  Households(hh_size * 8 +1,:)];
         HHData_extra_size = [HHData_extra_size Households(8,:)];
         
     end
     
     number_of_generation = number_of_generation + cum_number_of_generation;
-    
-    
     
 end
