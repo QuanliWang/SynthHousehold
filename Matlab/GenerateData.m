@@ -1,6 +1,6 @@
-function [Individuals_extra,z_HH_extra_size, HHData_extra_size, number_of_generation] = ...
+function [Individuals_extra,z_HH_extra_size, HHData_extra_size, synIndividuals,number_of_generation] = ...
     GenerateData(hh_size,lambda, w, ...
-    phi,pi, d, cum_number_of_generation,possiblehhcount,howmany)
+    phi,pi, d, cum_number_of_generation,possiblehhcount,howmany,synindex)
     
     Individuals_extra = [];
     z_HH_extra_size = [];
@@ -8,6 +8,7 @@ function [Individuals_extra,z_HH_extra_size, HHData_extra_size, number_of_genera
     number_of_generation = 0;
     n_possible_household = 0;
     p = length(d);
+    synIndividuals = [];
     while (n_possible_household< possiblehhcount)
         number_of_generation = number_of_generation + 1;
         
@@ -28,6 +29,9 @@ function [Individuals_extra,z_HH_extra_size, HHData_extra_size, number_of_genera
         
         z_HH_extra_size = [z_HH_extra_size  Households(hh_size * 8 +1,:)];
         HHData_extra_size = [HHData_extra_size Households(8,:)];
+        if synindex > 0 
+            synIndividuals = [synIndividuals households2individuals(synHouseholds)];
+        end
         
     end
     

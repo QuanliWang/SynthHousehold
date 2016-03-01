@@ -1,7 +1,9 @@
 clear all
 init;
 
-
+%synindex = [4960 4970 4980 4990 5000 9960 9970 9980 9990 10000];
+synindex = [10 15 20 25];
+synData = cell(length(synindex),1);
 for i = 1:mc.nrun  
     
     tic;   
@@ -14,9 +16,12 @@ for i = 1:mc.nrun
     
 
         %% generate impossible house hold
-        [z_Individual_extra,z_HH_extra,IndividualData_extra,HHdata_extra,para.hh_size_new] = ...
-        GetImpossibleHouseholds(orig.d,orig.ACS_count,para.lambda,para.w, para.phi,para.pi,hyper.howmany,orig.n);
-    
+        [z_Individual_extra,z_HH_extra,IndividualData_extra,HHdata_extra,para.hh_size_new,current_synData] = ...
+        GetImpossibleHouseholds(orig.d,orig.ACS_count,para.lambda,para.w,...
+        para.phi,para.pi,hyper.howmany,orig.n, ismember(i,synindex));
+        if ismember(i,synindex) 
+            synData{find(synindex ==i)} = current_synData(1:8,:);
+        end
         %% combine data and indicators
         para.z_HH_all = [z_HH z_HH_extra];
         para.HHdata_all = orig.HHdataorigT; para.HHdata_all(2,:) = para.HHdata_all(2,:) - 1;
