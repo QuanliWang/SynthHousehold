@@ -2,7 +2,7 @@ clear all
 init;
 
 %synindex = [4960 4970 4980 4990 5000 9960 9970 9980 9990 10000];
-synindex = [10 15 20 25];
+synindex = [496 497 498 499 500 996 997 998 999 1000];
 synData = cell(length(synindex),1);
 for i = 1:mc.nrun  
     
@@ -61,4 +61,4 @@ for i = 1:mc.nrun
 %     end
 end
    
-
+save -v7.3 testrun;
