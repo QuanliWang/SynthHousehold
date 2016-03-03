@@ -15,5 +15,5 @@ mex randomsample_new.cpp
 mex checkconstraints.cpp
 mex groupcount.cpp
 
-!mv *.mexmaci64 ../dist/.
+!mv *.*64 ../dist/.
 cd ..
