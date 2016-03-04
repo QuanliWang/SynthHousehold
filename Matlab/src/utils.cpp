@@ -12,6 +12,8 @@
 #define SIBLINGINLAW 8
 #define GRANDCHILD 9
 
+#define DIM 8
+#define COL 3
 
 //1 = head/householder, 2 = spouse, 3 = child, 4 = child-in-law, 5 = parent, 6 = parent-in- law, 7 = sibling, 8 = sibling-in-law,
 //9 = grandchild,

@@ -1,38 +1,44 @@
 clear all
 init;
 
+%synindex = [4960 4970 4980 4990 5000 9960 9970 9980 9990 10000];
+synindex = [496 497 498 499 500 996 997 998 999 1000];
+synData = cell(length(synindex),1);
 for i = 1:mc.nrun  
     
     tic;   
      %% update zHH
-    [z_HH_Individuals,z_HH] = UpdateHouseholdIndicator(...
-        orig.n,orig.n_individuals,orig.maxd,orig.p, orig.dataT,orig.SS,...
-        hyper.K,hyper.L,...
-        para.phi,para.w,para.pi,para.HHdata_all(1:orig.n,:),para.lambda);
+     [z_HH,z_HH_Individuals] = samplezHHwithHHnewv1_2HHvar(para.phi,orig.dataT,...
+         para.w,para.pi,orig.SS,para.HHdata_all(:,1:orig.n)',para.lambda{1},para.lambda{2}, rand(orig.n,1));
 
-    %% update zIndividual
-    z_Individuals = UpdateIndividualIndicator(orig.p,orig.maxd,orig.dataT,...
-        orig.HHserial, hyper.K,hyper.L,z_HH,para.phi,para.w);
- 
-    %% generate impossible house hold
-    [z_Individual_extra,z_HH_extra,IndividualData_extra,HHdata_extra,para.hh_size_new] = ...
-    GetImpossibleHouseholds(orig.d,orig.ACS_count,...
-                            para.lambda,para.w,para.phi, para.pi);
+     %% update zIndividual
+     z_Individuals = samplezmemberv1(para.phi,orig.dataT,para.w,z_HH,orig.HHserial,rand(size(orig.dataT,2),1));
     
-    %% combine data and indicators
-    para.z_HH_all = [z_HH;z_HH_extra];
-    para.HHdata_all = orig.HHdataorig; para.HHdata_all(:,2) = para.HHdata_all(:,2) - 1;
-    para.HHdata_all = [para.HHdata_all;HHdata_extra];
-    para.IndividualData_all = [orig.origdata(:,1:8);IndividualData_extra(:,1:8)];
-    %column 1 for K groups and column 2 for L groups
-    para.z_Individual_all = [[z_HH_Individuals;z_Individual_extra(:,1)]...
-                               [z_Individuals;z_Individual_extra(:,2)]];
-                           
-    clear z_HH z_HH_extra z_Individuals z_HH_Individuals z_Individual_extra IndividualData_extra HHdata_extra
-    
-    %% update phi
-    para.phi = UpdatePhi(hyper.K,hyper.L,orig.p,orig.d,orig.maxd,...
-                para.IndividualData_all,para.z_Individual_all);
+
+        %% generate impossible house hold
+        [z_Individual_extra,z_HH_extra,IndividualData_extra,HHdata_extra,para.hh_size_new,current_synData] = ...
+        GetImpossibleHouseholds(orig.d,orig.ACS_count,para.lambda,para.w,...
+        para.phi,para.pi,hyper.howmany,orig.n, ismember(i,synindex));
+        if ismember(i,synindex) 
+            synData{find(synindex ==i)} = current_synData(1:8,:);
+        end
+        %% combine data and indicators
+        para.z_HH_all = [z_HH z_HH_extra];
+        para.HHdata_all = orig.HHdataorigT; para.HHdata_all(2,:) = para.HHdata_all(2,:) - 1;
+        para.HHdata_all = [para.HHdata_all HHdata_extra];
+        para.IndividualData_all = [orig.origdata(:,1:8)' IndividualData_extra];
+        
+        %row 1 for K groups and row 2 for L groups
+        para.z_Individual_all = [[z_HH_Individuals;z_Individuals] z_Individual_extra];
+       
+        clear z_HH z_HH_extra z_Individuals z_HH_Individuals z_Individual_extra IndividualData_extra HHdata_extra
+
+        %% update phi
+        para.phi = UpdatePhi(hyper.K,hyper.L,orig.p,orig.d,orig.maxd,...
+                    para.IndividualData_all,para.z_Individual_all);
+        %% update w
+        [para.w,para.v] = UpdateW(para.beta,para.z_Individual_all, hyper.K, hyper.L);
+  
     
      %% update lambda
     [para.lambda] = UpdateLambda(hyper.dHH,hyper.K,para.z_HH_all,para.HHdata_all);
@@ -40,8 +46,7 @@ for i = 1:mc.nrun
      %% update pi
     [para.pi,para.u] = UpdatePi(para.alpha,para.z_HH_all,hyper.K);
         
-    %% update w
-    [para.w,para.v] = UpdateW(para.beta,para.z_Individual_all, hyper.K, hyper.L);
+    
     
      %% update alpha
     para.alpha = UpdateAlpha(hyper.aa,hyper.ab,para.u);
@@ -51,5 +56,9 @@ for i = 1:mc.nrun
     
     postsave;
     
+%    if mod(i,1000) == 0
+%        save -v7.3 last;
+%     end
 end
    
+save -v7.3 testrun;

@@ -7,13 +7,13 @@ if (mod(i,mc.thin) == 0 && i > mc.burn)
    output.lambda2out((i-mc.burn)/mc.thin,:,:) = para.lambda{2};
 end
 i
-total_household = size(para.HHdata_all,1)
+total_household = size(para.HHdata_all,2)
 toc
 output.elapsed_time(i) = toc;
-output.n_sout(i) = size(para.IndividualData_all,1);
+%output.n_sout(i) = size(para.IndividualData_all,1);
 output.nout(i) = total_household;
 output.extrasize(i,:) = para.hh_size_new;
-output.z_HH_save(i,:) = para.z_Individual_all(1:orig.n_individuals,1);
-output.z_member_save(i,:) =para. z_Individual_all(1:orig.n_individuals,2);
+output.z_HH_save(i,:) = para.z_Individual_all(1,1:orig.n_individuals);
+output.z_member_save(i,:) =para. z_Individual_all(2,1:orig.n_individuals);
 output.alphaout(i) = para.alpha;
 output.betaout(i) = para.beta;

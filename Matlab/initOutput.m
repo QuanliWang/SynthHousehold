@@ -4,7 +4,6 @@ output.betaout = zeros(mc.nrun,1);
 output.piout = zeros(mc.eff.sam,hyper.K); 
 output.wout = zeros(mc.eff.sam,hyper.K,hyper.L);
 output.nout = zeros(mc.nrun,1);
-output.n_sout = zeros(mc.nrun,1);
 
 output.extrasize = zeros(mc.nrun,3);
 

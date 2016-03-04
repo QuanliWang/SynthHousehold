@@ -6,7 +6,7 @@ para.phi=zeros(orig.maxd*orig.p,hyper.K*hyper.L);      % cell probabilities
 phi_1 = zeros(orig.maxd,orig.p);
 for i=1:orig.p
     for j=1:orig.d(i)
-        phi_1(j,i)=sum(orig.data(:,i)==j)/orig.n_individuals;
+        phi_1(j,i)=sum(orig.dataT(i,:)==j)/orig.n_individuals;
     end
 end
 para.phi(:,1) = reshape(phi_1,orig.maxd*orig.p,1);
@@ -15,14 +15,14 @@ for i = 2:hyper.K*hyper.L
 end
 clear phi_1
 
-para.HHdata_all = orig.HHdataorig; para.HHdata_all(:,2) = para.HHdata_all(:,2) - 1;
+para.HHdata_all = orig.HHdataorigT; para.HHdata_all(2,:) = para.HHdata_all(2,:) - 1;
 
 %initialize lambda
 para.lambda = cell(length(hyper.dHH),1);
 for i = 1: length(hyper.dHH)
     lambda = zeros(hyper.K,hyper.dHH(i));
     for j=1:hyper.dHH(i)
-        lambda(:,j) = sum(para.HHdata_all(:,i)==j)/orig.n;
+        lambda(:,j) = sum(para.HHdata_all(i,:)==j)/orig.n;
     end
     para.lambda{i} = lambda;
 end

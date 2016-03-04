@@ -15,7 +15,7 @@ orig.origdata = origdata;
 orig.SS = SS;
 orig.n = length(orig.SS);
 HHrowIndex = [1 cumsum(orig.SS)+1]; 
-orig.HHdataorig = orig.origdata(HHrowIndex(1: (end -1)),8:9);
+orig.HHdataorigT = orig.origdata(HHrowIndex(1: (end -1)),8:9)';
 orig.HHserial = orig.origdata(:,1);
 clear origdata SS n desc HHrowIndex
 
@@ -25,7 +25,6 @@ orig.p = orig.p-4;
 % variables: HHindex 1, pernum 2, sex 3, race 4, ethn 5, age 6, relate
 % 7(ind level) ownership 8 (binary, HH level) household size 
 orig.d = [2,9,5,94,12]; %number of levels for each variable (5 variables all together)
-orig.data = orig.origdata(:,3:7);
 orig.dataT = orig.origdata(:,3:7)';
 orig.maxd = max(orig.d);
 
