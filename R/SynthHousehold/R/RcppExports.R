@@ -25,3 +25,11 @@ rcpp_hello <- function() {
     .Call('SynthHousehold_rcpp_hello', PACKAGE = 'SynthHousehold')
 }
 
+samplezHH <- function(phi, data, w, pi, S, HHdata, lambda1, lambda2) {
+    .Call('SynthHousehold_samplezHH', PACKAGE = 'SynthHousehold', phi, data, w, pi, S, HHdata, lambda1, lambda2)
+}
+
+samplezmember <- function(phi, data, w, zHH, serial) {
+    .Call('SynthHousehold_samplezmember', PACKAGE = 'SynthHousehold', phi, data, w, zHH, serial)
+}
+
