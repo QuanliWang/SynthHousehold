@@ -5,6 +5,29 @@
 
 using namespace Rcpp;
 
+// checkconstraints
+List checkconstraints(NumericMatrix data, int neededpossiblehh);
+RcppExport SEXP SynthHousehold_checkconstraints(SEXP dataSEXP, SEXP neededpossiblehhSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< int >::type neededpossiblehh(neededpossiblehhSEXP);
+    __result = Rcpp::wrap(checkconstraints(data, neededpossiblehh));
+    return __result;
+END_RCPP
+}
+// households2individuals
+NumericMatrix households2individuals(NumericMatrix data);
+RcppExport SEXP SynthHousehold_households2individuals(SEXP dataSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type data(dataSEXP);
+    __result = Rcpp::wrap(households2individuals(data));
+    return __result;
+END_RCPP
+}
 // prGpostFunc
 NumericMatrix prGpostFunc(NumericMatrix phi_index, NumericMatrix lambda_index, NumericMatrix phi, NumericMatrix lambda, NumericMatrix omega, NumericVector pii, int FF, int SS, NumericVector cn_i);
 RcppExport SEXP SynthHousehold_prGpostFunc(SEXP phi_indexSEXP, SEXP lambda_indexSEXP, SEXP phiSEXP, SEXP lambdaSEXP, SEXP omegaSEXP, SEXP piiSEXP, SEXP FFSEXP, SEXP SSSEXP, SEXP cn_iSEXP) {
@@ -104,6 +127,25 @@ BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     __result = Rcpp::wrap(rcpp_hello());
+    return __result;
+END_RCPP
+}
+// samplehouseholds
+NumericMatrix samplehouseholds(NumericMatrix phi, NumericMatrix w, NumericVector pi, NumericVector d, NumericMatrix lambda1, NumericMatrix lambda2, int currrentbatch, int nHouseholds, int householdsize);
+RcppExport SEXP SynthHousehold_samplehouseholds(SEXP phiSEXP, SEXP wSEXP, SEXP piSEXP, SEXP dSEXP, SEXP lambda1SEXP, SEXP lambda2SEXP, SEXP currrentbatchSEXP, SEXP nHouseholdsSEXP, SEXP householdsizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type phi(phiSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type w(wSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type pi(piSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type lambda1(lambda1SEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type lambda2(lambda2SEXP);
+    Rcpp::traits::input_parameter< int >::type currrentbatch(currrentbatchSEXP);
+    Rcpp::traits::input_parameter< int >::type nHouseholds(nHouseholdsSEXP);
+    Rcpp::traits::input_parameter< int >::type householdsize(householdsizeSEXP);
+    __result = Rcpp::wrap(samplehouseholds(phi, w, pi, d, lambda1, lambda2, currrentbatch, nHouseholds, householdsize));
     return __result;
 END_RCPP
 }
