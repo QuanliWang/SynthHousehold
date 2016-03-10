@@ -30,6 +30,23 @@ for (i in 1:mc$nrun) {
   if (is.element(i,synindex)) {
     synData[[which(synindex ==i)]] <- data.extra$synIndividuals_all[1:8,]
   }
+    #combine data and indicators
+    para$z_HH_all <- c(z_household$z_HH, data.extra$z_HH_extra)
+    para$HHdata_all <- orig$HHdataorigT
+    para$HHdata_all[2,] <- para$HHdata_all[2,] -1
+    para$HHdata_all <- rbind(z_household$z_HH_Individuals,z_Individuals)
+    para$IndividualData_all <- cbind(t(orig$origdata[,1:8]),data.extra$IndividualData_extra)
+
+    #row 1 for K groups and row 2 for L groups
+    temp <- rbind(z_household$z_HH_Individuals,z_Individuals)
+    para$z_Individual_all  <- cbind(temp,data.extra$HHdata_individual_extra)
+
+    # update phi
+    para$phi <- UpdatePhi(para$IndividualData_all,para$z_Individual_all, hyper$K,hyper$L,orig$p,orig$d,orig$maxd);
+
+    W <- UpdateW(para$beta,para$z_Individual_all, hyper$K, hyper$L)
+    para$w <- W$w
+    para$v <- W$v
 
 
   #postsave

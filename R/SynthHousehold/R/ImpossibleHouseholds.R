@@ -78,7 +78,7 @@ GetImpossibleHouseholds <- function(d,ACS_count,lambda,w,phi,pi,howmany,n,synind
   HHdata_individual_extra <- ImpossibleIndividuals[9:10,]
   return(list(HHdata_individual_extra = HHdata_individual_extra,
               z_HH_extra = z_HH_extra,
-              IndividualData_extra = z_HH_extra,
+              IndividualData_extra = IndividualData_extra,
               HHdata_extra = HHdata_extra,
               hh_size_new = hh_size_new,
               synIndividuals_all = synIndividuals_all))

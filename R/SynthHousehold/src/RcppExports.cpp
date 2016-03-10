@@ -28,6 +28,20 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// groupcount
+NumericMatrix groupcount(NumericVector g1, NumericVector g2, int row, int col);
+RcppExport SEXP SynthHousehold_groupcount(SEXP g1SEXP, SEXP g2SEXP, SEXP rowSEXP, SEXP colSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type g1(g1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type g2(g2SEXP);
+    Rcpp::traits::input_parameter< int >::type row(rowSEXP);
+    Rcpp::traits::input_parameter< int >::type col(colSEXP);
+    __result = Rcpp::wrap(groupcount(g1, g2, row, col));
+    return __result;
+END_RCPP
+}
 // prGpostFunc
 NumericMatrix prGpostFunc(NumericMatrix phi_index, NumericMatrix lambda_index, NumericMatrix phi, NumericMatrix lambda, NumericMatrix omega, NumericVector pii, int FF, int SS, NumericVector cn_i);
 RcppExport SEXP SynthHousehold_prGpostFunc(SEXP phi_indexSEXP, SEXP lambda_indexSEXP, SEXP phiSEXP, SEXP lambdaSEXP, SEXP omegaSEXP, SEXP piiSEXP, SEXP FFSEXP, SEXP SSSEXP, SEXP cn_iSEXP) {
