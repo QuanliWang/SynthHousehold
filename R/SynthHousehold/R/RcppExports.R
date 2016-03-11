@@ -13,6 +13,10 @@ groupcount <- function(g1, g2, row, col) {
     .Call('SynthHousehold_groupcount', PACKAGE = 'SynthHousehold', g1, g2, row, col)
 }
 
+groupcount1D <- function(g, groups) {
+    .Call('SynthHousehold_groupcount1D', PACKAGE = 'SynthHousehold', g, groups)
+}
+
 prGpostFunc <- function(phi_index, lambda_index, phi, lambda, omega, pii, FF, SS, cn_i) {
     .Call('SynthHousehold_prGpostFunc', PACKAGE = 'SynthHousehold', phi_index, lambda_index, phi, lambda, omega, pii, FF, SS, cn_i)
 }

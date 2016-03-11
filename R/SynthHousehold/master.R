@@ -4,6 +4,7 @@ library(SynthHousehold)
 data(household)
 orig <- initData(household)
 
+t <- proc.time()
 #mcmc parameters
 mc <- list(nrun = 25, burn = 20, thin = 1)
 mc$eff.sam <- (mc$nrun-mc$burn)/mc$thin
@@ -34,7 +35,7 @@ for (i in 1:mc$nrun) {
     para$z_HH_all <- c(z_household$z_HH, data.extra$z_HH_extra)
     para$HHdata_all <- orig$HHdataorigT
     para$HHdata_all[2,] <- para$HHdata_all[2,] -1
-    para$HHdata_all <- rbind(z_household$z_HH_Individuals,z_Individuals)
+    para$HHdata_all <- cbind(para$HHdata_all,data.extra$HHdata_extra)
     para$IndividualData_all <- cbind(t(orig$origdata[,1:8]),data.extra$IndividualData_extra)
 
     #row 1 for K groups and row 2 for L groups
@@ -44,10 +45,25 @@ for (i in 1:mc$nrun) {
     # update phi
     para$phi <- UpdatePhi(para$IndividualData_all,para$z_Individual_all, hyper$K,hyper$L,orig$p,orig$d,orig$maxd);
 
+    #update W
     W <- UpdateW(para$beta,para$z_Individual_all, hyper$K, hyper$L)
     para$w <- W$w
     para$v <- W$v
 
+  # update lambda
+  para$lambda <- UpdateLambda(hyper$dHH,hyper$K,para$z_HH_all,para$HHdata_all)
+
+  # update pi
+  Pi <- UpdatePi(para$alpha,para$z_HH_all,hyper$K)
+  para$pi <- Pi$pi
+  para$u <- Pi$u
+
+  #update alpha
+  para$alpha <- UpdateAlpha(hyper$aa,hyper$ab,para$u)
+
+  #update beta
+  para$beta <- UpdateBeta(hyper$ba,hyper$bb,para$v)
 
   #postsave
 }
+proc.time() - t

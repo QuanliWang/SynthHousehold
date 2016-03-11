@@ -42,6 +42,18 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// groupcount1D
+NumericVector groupcount1D(NumericVector g, int groups);
+RcppExport SEXP SynthHousehold_groupcount1D(SEXP gSEXP, SEXP groupsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type g(gSEXP);
+    Rcpp::traits::input_parameter< int >::type groups(groupsSEXP);
+    __result = Rcpp::wrap(groupcount1D(g, groups));
+    return __result;
+END_RCPP
+}
 // prGpostFunc
 NumericMatrix prGpostFunc(NumericMatrix phi_index, NumericMatrix lambda_index, NumericMatrix phi, NumericMatrix lambda, NumericMatrix omega, NumericVector pii, int FF, int SS, NumericVector cn_i);
 RcppExport SEXP SynthHousehold_prGpostFunc(SEXP phi_indexSEXP, SEXP lambda_indexSEXP, SEXP phiSEXP, SEXP lambdaSEXP, SEXP omegaSEXP, SEXP piiSEXP, SEXP FFSEXP, SEXP SSSEXP, SEXP cn_iSEXP) {
