@@ -2,11 +2,11 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-NumericMatrix groupcount(NumericVector g1, NumericVector g2, int row, int col) {
+NumericMatrix groupcount(NumericVector g1, NumericVector g2, int n1, int n2) {
 
-  NumericMatrix counts(row, col);
+  NumericMatrix counts(n1, n2);
   for (int i = 0; i < g1.length(); i++) {
-    counts[((int)g1[i] -1) + ((int)g2[i]-1) * row ]++;
+    counts[((int)g1[i] -1) + ((int)g2[i]-1) * n1 ]++;
   }
   return counts;
 }

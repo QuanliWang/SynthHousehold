@@ -9,36 +9,12 @@ households2individuals <- function(data) {
     .Call('SynthHousehold_households2individuals', PACKAGE = 'SynthHousehold', data)
 }
 
-groupcount <- function(g1, g2, row, col) {
-    .Call('SynthHousehold_groupcount', PACKAGE = 'SynthHousehold', g1, g2, row, col)
+groupcount <- function(g1, g2, n1, n2) {
+    .Call('SynthHousehold_groupcount', PACKAGE = 'SynthHousehold', g1, g2, n1, n2)
 }
 
 groupcount1D <- function(g, groups) {
     .Call('SynthHousehold_groupcount1D', PACKAGE = 'SynthHousehold', g, groups)
-}
-
-prGpostFunc <- function(phi_index, lambda_index, phi, lambda, omega, pii, FF, SS, cn_i) {
-    .Call('SynthHousehold_prGpostFunc', PACKAGE = 'SynthHousehold', phi_index, lambda_index, phi, lambda, omega, pii, FF, SS, cn_i)
-}
-
-prMpostFunc <- function(phi_index, phi, omega, rep_G, FF, SS) {
-    .Call('SynthHousehold_prMpostFunc', PACKAGE = 'SynthHousehold', phi_index, phi, omega, rep_G, FF, SS)
-}
-
-prEachComb02Func <- function(phi_index_02, lambda_index_02, phi, lambda, omega, pii, FF, SS, cn_i_02) {
-    .Call('SynthHousehold_prEachComb02Func', PACKAGE = 'SynthHousehold', phi_index_02, lambda_index_02, phi, lambda, omega, pii, FF, SS, cn_i_02)
-}
-
-prGpost02Func <- function(phi_index_02, lambda_index_02, phi, lambda, omega, pii, FF, SS, cn_i_02) {
-    .Call('SynthHousehold_prGpost02Func', PACKAGE = 'SynthHousehold', phi_index_02, lambda_index_02, phi, lambda, omega, pii, FF, SS, cn_i_02)
-}
-
-sampleXMiss02Func <- function(lambda_index_house_miss_02, phi_index_struc_zero_pass_02, lambda, pii, phi, omega, G_X_miss_02, M_X_miss_02, FF) {
-    .Call('SynthHousehold_sampleXMiss02Func', PACKAGE = 'SynthHousehold', lambda_index_house_miss_02, phi_index_struc_zero_pass_02, lambda, pii, phi, omega, G_X_miss_02, M_X_miss_02, FF)
-}
-
-rcpp_hello <- function() {
-    .Call('SynthHousehold_rcpp_hello', PACKAGE = 'SynthHousehold')
 }
 
 samplehouseholds <- function(phi, w, pi, d, lambda1, lambda2, currrentbatch, nHouseholds, householdsize) {
