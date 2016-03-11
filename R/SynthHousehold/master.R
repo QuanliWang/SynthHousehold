@@ -1,10 +1,10 @@
+rm(list = ls())
 library(SynthHousehold)
 
 #set up data set
 data(household)
 orig <- initData(household)
 
-t <- proc.time()
 #mcmc parameters
 mc <- list(nrun = 25, burn = 20, thin = 1)
 mc$eff.sam <- (mc$nrun-mc$burn)/mc$thin
@@ -19,7 +19,11 @@ output <- initOutput(orig,hyper,mc)
 synindex <- c(9910,9920,9930,9940,9950,9960,9970,9980,9990,10000)
 synData <- list()
 
+#Rprof("R1.out",interval = 0.001)
+
 for (i in 1:mc$nrun) {
+  cat(paste("iteration ", i,"\n", sep = ""))
+  t <- proc.time()
   # update zHH
   z_household <- samplezHH(para$phi,orig$dataT,para$w,para$pi,orig$SS,t(para$HHdata_all[,1:orig$n]),
             para$lambda[[1]],para$lambda[[2]])
@@ -28,6 +32,7 @@ for (i in 1:mc$nrun) {
   z_Individuals <- samplezmember(para$phi,orig$dataT,para$w,z_household$z_HH,orig$HHserial)
   data.extra <- GetImpossibleHouseholds(orig$d,orig$ACS_count,para$lambda,para$w,para$phi,
                   para$pi,hyper$blocksize,orig$n,is.element(i,synindex))
+  para$hh_size_new <- as.vector(data.extra$hh_size_new)
   if (is.element(i,synindex)) {
     synData[[which(synindex ==i)]] <- data.extra$synIndividuals_all[1:8,]
   }
@@ -64,6 +69,29 @@ for (i in 1:mc$nrun) {
   #update beta
   para$beta <- UpdateBeta(hyper$ba,hyper$bb,para$v)
 
-  #postsave
+  #post save
+  if (i %% mc$thin == 0 && i > mc$burn)  {
+    index <- (i-mc$burn)/mc$thin
+    output$piout[index,] <- para$pi
+    output$wout[index,,] <- para$w
+    output$newphiout[index,,] <- para$phi
+
+    output$lambda1out[index,,] <- para$lambda[[1]]
+    output$lambda2out[index,,] <- para$lambda[[2]]
+  }
+
+  total_household <- dim(para$HHdata_all)[2]
+  cat(paste("number of household is ", total_household, "\n", sep = ''))
+
+  output$elapsed_time[i] <- (proc.time() - t)[["elapsed"]]
+  cat(paste("elapsed time = ", output$elapsed_time[i], "\n\n", sep = ' '))
+  output$nout[i] <- total_household
+  output$extrasize[i,] <- para$hh_size_new
+  output$z_HH_save[i,] <- para$z_Individual_all[1,1:orig$n_individuals]
+  output$z_member_save[i,]  <- para$z_Individual_all[2,1:orig$n_individuals]
+  output$alphaout[i] <- para$alpha
+  output$betaout[i] <- para$beta
+
 }
-proc.time() - t
+#Rprof(NULL)
+#summaryRprof("R1.out")
