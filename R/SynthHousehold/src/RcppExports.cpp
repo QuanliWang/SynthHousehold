@@ -43,14 +43,14 @@ BEGIN_RCPP
 END_RCPP
 }
 // groupcount1D
-NumericVector groupcount1D(NumericVector g, int groups);
-RcppExport SEXP SynthHousehold_groupcount1D(SEXP gSEXP, SEXP groupsSEXP) {
+NumericVector groupcount1D(NumericVector g, int n);
+RcppExport SEXP SynthHousehold_groupcount1D(SEXP gSEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericVector >::type g(gSEXP);
-    Rcpp::traits::input_parameter< int >::type groups(groupsSEXP);
-    __result = Rcpp::wrap(groupcount1D(g, groups));
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    __result = Rcpp::wrap(groupcount1D(g, n));
     return __result;
 END_RCPP
 }

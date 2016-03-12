@@ -12,8 +12,8 @@ NumericMatrix groupcount(NumericVector g1, NumericVector g2, int n1, int n2) {
 }
 
 // [[Rcpp::export]]
-NumericVector groupcount1D(NumericVector g, int groups) {
-  NumericVector counts(groups);
+NumericVector groupcount1D(NumericVector g, int n) {
+  NumericVector counts(n);
   for (int i = 0; i < g.length(); i++) {
     counts[((int)g[i]-1)]++;
   }

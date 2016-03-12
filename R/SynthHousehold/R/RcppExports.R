@@ -13,8 +13,8 @@ groupcount <- function(g1, g2, n1, n2) {
     .Call('SynthHousehold_groupcount', PACKAGE = 'SynthHousehold', g1, g2, n1, n2)
 }
 
-groupcount1D <- function(g, groups) {
-    .Call('SynthHousehold_groupcount1D', PACKAGE = 'SynthHousehold', g, groups)
+groupcount1D <- function(g, n) {
+    .Call('SynthHousehold_groupcount1D', PACKAGE = 'SynthHousehold', g, n)
 }
 
 samplehouseholds <- function(phi, w, pi, d, lambda1, lambda2, currrentbatch, nHouseholds, householdsize) {

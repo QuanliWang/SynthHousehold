@@ -1,7 +1,7 @@
 \name{groupcount}
 \alias{groupcount}
 \title{
-Generate 2D count table for two integer-valued variables.
+Generate 2D count table for two integer-valued vectors.
 }
 \description{
 Similar to 'table' function, this function builts a contingency table of the counts at each combination of all possible values from two integer-valued input vectors.
@@ -24,7 +24,7 @@ groupcount(g1, g2, n1, n2)
 }
 }
 \details{
-This is implemented as a utility function to build a 2D histogram count table. For efficiency, it does not check if the maxmim values in input vectors exceed the maximum values specified.
+This is implemented as an utility function to build a 2D histogram count table. For efficiency, it does not check if the maxmim values in input vectors exceed the maximum values specified.
 }
 \value{
 The count table.

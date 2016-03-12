@@ -45,7 +45,7 @@ for (i in 1:mc$nrun) {
 
     #row 1 for K groups and row 2 for L groups
     temp <- rbind(z_household$z_HH_Individuals,z_Individuals)
-    para$z_Individual_all  <- cbind(temp,data.extra$HHdata_individual_extra)
+    para$z_Individual_all  <- cbind(temp,data.extra$z_HHdata_individual_extra)
 
     # update phi
     para$phi <- UpdatePhi(para$IndividualData_all,para$z_Individual_all, hyper$K,hyper$L,orig$p,orig$d,orig$maxd);
