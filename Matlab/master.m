@@ -1,8 +1,7 @@
 clear all
 init;
 
-%synindex = [4960 4970 4980 4990 5000 9960 9970 9980 9990 10000];
-synindex = [496 497 498 499 500 996 997 998 999 1000];
+synindex = [4960 4970 4980 4990 5000 9910 9920 9930 9940 9950 9960 9970 9980 9990 10000];
 synData = cell(length(synindex),1);
 for i = 1:mc.nrun  
     
@@ -16,7 +15,7 @@ for i = 1:mc.nrun
     
 
         %% generate impossible house hold
-        [z_Individual_extra,z_HH_extra,IndividualData_extra,HHdata_extra,para.hh_size_new,current_synData] = ...
+        [HHdata_individual_extra,z_HH_extra,IndividualData_extra,HHdata_extra,para.hh_size_new,current_synData] = ...
         GetImpossibleHouseholds(orig.d,orig.ACS_count,para.lambda,para.w,...
         para.phi,para.pi,hyper.howmany,orig.n, ismember(i,synindex));
         if ismember(i,synindex) 
@@ -29,9 +28,9 @@ for i = 1:mc.nrun
         para.IndividualData_all = [orig.origdata(:,1:8)' IndividualData_extra];
         
         %row 1 for K groups and row 2 for L groups
-        para.z_Individual_all = [[z_HH_Individuals;z_Individuals] z_Individual_extra];
+        para.z_Individual_all = [[z_HH_Individuals;z_Individuals] HHdata_individual_extra];
        
-        clear z_HH z_HH_extra z_Individuals z_HH_Individuals z_Individual_extra IndividualData_extra HHdata_extra
+        clear z_HH z_HH_extra z_Individuals z_HH_Individuals HHdata_individual_extra IndividualData_extra HHdata_extra
 
         %% update phi
         para.phi = UpdatePhi(hyper.K,hyper.L,orig.p,orig.d,orig.maxd,...
@@ -56,9 +55,9 @@ for i = 1:mc.nrun
     
     postsave;
     
-%    if mod(i,1000) == 0
-%        save -v7.3 last;
-%     end
+    if mod(i,1000) == 0
+        save -v7.3 last;
+     end
 end
    
-save -v7.3 testrun;
+save -v7.3 last;
