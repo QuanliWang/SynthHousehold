@@ -6,7 +6,7 @@ data(household)
 orig <- initData(household)
 
 #mcmc parameters
-mc <- list(nrun = 25, burn = 20, thin = 1)
+mc <- list(nrun = 10000, burn = 5000, thin = 50)
 mc$eff.sam <- (mc$nrun-mc$burn)/mc$thin
 
 #hyper parameters
@@ -87,8 +87,8 @@ for (i in 1:mc$nrun) {
   cat(paste("elapsed time = ", output$elapsed_time[i], "\n\n", sep = ' '))
   output$nout[i] <- total_household
   output$extrasize[i,] <- para$hh_size_new
-  output$z_HH_save[i,] <- para$z_Individual_all[1,1:orig$n_individuals]
-  output$z_member_save[i,]  <- para$z_Individual_all[2,1:orig$n_individuals]
+  #output$z_HH_save[i,] <- para$z_Individual_all[1,1:orig$n_individuals]
+  #output$z_member_save[i,]  <- para$z_Individual_all[2,1:orig$n_individuals]
   output$alphaout[i] <- para$alpha
   output$betaout[i] <- para$beta
 

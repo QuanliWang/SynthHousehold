@@ -79,8 +79,8 @@ initOutput <- function(data,hyper,mc) {
   output$wout <- array(0, dim=c(mc$eff.sam,hyper$K,hyper$L))
   output$nout <- matrix(0,nrow = mc$nrun,ncol = 1)
   output$extrasize <- matrix(0,nrow = mc$nrun,ncol = 3)
-  output$z_HH_save <- matrix(0, nrow = mc$nrun, ncol = data$n_individuals)
-  output$z_member_save <- matrix(0, nrow = mc$nrun, ncol = data$n_individuals)
+  #output$z_HH_save <- matrix(0, nrow = mc$nrun, ncol = data$n_individuals)
+  #output$z_member_save <- matrix(0, nrow = mc$nrun, ncol = data$n_individuals)
   output$elapsed_time <-  matrix(0,nrow = mc$nrun,ncol = 1)
   output$newphiout <- array(0, dim=c(mc$eff.sam,data$maxd*data$p,hyper$K*hyper$L))
 

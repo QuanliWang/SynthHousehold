@@ -14,6 +14,9 @@
     data_to_check <- samplehouseholds(phi,w, pi, d, lambda[[1]],lambda[[2]],batch.index+total.batch, howmany,hh_size)
 
     #impossible household
+    save(data_to_check,file = "data_to_check.RData")
+    temp <- possiblehhcount-n_possible_household
+    save(temp, file = "temp.RData")
     checked.households <- checkconstraints(data_to_check,possiblehhcount-n_possible_household)
     n_possible_household <- n_possible_household + checked.households$possible
 
