@@ -18,6 +18,8 @@ List checkconstraints(NumericMatrix data,int neededpossiblehh) {
   NumericMatrix newdata(columns,rows);
   NumericMatrix syndata(columns,totalpossible);
   NumericVector impossible_counts(totalpossible);
+  NumericMatrix newdata0(columns, 0);
+  NumericMatrix syndata0(columns, 0);
 
   int count1 = 0;
   int count2 = 0;
@@ -38,12 +40,20 @@ List checkconstraints(NumericMatrix data,int neededpossiblehh) {
 
   if (count1 < rows) { //rows in C are the columns in the return matrix
     //need to resize the output matrix
-    newdata = newdata(Range(0,columns-1), Range(0,count1-1));
+    if (count1 >= 1) {
+      newdata = newdata(Range(0,columns-1), Range(0,count1-1));
+    } else {
+      newdata = newdata0;
+    }
   }
 
   if (count2 < totalpossible) { //truncate possible households if too many
     //need to resize the output matrix
-    syndata = syndata(Range(0,columns-1), Range(0,count2-1));
+    if (count2 >= 1) {
+      syndata = syndata(Range(0,columns-1), Range(0,count2-1));
+    } else {
+      syndata = syndata0;
+    }
   }
 
   return List::create(Named("outcome", isPossible),

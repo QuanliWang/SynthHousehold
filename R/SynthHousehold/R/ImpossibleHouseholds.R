@@ -21,9 +21,10 @@
     z_HH_extra[[batch.index]] <- checked.households$Households[hh_size * 8 +1,]
     HHData_extra[[batch.index]] <- checked.households$Households[8,]
     if (synindex > 0) {
-      synIndividuals[[batch.index]] = households2individuals(checked.households$synHouseholds);
+      synIndividuals[[batch.index]]  <- households2individuals(checked.households$synHouseholds)
     }
   }
+
   Individuals_extra <- do.call(cbind, Individuals_extra)
   z_HH_extra <- unlist(z_HH_extra)
   HHData_extra <- unlist(HHData_extra)
