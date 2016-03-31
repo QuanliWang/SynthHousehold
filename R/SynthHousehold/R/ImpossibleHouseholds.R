@@ -11,7 +11,9 @@
     batch.index <- batch.index + 1
     #print(batch.index)
     #generate a batch of 10K household
-    data_to_check <- samplehouseholds(phi,w, pi, d, lambda[[1]],lambda[[2]],batch.index+total.batch, howmany,hh_size)
+    #data_to_check <- samplehouseholds(phi,w, pi, d, lambda[[1]],lambda[[2]],batch.index+total.batch, howmany,hh_size)
+    data_to_check <- samplehouseholds(phi,w, pi, d, lambda,batch.index+total.batch, howmany,hh_size)
+
 
     #impossible household
     checked.households <- checkconstraints(data_to_check,possiblehhcount-n_possible_household)
