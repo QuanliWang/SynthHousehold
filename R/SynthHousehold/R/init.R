@@ -14,7 +14,10 @@ initData <- function(household) {
   orig$p <- dim(household)[2] - 4
 
   #levels for each variable in the model. This might be different from the sun-sampled data in use
-  orig$d <- c(2,9,5,94,12)
+  orig$d <- c(0,0,0,0,0)
+  for (i in 1: length(orig$d)) {
+    orig$d[i] <- max(household[,i+2])
+  }
   orig$dataT <- t(household[,3:7])
   orig$maxd <- max(orig$d)
 
@@ -78,7 +81,7 @@ initOutput <- function(data,hyper,mc) {
   output$piout <- matrix(0, mc$eff.sam,hyper$K)
   output$wout <- array(0, dim=c(mc$eff.sam,hyper$K,hyper$L))
   output$nout <- matrix(0,nrow = mc$nrun,ncol = 1)
-  output$extrasize <- matrix(0,nrow = mc$nrun,ncol = 3)
+  output$extrasize <- matrix(0,nrow = mc$nrun,ncol = length(data$ACS_count))
   #output$z_HH_save <- matrix(0, nrow = mc$nrun, ncol = data$n_individuals)
   #output$z_member_save <- matrix(0, nrow = mc$nrun, ncol = data$n_individuals)
   output$elapsed_time <-  matrix(0,nrow = mc$nrun,ncol = 1)

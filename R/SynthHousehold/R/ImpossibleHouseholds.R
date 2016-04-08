@@ -11,7 +11,9 @@
     batch.index <- batch.index + 1
     #print(batch.index)
     #generate a batch of 10K household
-    data_to_check <- samplehouseholds(phi,w, pi, d, lambda[[1]],lambda[[2]],batch.index+total.batch, howmany,hh_size)
+    #data_to_check <- samplehouseholds(phi,w, pi, d, lambda[[1]],lambda[[2]],batch.index+total.batch, howmany,hh_size)
+    data_to_check <- samplehouseholds(phi,w, pi, d, lambda,batch.index+total.batch, howmany,hh_size)
+
 
     #impossible household
     checked.households <- checkconstraints(data_to_check,possiblehhcount-n_possible_household)
@@ -41,7 +43,7 @@
 
 GetImpossibleHouseholds <- function(d,ACS_count,lambda,w,phi,pi,howmany,n,synindex) {
   cumsize <- 0
-  hh_size_new <-  matrix(0,nrow = 3, ncol = 1)
+  hh_size_new <-  matrix(0,nrow = length(ACS_count), ncol = 1)
   hh_index <- list()
   ImpossibleIndividuals <- list()
   z_HH_extra <- list()
@@ -50,7 +52,7 @@ GetImpossibleHouseholds <- function(d,ACS_count,lambda,w,phi,pi,howmany,n,synind
 
   ##
   total.batch <- 0
-  for (hh_size in  2:4) {
+  for (hh_size in  2:(length(ACS_count)+1)) {
     batch <- .GenerateData(hh_size,lambda, w, phi,pi, d, total.batch,ACS_count[hh_size -1],howmany,synindex)
 
     hh_size_new[hh_size-1] <- length(batch$z_HH_extra)

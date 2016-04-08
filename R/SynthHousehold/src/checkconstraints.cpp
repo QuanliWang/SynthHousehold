@@ -7,7 +7,7 @@ using namespace Rcpp;
 List checkconstraints(NumericMatrix data,int neededpossiblehh) {
   int nHouseholds = data.nrow(); //data item in rows. !!
 
-  //use the raw data instead, which has hh_size * 8 + 1 + hh_size
+  //use the raw data instead, which has hh_size * DIM + 1 + hh_size
   int columns = data.ncol();
   int hh_size = (columns -1) / (DIM+1);
 
@@ -68,7 +68,7 @@ NumericMatrix households2individuals(NumericMatrix data){
 
   int nHouseholds = data.ncol();
 
-  //use the raw data instead, which has hh_size * 8 + 1 + hh_size columns (in C)
+  //use the raw data instead, which has hh_size * DIM + 1 + hh_size columns (in C)
   int columns = data.nrow();
   int hh_size = (columns - 1) / (DIM+1);
 
