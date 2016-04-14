@@ -1,5 +1,5 @@
 rm(list = ls())
-library(SynthHousehold)
+library(NestedCategBayesImpute)
 library(dplyr)
 orig.file <- system.file("extdata", "origdata.txt", package = "SynthHousehold")
 orig.data <- read.table(orig.file,header = TRUE, sep = " ")

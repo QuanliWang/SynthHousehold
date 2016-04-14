@@ -1,5 +1,5 @@
 rm(list = ls())
-library(SynthHousehold)
+library(NestedCategBayesImpute)
 
 #set up data set
 data(household)

@@ -1,0 +1,14 @@
+Package: NestedCategBayesImpute
+Type: Package
+Title: Synthetic Household with Structure Zeros
+Version: 0.1
+Date: 2016-02-15
+Author: Quanli Wang, Jerry Reiter, Jingchen Hu and Olanrewaju Akande
+Maintainer: Quanli Wang <quanli@stat.duke.edu>
+Description: The tool set provides a set of functions to fit Dirichlet process mixture models for nested categorical data with structure zeros. It has has direct applications for generate synthetic households data.
+License: GPL(>=3)
+LazyData: TRUE
+Imports:
+    Rcpp (>= 0.12.0)
+LinkingTo:
+    Rcpp

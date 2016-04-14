@@ -7,7 +7,7 @@ using namespace Rcpp;
 
 // checkconstraints
 List checkconstraints(NumericMatrix data, int neededpossiblehh);
-RcppExport SEXP SynthHousehold_checkconstraints(SEXP dataSEXP, SEXP neededpossiblehhSEXP) {
+RcppExport SEXP NestedCategBayesImpute_checkconstraints(SEXP dataSEXP, SEXP neededpossiblehhSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -19,7 +19,7 @@ END_RCPP
 }
 // households2individuals
 NumericMatrix households2individuals(NumericMatrix data);
-RcppExport SEXP SynthHousehold_households2individuals(SEXP dataSEXP) {
+RcppExport SEXP NestedCategBayesImpute_households2individuals(SEXP dataSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -30,7 +30,7 @@ END_RCPP
 }
 // groupcount
 NumericMatrix groupcount(NumericVector g1, NumericVector g2, int n1, int n2);
-RcppExport SEXP SynthHousehold_groupcount(SEXP g1SEXP, SEXP g2SEXP, SEXP n1SEXP, SEXP n2SEXP) {
+RcppExport SEXP NestedCategBayesImpute_groupcount(SEXP g1SEXP, SEXP g2SEXP, SEXP n1SEXP, SEXP n2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -44,7 +44,7 @@ END_RCPP
 }
 // groupcount1D
 NumericVector groupcount1D(NumericVector g, int n);
-RcppExport SEXP SynthHousehold_groupcount1D(SEXP gSEXP, SEXP nSEXP) {
+RcppExport SEXP NestedCategBayesImpute_groupcount1D(SEXP gSEXP, SEXP nSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -56,7 +56,7 @@ END_RCPP
 }
 // samplehouseholds
 NumericMatrix samplehouseholds(NumericMatrix phi, NumericMatrix w, NumericVector pi, NumericVector d, List lambda, int currrentbatch, int nHouseholds, int householdsize);
-RcppExport SEXP SynthHousehold_samplehouseholds(SEXP phiSEXP, SEXP wSEXP, SEXP piSEXP, SEXP dSEXP, SEXP lambdaSEXP, SEXP currrentbatchSEXP, SEXP nHouseholdsSEXP, SEXP householdsizeSEXP) {
+RcppExport SEXP NestedCategBayesImpute_samplehouseholds(SEXP phiSEXP, SEXP wSEXP, SEXP piSEXP, SEXP dSEXP, SEXP lambdaSEXP, SEXP currrentbatchSEXP, SEXP nHouseholdsSEXP, SEXP householdsizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -74,7 +74,7 @@ END_RCPP
 }
 // samplezHH
 List samplezHH(NumericMatrix phi, NumericMatrix data, NumericMatrix w, NumericVector pi, NumericVector S, NumericMatrix HHdata, NumericMatrix lambda1, NumericMatrix lambda2);
-RcppExport SEXP SynthHousehold_samplezHH(SEXP phiSEXP, SEXP dataSEXP, SEXP wSEXP, SEXP piSEXP, SEXP SSEXP, SEXP HHdataSEXP, SEXP lambda1SEXP, SEXP lambda2SEXP) {
+RcppExport SEXP NestedCategBayesImpute_samplezHH(SEXP phiSEXP, SEXP dataSEXP, SEXP wSEXP, SEXP piSEXP, SEXP SSEXP, SEXP HHdataSEXP, SEXP lambda1SEXP, SEXP lambda2SEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -92,7 +92,7 @@ END_RCPP
 }
 // samplezmember
 NumericVector samplezmember(NumericMatrix phi, NumericMatrix data, NumericMatrix w, NumericVector zHH, NumericVector serial);
-RcppExport SEXP SynthHousehold_samplezmember(SEXP phiSEXP, SEXP dataSEXP, SEXP wSEXP, SEXP zHHSEXP, SEXP serialSEXP) {
+RcppExport SEXP NestedCategBayesImpute_samplezmember(SEXP phiSEXP, SEXP dataSEXP, SEXP wSEXP, SEXP zHHSEXP, SEXP serialSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
