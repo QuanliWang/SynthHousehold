@@ -14,8 +14,10 @@ List samplezHH(NumericMatrix phi, NumericMatrix data,
   int maxdd = phi.nrow() / p;
   int n = S.length();
 
-  NumericMatrix lambda1 = lambda[0];
-  NumericMatrix lambda2 = lambda[1];
+  std::vector<NumericMatrix> Lambdas;
+  for (int i = 0; i < lambda.length(); i++) {
+    Lambdas.push_back(lambda[i]);
+  }
 
   //printf("K = %d, L = %d, p = %d, maxd = %d, nIndividuals = %d, n=%d\n", K, L, p, maxdd, nIndividuals,n);
 
@@ -34,8 +36,6 @@ List samplezHH(NumericMatrix phi, NumericMatrix data,
   }
   int maxDDtP = maxdd*p;
   for (int h = 0; h < n; h++) {
-    int HHdata_base1 = (HHdata[h]-1)*K;
-    int HHdata_base2 = (HHdata[h+n]-1)*K;
     for (int k=0; k < K; k++) {
       double zupdateprod = 1.0;
       for (int memberindex=0; memberindex < S[h]; memberindex++){
@@ -52,9 +52,10 @@ List samplezHH(NumericMatrix phi, NumericMatrix data,
         } // closing l++
         zupdateprod *= add;
       } // closing member++
-      zupdateprod *= lambda1[HHdata_base1+k];
-      zupdateprod *= lambda2[HHdata_base2+k];
 
+      for (int hv = 0; hv < Lambdas.size(); hv++) {
+        zupdateprod *= Lambdas[hv][(HHdata[h+hv*n]-1)*K+k];
+      }
       zupdateprob1[k] = pi[k]*zupdateprod;
     } // closing k++
     group[h] = samplew(zupdateprob1, K, rand[h]);
