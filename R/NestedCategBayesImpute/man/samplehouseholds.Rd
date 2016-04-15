@@ -7,7 +7,7 @@ Rcpp implementation for sampling household data without constraints.
 Rcpp implementation for sampling household data without constraints.
 }
 \usage{
-samplehouseholds(phi, w, pi, d, lambda1, lambda2, currrentbatch,
+samplehouseholds(phi, w, pi, d, lambda, currrentbatch,
                 nHouseholds, householdsize)
 }
 \arguments{
@@ -23,11 +23,8 @@ samplehouseholds(phi, w, pi, d, lambda1, lambda2, currrentbatch,
   \item{d}{
   the number of levels for each variable.
 }
-  \item{lambda1}{
-  lambda for the first household level variable
-}
-  \item{lambda2}{
-  lambda for rge second household level variable
+  \item{lambda}{
+  A list of lambdas for household level variables.
 }
   \item{currrentbatch}{
   The current batch number for the household data to be generated. The household ID will be generated based on this batch number.

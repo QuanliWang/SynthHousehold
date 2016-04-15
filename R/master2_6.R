@@ -29,7 +29,7 @@ for (i in 1:mc$nrun) {
   t <- proc.time()
   # update zHH
   z_household <- samplezHH(para$phi,orig$dataT,para$w,para$pi,orig$SS,t(para$HHdata_all[,1:orig$n]),
-            para$lambda[[1]],para$lambda[[2]])
+            para$lambda)
 
   # update zIndividual
   z_Individuals <- samplezmember(para$phi,orig$dataT,para$w,z_household$z_HH,orig$HHserial)

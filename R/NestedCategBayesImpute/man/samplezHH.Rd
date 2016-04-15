@@ -7,7 +7,7 @@ Update household level component indexes.
 Update household level component indexes.
 }
 \usage{
-samplezHH(phi, data, w, pi, S, HHdata, lambda1, lambda2)
+samplezHH(phi, data, w, pi, S, HHdata, lambda)
 }
 \arguments{
   \item{phi}{
@@ -28,11 +28,8 @@ samplezHH(phi, data, w, pi, S, HHdata, lambda1, lambda2)
   \item{HHdata}{
   Household level variables. Currently hard-coded to two variables in the paper.
 }
-  \item{lambda1}{
-  lambda for household level variable 1
-}
-  \item{lambda2}{
-  lambda for household level variable 2 (household size)
+  \item{lambda}{
+  a list of lambdas for household level variables
 }
 }
 \details{
