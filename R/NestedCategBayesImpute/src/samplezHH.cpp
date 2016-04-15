@@ -5,8 +5,7 @@ using namespace Rcpp;
 // [[Rcpp::export]]
 List samplezHH(NumericMatrix phi, NumericMatrix data,
                           NumericMatrix w, NumericVector pi, NumericVector S,
-                          NumericMatrix HHdata, NumericMatrix lambda1,
-                          NumericMatrix lambda2) {
+                          NumericMatrix HHdata, List lambda) {
                  //, NumericVector rand) {
   int p = data.nrow();
   int nIndividuals = data.ncol();
@@ -14,6 +13,10 @@ List samplezHH(NumericMatrix phi, NumericMatrix data,
   int L = w.ncol();
   int maxdd = phi.nrow() / p;
   int n = S.length();
+
+  NumericMatrix lambda1 = lambda[0];
+  NumericMatrix lambda2 = lambda[1];
+
   //printf("K = %d, L = %d, p = %d, maxd = %d, nIndividuals = %d, n=%d\n", K, L, p, maxdd, nIndividuals,n);
 
   NumericVector group(n);

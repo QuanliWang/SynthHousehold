@@ -73,8 +73,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // samplezHH
-List samplezHH(NumericMatrix phi, NumericMatrix data, NumericMatrix w, NumericVector pi, NumericVector S, NumericMatrix HHdata, NumericMatrix lambda1, NumericMatrix lambda2);
-RcppExport SEXP NestedCategBayesImpute_samplezHH(SEXP phiSEXP, SEXP dataSEXP, SEXP wSEXP, SEXP piSEXP, SEXP SSEXP, SEXP HHdataSEXP, SEXP lambda1SEXP, SEXP lambda2SEXP) {
+List samplezHH(NumericMatrix phi, NumericMatrix data, NumericMatrix w, NumericVector pi, NumericVector S, NumericMatrix HHdata, List lambda);
+RcppExport SEXP NestedCategBayesImpute_samplezHH(SEXP phiSEXP, SEXP dataSEXP, SEXP wSEXP, SEXP piSEXP, SEXP SSEXP, SEXP HHdataSEXP, SEXP lambdaSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
@@ -84,9 +84,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type pi(piSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type S(SSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type HHdata(HHdataSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type lambda1(lambda1SEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type lambda2(lambda2SEXP);
-    __result = Rcpp::wrap(samplezHH(phi, data, w, pi, S, HHdata, lambda1, lambda2));
+    Rcpp::traits::input_parameter< List >::type lambda(lambdaSEXP);
+    __result = Rcpp::wrap(samplezHH(phi, data, w, pi, S, HHdata, lambda));
     return __result;
 END_RCPP
 }
