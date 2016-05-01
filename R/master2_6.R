@@ -1,21 +1,26 @@
 rm(list = ls())
 library(NestedCategBayesImpute)
 library(dplyr)
-orig.file <- system.file("extdata", "origdata.txt", package = "SynthHousehold")
+orig.file <- system.file("extdata", "origdata.txt", package = "NestedCategBayesImpute")
 orig.data <- read.table(orig.file,header = TRUE, sep = " ")
-names(orig.data) <- c("Hhindex", "pernum", "sex", "race", "sthn","age","relate","ownership")
+names(orig.data) <- c("Hhindex","pernum", "sex", "race", "sthn","age","relate","ownership",
+                      "headsex", "headrace", "headsthn","headage","headrelate")
 household.size <- as.data.frame(table(orig.data[,1]))
 household.size[,1] <- as.numeric(household.size[,1])
 names(household.size) <- c("Hhindex", 'householdsize')
 household <- orig.data %>% inner_join(household.size)
 orig <- initData(household)
+orig$HHdataorigT <- orig$HHdataorigT + 1 ## Michael
 
 #mcmc parameters
 mc <- list(nrun = 10000, burn = 5000, thin = 50)
 mc$eff.sam <- (mc$nrun-mc$burn)/mc$thin
 #hyper parameters
 #aa ab: gamma hyperparameters for alpha
-hyper <- list(K=40 , L=15, aa=0.25, ab=0.25, ba=0.25,bb=0.25, dHH = c(2,length(unique(household[,"householdsize"]))), blocksize = 10000)
+#hyper <- list(K=40 , L=15, aa=0.25, ab=0.25, ba=0.25,bb=0.25,
+#              dHH = c(2,length(unique(household[,"householdsize"]))), blocksize = 10000)
+hyper <- list(K=40 , L=15, aa=0.25, ab=0.25, ba=0.25,bb=0.25,
+              dHH = c(orig$d,2,length(unique(household[,"householdsize"]))), blocksize = 10000)
 para <- initParameters(orig,hyper)
 output <- initOutput(orig,hyper,mc)
 
@@ -23,7 +28,6 @@ synindex <- c(9910,9920,9930,9940,9950,9960,9970,9980,9990,10000)
 synData <- list()
 
 #Rprof("R1.out",interval = 0.001)
-
 for (i in 1:mc$nrun) {
   cat(paste("iteration ", i,"\n", sep = ""))
   t <- proc.time()

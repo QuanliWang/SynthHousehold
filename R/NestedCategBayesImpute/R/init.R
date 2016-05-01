@@ -5,17 +5,19 @@ initData <- function(household) {
   orig$n <- length(orig$SS)
 
   HHrowIndex <- c(1, cumsum(orig[["SS"]])+1)
-  #column 8 and 9 are household level data
-  orig$HHdataorigT <- t(household[HHrowIndex[1:orig$n],c(8,9)])
+  #column 8 to 14 are household level data ### Michael
+  orig$HHdataorigT <- t(household[HHrowIndex[1:orig$n],c(8,14,9:13)])
   orig$HHserial <- household[,1]
 
   orig$n_individuals <- dim(household)[1]
   #hard-coded data structure for now, as we don't know if it will apply to more general data set yet
   orig$p <- dim(household)[2] - 4
+  orig$p <-  orig$p/2 ### Michael
 
   #levels for each variable in the model. This might be different from the sun-sampled data in use
-  orig$d <- c(0,0,0,0,0)
-  for (i in 1: length(orig$d)) {
+  #orig$d <- c(0,0,0,0,0)
+  orig$d <- rep(0,orig$p) ### Michael
+  for (i in 1:length(orig$d)) {
     orig$d[i] <- max(household[,i+2])
   }
   orig$dataT <- t(household[,3:7])
