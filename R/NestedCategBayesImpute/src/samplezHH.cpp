@@ -6,7 +6,6 @@ using namespace Rcpp;
 List samplezHH(NumericMatrix phi, NumericMatrix data,
                           NumericMatrix w, NumericVector pi, NumericVector S,
                           NumericMatrix HHdata, List lambda) {
-                 //, NumericVector rand) {
   int p = data.nrow();
   int nIndividuals = data.ncol();
   int K = w.nrow();
