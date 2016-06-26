@@ -16,7 +16,16 @@ NumericMatrix samplehouseholds(NumericMatrix phi, NumericMatrix w, NumericVector
   int maxDDtp = phi.nrow();
   int maxdd = maxDDtp / p;
 
-  int ncol = householdsize * DIM + 1 + householdsize;
+  //int ncol = householdsize * DIM + 1 + householdsize;
+  //output data: zero-based
+  //column 0: household unique index
+  //column 1: member index within the household (pernum:person number?)
+  //column 2 to 2+p-1: individual data
+  //column 2+p: 2+p+n_lambdas-2: household level data
+  //column 2+p+n_lambdas-1: household group indicator
+  //column last hh_size: individual group indicator
+  int DIM = 2 + p + n_lambdas - 1; //not output the household size
+  int ncol = DIM * householdsize + householdsize  + 1;
   NumericMatrix data(nHouseholds, ncol);
 
   //copy data from list of matrices to C++
@@ -26,9 +35,10 @@ NumericMatrix samplehouseholds(NumericMatrix phi, NumericMatrix w, NumericVector
     lambdas[i] = new double[l.length()];
     std::copy(l.begin(), l.end(), lambdas[i]);
   }
+
 //   NumericVector rand = runif(nHouseholds * (householdsize *(1+p) + 2));
-  NumericVector rand = runif(nHouseholds * (householdsize *(1+p) + n_lambdas)); // Michael
-  //n_lambdas is not used for now, but might be useful when there are more than two household level variables
+//  NumericVector rand = runif(nHouseholds * (householdsize *(1+p) + n_lambdas));
+  NumericVector rand = runif(nHouseholds * ncol); //at most this many
   sampleHouseholds_imp(data.begin(), rand.begin(), lambdas, lambda_columns, w.begin(),
                    phi.begin(), pi.begin(),d.begin(),
                    nHouseholds, householdsize, K, L,maxdd,p, currrentbatch,n_lambdas);

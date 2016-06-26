@@ -1,5 +1,6 @@
 #include "sampleW.h"
 #include "samplehouseholds.h"
+#include <cstdio>
 
 void sampleHouseholds_imp(double* data, double* rand,  double** lambda, int* lambda_columns, double* w, double* phi,
                           double *pi, double* d,int nHouseholds, int householdsize, int K,int L,
@@ -11,18 +12,19 @@ void sampleHouseholds_imp(double* data, double* rand,  double** lambda, int* lam
     double* nextrand = rand; //traverse through random numbers
 
     int column;
-    //sampling hhindexh, column: householdsize householdsize * DIM + 1
+    int DIM = 2 + p + n_lambdas - 1;
+    //sampling hhindexh, column: householdsize * DIM + 1
     column = (householdsize * DIM + 1) - 1; //zero-based column
     double* hhindexh = data + column * nHouseholds;
 
-    double* pi_lambda2 = new double[K];
-    double* currentlambdacolumn = lambda[1] + (householdsize - 1 -1) * K; //column hh_size-1, addjusted to zero based
+    double* pi_lambda_last = new double[K];
+    double* currentlambdacolumn = lambda[n_lambdas-1] + (householdsize - 1 -1) * K; //column hh_size-1, addjusted to zero based
     for (int i = 0; i < K; i++) {
-        pi_lambda2[i] = pi[i] * currentlambdacolumn[i];
+      pi_lambda_last[i] = pi[i] * currentlambdacolumn[i];
     }
-    samplew_multi2(pi_lambda2, K, nextrand,hhindexh,nHouseholds);
+    samplew_multi2(pi_lambda_last, K, nextrand,hhindexh,nHouseholds);
     nextrand += nHouseholds; //advance nHouseholds random numbers
-    delete [] pi_lambda2;
+    delete [] pi_lambda_last;
 
     //prepare w for group sampling, first need to transpose w
     double* wt = new double[K * L];
@@ -40,25 +42,6 @@ void sampleHouseholds_imp(double* data, double* rand,  double** lambda, int* lam
         }
         currentrow += L;
     }
-
-    //prepare lambda1 for group sampling, first need to transpose lambda1
-    //the code  here duplicate the lines above for w
-    double* lambda1t = new double[K * lambda_columns[0]];
-    currentrow = lambda1t;
-    for (int k =0; k < K; k++) {
-        double dsum = 0.0;
-        for (int l = 0; l <lambda_columns[0]; l++) {
-            //transpose first
-            currentrow[l] = lambda[0][l*K+k];
-            dsum += currentrow[l];
-        }
-        currentrow[0] /= dsum;
-        for (int l = 1; l <lambda_columns[0]; l++) {
-            currentrow[l] = currentrow[l]/dsum + currentrow[l-1]; //normilized cum_sum
-        }
-        currentrow += lambda_columns[0];
-    }
-
 
     //now sampling from each group for each individual
     //memberindexhh
@@ -79,27 +62,45 @@ void sampleHouseholds_imp(double* data, double* rand,  double** lambda, int* lam
         }
     }
 
-
     //generate household level data
-
-    for (int i = 0; i < householdsize; i++) {
-        columns[i] = data + ((i+1) * DIM -1) * nHouseholds; //zero-based column
-    }
-
-    for (int i = 0; i < nHouseholds; i++) {
-        int group = (int)hhindexh[i]-1;
-        double* currentp = lambda1t + group * lambda_columns[0];
-        double rn = *nextrand++;
-        int k;
-        for(k=0;k < lambda_columns[0] && rn>currentp[k];k++) //see sampleW for algorithm
-            ;
-        for (int j = 0; j < householdsize; j++) {
-            columns[j][i] = k + 1;
+    for (int g = 0; g < n_lambdas-1; g++) {
+      //printf("g = %d\n", g);
+      //prepare lambdas for for group sampling, first need to transpose lambda
+      //the code  here duplicate the lines above for w
+      double* lambda_t = new double[K * lambda_columns[g]];
+      currentrow = lambda_t;
+      for (int k =0; k < K; k++) {
+        double dsum = 0.0;
+        for (int l = 0; l <lambda_columns[g]; l++) {
+          //transpose first
+          currentrow[l] = lambda[g][l*K+k];
+          dsum += currentrow[l];
         }
-    }
+        currentrow[0] /= dsum;
+        for (int l = 1; l <lambda_columns[g]; l++) {
+          currentrow[l] = currentrow[l]/dsum + currentrow[l-1]; //normilized cum_sum
+        }
+        currentrow += lambda_columns[g];
+      }
 
+      for (int i = 0; i < householdsize; i++) {
+          columns[i] = data + (i * DIM + 2 + p + g) * nHouseholds; //zero-based column
+      }
+
+      for (int i = 0; i < nHouseholds; i++) {
+          int group = (int)hhindexh[i]-1;
+          double* currentp = lambda_t + group * lambda_columns[g];
+          double rn = *nextrand++;
+          int k;
+          for(k=0;k < lambda_columns[g] && rn>currentp[k];k++) //see sampleW for algorithm
+              ;
+          for (int j = 0; j < householdsize; j++) {
+              columns[j][i] = k + 1;
+          }
+      }
+      delete [] lambda_t;
+    }
     delete [] wt;
-    delete [] lambda1t;
     delete [] columns;
 
     //extract p values for each variable
@@ -124,19 +125,24 @@ void sampleHouseholds_imp(double* data, double* rand,  double** lambda, int* lam
         }
     }
 
-    double** datacolumns = new double*[7]; //7 variables to genetate data
+    double** datacolumns = new double*[2+p]; // 2+p variables to genetate data
     int* groupindex = new int[nHouseholds];
-    //now generate individual data (column 2 through 6, zero-based )
+    //now generate individual data (column 2 through 2+p-1, zero-based )
     for (int hh =0; hh < householdsize; hh++) {
         //set columns
-        for (int i =0; i < 7; i++) {
+        for (int i =0; i < 2+p ; i++) {
             datacolumns[i] = data + (hh * DIM + i) * nHouseholds; //zero-based column
         }
         //set groupindex
-        //groupindex = (hhindexh-1)*L+data_to_check(:,hh_size * 8 +1 + hh);
         double* hh_column = data + ((householdsize * DIM + 1) + hh) * nHouseholds;
         for (int i = 0; i < nHouseholds; i++) {
             groupindex[i] = (hhindexh[i]-1)*L + hh_column[i];
+        }
+
+        int houseIndex = currrentbatch *nHouseholds;
+        for (int j = 0; j < nHouseholds; j++) {
+          datacolumns[0][j] = houseIndex + j + 1; //one based houseIndex
+          datacolumns[1][j] = hh+1;
         }
 
         for (int i = 0; i < p; i++) {
@@ -151,11 +157,7 @@ void sampleHouseholds_imp(double* data, double* rand,  double** lambda, int* lam
                 datacolumns[i+2][j] = k+1; //start at column 2, zero-based
             }
         }
-        int houseIndex = currrentbatch *nHouseholds;
-        for (int j = 0; j < nHouseholds; j++) {
-            datacolumns[0][j] = houseIndex + j + 1; //i based houseIndex
-            datacolumns[1][j] = hh+1;
-        }
+
 
     }
     delete [] datacolumns;
@@ -166,4 +168,5 @@ void sampleHouseholds_imp(double* data, double* rand,  double** lambda, int* lam
         delete [] ps[i];
     }
     delete [] ps;
+
 }
