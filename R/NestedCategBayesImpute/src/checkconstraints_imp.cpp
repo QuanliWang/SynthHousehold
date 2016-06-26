@@ -172,7 +172,6 @@ inline bool IsValidGrandChild(double *record, int hhsize, int spouse, int head) 
 
 int isValid(double *datah, int hh_size) {
 
-    //mexPrintf("check head 0\n");
     int head = GetHead(datah,hh_size);
     if (head <=0) {return 0;}
 
@@ -202,7 +201,7 @@ int isValid(double *datah, int hh_size) {
 
 }
 
-int checkconstraints_imp(double *data, double *isPossible,int hh_size, int nHouseholds) {
+int checkconstraints_imp(double *data, double *isPossible,int hh_size, int DIM, int nHouseholds) {
 
     int totalpossible = 0;
     double *datah = new double[hh_size * 3 + 1];
@@ -212,7 +211,7 @@ int checkconstraints_imp(double *data, double *isPossible,int hh_size, int nHous
 	for (int m = 1; m <= nHouseholds; m++){
         for (int j = 1; j <= hh_size; j++) {
             for (int k = 0; k < COL; k++) {
-                datah[k * hh_size + j] = data[((j-1) * 8 + column[k] -1) * nHouseholds + (m-1)];
+                datah[k * hh_size + j] = data[((j-1) * DIM + column[k] -1) * nHouseholds + (m-1)];
             }
         }
 		isPossible[m-1] = isValid(datah, hh_size);

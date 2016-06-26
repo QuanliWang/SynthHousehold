@@ -6,25 +6,27 @@
 using namespace Rcpp;
 
 // checkconstraints
-List checkconstraints(NumericMatrix data, int neededpossiblehh);
-RcppExport SEXP NestedCategBayesImpute_checkconstraints(SEXP dataSEXP, SEXP neededpossiblehhSEXP) {
+List checkconstraints(NumericMatrix data, int neededpossiblehh, int hh_size);
+RcppExport SEXP NestedCategBayesImpute_checkconstraints(SEXP dataSEXP, SEXP neededpossiblehhSEXP, SEXP hh_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericMatrix >::type data(dataSEXP);
     Rcpp::traits::input_parameter< int >::type neededpossiblehh(neededpossiblehhSEXP);
-    __result = Rcpp::wrap(checkconstraints(data, neededpossiblehh));
+    Rcpp::traits::input_parameter< int >::type hh_size(hh_sizeSEXP);
+    __result = Rcpp::wrap(checkconstraints(data, neededpossiblehh, hh_size));
     return __result;
 END_RCPP
 }
 // households2individuals
-NumericMatrix households2individuals(NumericMatrix data);
-RcppExport SEXP NestedCategBayesImpute_households2individuals(SEXP dataSEXP) {
+NumericMatrix households2individuals(NumericMatrix data, int hh_size);
+RcppExport SEXP NestedCategBayesImpute_households2individuals(SEXP dataSEXP, SEXP hh_sizeSEXP) {
 BEGIN_RCPP
     Rcpp::RObject __result;
     Rcpp::RNGScope __rngScope;
     Rcpp::traits::input_parameter< NumericMatrix >::type data(dataSEXP);
-    __result = Rcpp::wrap(households2individuals(data));
+    Rcpp::traits::input_parameter< int >::type hh_size(hh_sizeSEXP);
+    __result = Rcpp::wrap(households2individuals(data, hh_size));
     return __result;
 END_RCPP
 }

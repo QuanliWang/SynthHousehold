@@ -4,15 +4,16 @@ using namespace Rcpp;
 #include "checkconstraints.h"
 
 // [[Rcpp::export]]
-List checkconstraints(NumericMatrix data,int neededpossiblehh) {
+List checkconstraints(NumericMatrix data,int neededpossiblehh, int hh_size) {
   int nHouseholds = data.nrow(); //data item in rows. !!
 
   //use the raw data instead, which has hh_size * DIM + 1 + hh_size
   int columns = data.ncol();
-  int hh_size = (columns -1) / (DIM+1);
+  int DIM = (columns -1) / hh_size -1;
+  //int hh_size = (columns -1) / (DIM+1);
 
   NumericVector isPossible(nHouseholds);
-  int totalpossible = checkconstraints_imp(data.begin(), isPossible.begin(), hh_size, nHouseholds);
+  int totalpossible = checkconstraints_imp(data.begin(), isPossible.begin(), hh_size, DIM, nHouseholds);
 
   int rows = nHouseholds-totalpossible;
   NumericMatrix newdata(columns,rows);
@@ -64,14 +65,14 @@ List checkconstraints(NumericMatrix data,int neededpossiblehh) {
 }
 
 // [[Rcpp::export]]
-NumericMatrix households2individuals(NumericMatrix data){
+NumericMatrix households2individuals(NumericMatrix data, int hh_size){
 
   int nHouseholds = data.ncol();
 
   //use the raw data instead, which has hh_size * DIM + 1 + hh_size columns (in C)
   int columns = data.nrow();
-  int hh_size = (columns - 1) / (DIM+1);
-
+  //int hh_size = (columns - 1) / (DIM+1);
+  int DIM = (columns -1) / hh_size -1;
   NumericMatrix Individuals(DIM + 2, nHouseholds*hh_size);
 
   int c9 = hh_size * DIM;

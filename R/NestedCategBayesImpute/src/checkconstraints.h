@@ -9,7 +9,6 @@
 #define SIBLINGINLAW 8
 #define GRANDCHILD 9
 
-#define DIM 8
 #define COL 3
 
-int checkconstraints_imp(double *data, double *isPossible,int hh_size, int nHouseholds);
+int checkconstraints_imp(double *data, double *isPossible,int hh_size, int DIM, int nHouseholds);
