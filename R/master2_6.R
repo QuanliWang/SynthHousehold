@@ -13,10 +13,9 @@ household <- orig.data %>% inner_join(household.size)
 individual_varible_index = c(3:7)
 
 #column 8 to 14 are household level data
-household_variable_index = c(8,14,9:13)
+household_variable_index = c(8:14) #make sure the last one is household size
 
 orig <- initData(household, individual_varible_index,household_variable_index)
-#orig$HHdataorigT <- orig$HHdataorigT + 1 ## Michael
 
 #mcmc parameters
 mc <- list(nrun = 10000, burn = 5000, thin = 50)
