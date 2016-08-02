@@ -1,4 +1,6 @@
 .GenerateData <- function(hh_size,lambda, w, phi,pi, d, total.batch,possiblehhcount,howmany,synindex) {
+  #save(hh_size,lambda, w, phi,pi, d, total.batch,possiblehhcount,howmany,synindex, file = "last2.RData")
+  #return(NULL)
   Individuals_extra <- list()
   z_HH_extra <- list()
   HHData_extra <- list()
@@ -12,7 +14,6 @@
     #print(batch.index)
     #generate a batch of 10K household
     data_to_check <- samplehouseholds(phi,w, pi, d, lambda,batch.index+total.batch, howmany,hh_size)
-
 
     #impossible household
     checked.households <- checkconstraints(data_to_check,possiblehhcount-n_possible_household)
@@ -41,6 +42,8 @@
 }
 
 GetImpossibleHouseholds <- function(d,ACS_count,lambda,w,phi,pi,howmany,n,synindex) {
+  #save(d,ACS_count,lambda,w,phi,pi,howmany,n,synindex, file = "last.RData")
+  #return(NULL)
   cumsize <- 0
   hh_size_new <-  matrix(0,nrow = length(ACS_count), ncol = 1)
   hh_index <- list()
@@ -51,17 +54,17 @@ GetImpossibleHouseholds <- function(d,ACS_count,lambda,w,phi,pi,howmany,n,synind
 
   ##
   total.batch <- 0
-  for (hh_size in  2:(length(ACS_count)+1)) {
-    batch <- .GenerateData(hh_size,lambda, w, phi,pi, d, total.batch,ACS_count[hh_size -1],howmany,synindex)
+  for (hh_size in  1:(length(ACS_count))) {
+    batch <- .GenerateData(hh_size,lambda, w, phi,pi, d, total.batch,ACS_count[hh_size],howmany,synindex)
 
-    hh_size_new[hh_size-1] <- length(batch$z_HH_extra)
-    hh_index[[hh_size -1]] <- cumsize + rep(1:hh_size_new[hh_size-1], each = hh_size)
-    cumsize <- cumsize + hh_size_new[hh_size-1]
-    ImpossibleIndividuals[[hh_size -1]] <- batch$Individuals_extra
-    z_HH_extra[[hh_size -1]] <-  batch$z_HH_extra
-    HHdata_extra[[hh_size -1]] <- rbind(batch$HHData_extra,rep(hh_size - 1, times = hh_size_new[hh_size-1])) # 2 by ...
+    hh_size_new[hh_size] <- length(batch$z_HH_extra)
+    hh_index[[hh_size]] <- cumsize + rep(1:hh_size_new[hh_size], each = hh_size)
+    cumsize <- cumsize + hh_size_new[hh_size]
+    ImpossibleIndividuals[[hh_size]] <- batch$Individuals_extra
+    z_HH_extra[[hh_size]] <-  batch$z_HH_extra
+    HHdata_extra[[hh_size]] <- rbind(batch$HHData_extra,rep(hh_size, times = hh_size_new[hh_size])) # 2 by ...
     if (synindex > 0) {
-      synIndividuals_all[[hh_size -1]] <- batch$synIndividuals
+      synIndividuals_all[[hh_size]] <- batch$synIndividuals
     }
     total.batch <- batch$batch.index
   }

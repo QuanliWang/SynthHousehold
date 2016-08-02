@@ -221,3 +221,24 @@ int checkconstraints_imp(double *data, double *isPossible,int hh_size, int DIM, 
 	delete [] datah;
     return totalpossible;
 }
+
+int checkconstraints_imp_format2(double *data, double *isPossible,int hh_size, int DIM, int nHouseholds) {
+
+  int totalpossible = 0;
+  double *datah = new double[hh_size * 3 + 1];
+  //column 3, 6, 7 = sex, age and relte
+  int column[COL]; column[0] = 3; column[1] = 6; column[2] = 7;
+
+  for (int m = 1; m <= nHouseholds; m++){
+    for (int j = 1; j <= hh_size; j++) {
+      for (int k = 0; k < COL; k++) {
+        datah[k * hh_size + j] = data[((j-1) * DIM + column[k] -1) * nHouseholds + (m-1)];
+      }
+    }
+    isPossible[m-1] = isValid(datah, hh_size);
+    totalpossible+= (int)isPossible[m-1];
+  }
+
+  delete [] datah;
+  return totalpossible;
+}
