@@ -17,7 +17,7 @@
 
     #impossible household
     hh_size_real <- hh_size + 1
-    data_to_check_old_format <- ConvertDataForward(data_to_check,hh_size,p,lambda)
+    #data_to_check_old_format <- ConvertDataForward(data_to_check,hh_size,p,lambda)
 
     checked.households <- checkconstraints(data_to_check,possiblehhcount-n_possible_household, hh_size+1)
     n_possible_household <- n_possible_household + checked.households$possible
