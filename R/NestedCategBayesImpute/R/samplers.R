@@ -1,6 +1,6 @@
-UpdatePhi <- function(IndividualData_all, z_Individual_all, K, L, p, d, maxd) {
+UpdatePhi <- function(IndividualData_all, z_Individual_all, K, L, p, d, maxd,individual_varible_index) {
   phi <- array(NA,dim = c(maxd,p, K*L))
-  data = IndividualData_all[3:7,]
+  data = IndividualData_all[individual_varible_index,]
   groupIndex <- L*(z_Individual_all[1,]-1)+z_Individual_all[2,]
   for (j in 1:p) {
     phicount <- groupcount(groupIndex, data[j,], K*L, d[j])

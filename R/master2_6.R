@@ -52,18 +52,19 @@ for (i in 1:mc$nrun) {
     synData[[which(synindex ==i)]] <- data.extra$synIndividuals_all[1:8,]
   }
     #combine data and indicators
+    DIM <- dim(data.extra$IndividualData_extra)[1]
     para$z_HH_all <- c(z_household$z_HH, data.extra$z_HH_extra)
     para$HHdata_all <- orig$HHdataorigT
-    para$HHdata_all[2,] <- para$HHdata_all[2,] -1
     para$HHdata_all <- cbind(para$HHdata_all,data.extra$HHdata_extra)
-    para$IndividualData_all <- cbind(t(orig$origdata[,1:8]),data.extra$IndividualData_extra)
+    para$IndividualData_all <- cbind(t(orig$origdata[,1:DIM]),data.extra$IndividualData_extra)
 
     #row 1 for K groups and row 2 for L groups
     temp <- rbind(z_household$z_HH_Individuals,z_Individuals)
     para$z_Individual_all  <- cbind(temp,data.extra$z_HHdata_individual_extra)
 
     # update phi
-    para$phi <- UpdatePhi(para$IndividualData_all,para$z_Individual_all, hyper$K,hyper$L,orig$p,orig$d,orig$maxd);
+    para$phi <- UpdatePhi(para$IndividualData_all,para$z_Individual_all,
+                    hyper$K,hyper$L,orig$p,orig$d,orig$maxd,individual_varible_index)
 
     #update W
     W <- UpdateW(para$beta,para$z_Individual_all, hyper$K, hyper$L)
