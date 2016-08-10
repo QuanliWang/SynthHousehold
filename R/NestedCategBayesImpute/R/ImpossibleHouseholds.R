@@ -21,10 +21,17 @@
 
     checked.households <- checkconstraints(data_to_check_old_format,possiblehhcount-n_possible_household, hh_size+1)
     n_possible_household <- n_possible_household + checked.households$possible
+    if (length(checked.households$Households) > 0) {
+      checked.households$Households <- t(ConvertDataBack(t(checked.households$Households),hh_size,p,lambda))
+    }
+    if (length(checked.households$synHouseholds) > 0) {
+      checked.households$synHouseholds <- t(ConvertDataBack(t(checked.households$synHouseholds),hh_size,p,lambda))
+    }
 
-    Individuals_extra[[batch.index]] <- households2individuals(checked.households$Households)
-    z_HH_extra[[batch.index]] <- checked.households$Households[hh_size * 8 +1,]
-    HHData_extra[[batch.index]] <- checked.households$Households[8,]
+    Individuals_extra[[batch.index]] <- households2individuals(checked.households$Households,hh_size)
+    DIM <- p + length(lambda) + 1
+    z_HH_extra[[batch.index]] <- checked.households$Households[hh_size * DIM +1,]
+    HHData_extra[[batch.index]] <- checked.households$Households[(p+3): DIM,]
     if (synindex > 0) {
       synIndividuals[[batch.index]]  <- households2individuals(checked.households$synHouseholds)
     }
@@ -32,7 +39,7 @@
 
   Individuals_extra <- do.call(cbind, Individuals_extra)
   z_HH_extra <- unlist(z_HH_extra)
-  HHData_extra <- unlist(HHData_extra)
+  HHData_extra <- do.call(cbind, HHData_extra)
   if (synindex > 0) {
     synIndividuals <- do.call(cbind, synIndividuals)
   }
