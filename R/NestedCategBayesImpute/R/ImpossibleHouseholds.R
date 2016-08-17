@@ -33,7 +33,7 @@
     z_HH_extra[[batch.index]] <- checked.households$Households[hh_size * DIM +1,]
     HHData_extra[[batch.index]] <- checked.households$Households[(p+3): DIM,]
     if (synindex > 0) {
-      synIndividuals[[batch.index]]  <- households2individuals(checked.households$synHouseholds)
+      synIndividuals[[batch.index]]  <- households2individuals(checked.households$synHouseholds,hh_size)
     }
   }
 

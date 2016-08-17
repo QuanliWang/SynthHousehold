@@ -1,10 +1,13 @@
 rm(list = ls())
 library(NestedCategBayesImpute)
 library(dplyr)
-orig.file <- system.file("extdata", "origdata_new.txt", package = "NestedCategBayesImpute")
+
+orig.file <- system.file("extdata", "origdata_newFormat.txt", package = "NestedCategBayesImpute")
+
+
 orig.data <- read.table(orig.file,header = TRUE, sep = " ")
 names(orig.data) <- c("Hhindex","pernum", "sex", "race", "sthn","age","relate","ownership",
-                      "headsex", "headrace", "headsthn","headage","headrelate")
+                      "headsex", "headrace", "headsthn","headage")
 household.size <- as.data.frame(table(orig.data[,1]))
 household.size[,1] <- as.numeric(household.size[,1])
 names(household.size) <- c("Hhindex", 'householdsize')
@@ -13,7 +16,7 @@ household <- orig.data %>% inner_join(household.size)
 individual_varible_index = c(3:7)
 
 #column 8 to 14 are household level data
-household_variable_index = c(8:14) #make sure the last one is household size
+household_variable_index = c(8:13) #make sure the last one is household size
 
 orig <- initData(household, individual_varible_index,household_variable_index)
 
@@ -32,7 +35,7 @@ hyper <- list(K=40 , L=15, aa=0.25, ab=0.25, ba=0.25,bb=0.25,
 para <- initParameters(orig,hyper)
 output <- initOutput(orig,hyper,mc)
 
-synindex <- c(9910,9920,9930,9940,9950,9960,9970,9980,9990,10000)
+synindex <- c(100,9920,9930,9940,9950,9960,9970,9980,9990,10000)
 synData <- list()
 
 #Rprof("R1.out",interval = 0.001)
@@ -47,12 +50,14 @@ for (i in 1:mc$nrun) {
   z_Individuals <- samplezmember(para$phi,orig$dataT,para$w,z_household$z_HH,orig$HHserial)
   data.extra <- GetImpossibleHouseholds(orig$d,orig$ACS_count,para$lambda,para$w,para$phi,
                   para$pi,hyper$blocksize,orig$n,is.element(i,synindex))
+
   para$hh_size_new <- as.vector(data.extra$hh_size_new)
+  DIM <- dim(data.extra$IndividualData_extra)[1]
   if (is.element(i,synindex)) {
-    synData[[which(synindex ==i)]] <- data.extra$synIndividuals_all[1:8,]
+    synData[[which(synindex ==i)]] <- data.extra$synIndividuals_all[1:DIM,]
   }
     #combine data and indicators
-    DIM <- dim(data.extra$IndividualData_extra)[1]
+
     para$z_HH_all <- c(z_household$z_HH, data.extra$z_HH_extra)
     para$HHdata_all <- orig$HHdataorigT
     para$HHdata_all <- cbind(para$HHdata_all,data.extra$HHdata_extra)
