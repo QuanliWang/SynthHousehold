@@ -12,7 +12,7 @@ List samplezHH(NumericMatrix phi, NumericMatrix data,
   int L = w.ncol();
   int maxdd = phi.nrow() / p;
   int n = S.length();
-
+  //printf("in samplezHH\n");
   std::vector<NumericMatrix> Lambdas;
   for (int i = 0; i < lambda.length(); i++) {
     Lambdas.push_back(lambda[i]);
@@ -36,27 +36,32 @@ List samplezHH(NumericMatrix phi, NumericMatrix data,
   int maxDDtP = maxdd*p;
   for (int h = 0; h < n; h++) {
     for (int k=0; k < K; k++) {
-      double zupdateprod = 1.0;
-      for (int memberindex=0; memberindex < S[h]; memberindex++){
-        int base = (cumS[h]+memberindex)*p; //base for data
-        double add = 0.0;
-        for (int l=0; l < L; l++) {
-          double phiprod = 1.0;
-          int phi_base = (int)(maxDDtP*(k*L+l));
-          for (int j=0; j < p; j++) {
-            int u = (int)data[base+j]-1;
-            phiprod *= phi[phi_base+j*maxdd+u];
-          }
-          add += w[K*l+k]*phiprod;
-        } // closing l++
-        zupdateprod *= add;
-      } // closing member++
+      try {
+        double zupdateprod = 1.0;
+        for (int memberindex=0; memberindex < S[h]; memberindex++){
+          int base = (cumS[h]+memberindex)*p; //base for data
+          double add = 0.0;
+          for (int l=0; l < L; l++) {
+            double phiprod = 1.0;
+            int phi_base = (int)(maxDDtP*(k*L+l));
+            for (int j=0; j < p; j++) {
+              int u = (int)data[base+j]-1;
+              phiprod *= phi[phi_base+j*maxdd+u];
+            }
+            add += w[K*l+k]*phiprod;
+          } // closing l++
+          zupdateprod *= add;
+        } // closing member++
 
-      for (int hv = 0; hv < Lambdas.size(); hv++) {
-        zupdateprod *= Lambdas[hv][(HHdata[h+hv*n]-1)*K+k];
+        for (int hv = 0; hv < Lambdas.size(); hv++) {
+          zupdateprod *= Lambdas[hv][(HHdata[h+hv*n]-1)*K+k];
+        }
+        zupdateprob1[k] = pi[k]*zupdateprod;
+      } catch (...) {
+        zupdateprob1[k] = 0;
       }
-      zupdateprob1[k] = pi[k]*zupdateprod;
     } // closing k++
+
     group[h] = samplew(zupdateprob1, K, rand[h]);
     for (int m=0; m < S[h];m++) {
       indi[count++] = group[h];
@@ -64,6 +69,7 @@ List samplezHH(NumericMatrix phi, NumericMatrix data,
   }
   delete [] cumS;
   delete [] zupdateprob1;
+  //printf("done samplezHH\n");
   return List::create(Named("z_HH", group), Named("z_HH_Individuals", indi));
 }
 

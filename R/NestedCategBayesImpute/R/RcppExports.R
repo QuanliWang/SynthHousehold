@@ -5,6 +5,10 @@ checkconstraints <- function(data, neededpossiblehh, hh_size) {
     .Call('NestedCategBayesImpute_checkconstraints', PACKAGE = 'NestedCategBayesImpute', data, neededpossiblehh, hh_size)
 }
 
+checkconstraints_format2 <- function(data, neededpossiblehh, hh_size) {
+    .Call('NestedCategBayesImpute_checkconstraints_format2', PACKAGE = 'NestedCategBayesImpute', data, neededpossiblehh, hh_size)
+}
+
 households2individuals <- function(data, hh_size) {
     .Call('NestedCategBayesImpute_households2individuals', PACKAGE = 'NestedCategBayesImpute', data, hh_size)
 }

@@ -43,11 +43,14 @@ for (i in 1:mc$nrun) {
   cat(paste("iteration ", i,"\n", sep = ""))
   t <- proc.time()
   # update zHH
+  print("update zHH")
   z_household <- samplezHH(para$phi,orig$dataT,para$w,para$pi,orig$SS,t(para$HHdata_all[,1:orig$n]),
             para$lambda)
 
   # update zIndividual
+  print("update zIndividual")
   z_Individuals <- samplezmember(para$phi,orig$dataT,para$w,z_household$z_HH,orig$HHserial)
+  print("get new household")
   data.extra <- GetImpossibleHouseholds(orig$d,orig$ACS_count,para$lambda,para$w,para$phi,
                   para$pi,hyper$blocksize,orig$n,is.element(i,synindex))
 
@@ -57,7 +60,7 @@ for (i in 1:mc$nrun) {
     synData[[which(synindex ==i)]] <- data.extra$synIndividuals_all[1:DIM,]
   }
     #combine data and indicators
-
+   print("combine")
     para$z_HH_all <- c(z_household$z_HH, data.extra$z_HH_extra)
     para$HHdata_all <- orig$HHdataorigT
     para$HHdata_all <- cbind(para$HHdata_all,data.extra$HHdata_extra)
@@ -68,28 +71,35 @@ for (i in 1:mc$nrun) {
     para$z_Individual_all  <- cbind(temp,data.extra$z_HHdata_individual_extra)
 
     # update phi
+    print("update phi")
     para$phi <- UpdatePhi(para$IndividualData_all,para$z_Individual_all,
                     hyper$K,hyper$L,orig$p,orig$d,orig$maxd,individual_varible_index)
 
     #update W
+    print("update W")
     W <- UpdateW(para$beta,para$z_Individual_all, hyper$K, hyper$L)
     para$w <- W$w
     para$v <- W$v
 
   # update lambda
+    print("update lambda")
   para$lambda <- UpdateLambda(hyper$dHH,hyper$K,para$z_HH_all,para$HHdata_all)
 
   # update pi
+  print("update pi")
   Pi <- UpdatePi(para$alpha,para$z_HH_all,hyper$K)
   para$pi <- Pi$pi
   para$u <- Pi$u
 
   #update alpha
+  print("update alpha")
   para$alpha <- UpdateAlpha(hyper$aa,hyper$ab,para$u)
 
   #update beta
+  print("update beta")
   para$beta <- UpdateBeta(hyper$ba,hyper$bb,para$v)
 
+  print("save")
   #post save
   if (i %% mc$thin == 0 && i > mc$burn)  {
     index <- (i-mc$burn)/mc$thin

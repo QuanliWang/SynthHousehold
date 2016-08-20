@@ -16,24 +16,29 @@
     data_to_check <- samplehouseholds(phi,w, pi, d, lambda,batch.index+total.batch, howmany,hh_size)
 
     #impossible household
-    hh_size_real <- hh_size + 1
-    data_to_check_old_format <- ConvertDataForward(data_to_check,hh_size,p,lambda)
 
-    checked.households <- checkconstraints(data_to_check_old_format,possiblehhcount-n_possible_household, hh_size+1)
+    #data_to_check_old_format <- ConvertDataForward(data_to_check,hh_size,p,lambda)
+    print("do_check")
+    checked.households <- checkconstraints_format2(data_to_check,possiblehhcount-n_possible_household, hh_size)
     n_possible_household <- n_possible_household + checked.households$possible
     if (length(checked.households$Households) > 0) {
-      checked.households$Households <- t(ConvertDataBack(t(checked.households$Households),hh_size,p,lambda))
-    }
-    if (length(checked.households$synHouseholds) > 0) {
-      checked.households$synHouseholds <- t(ConvertDataBack(t(checked.households$synHouseholds),hh_size,p,lambda))
+      #checked.households$Households <- t(ConvertDataBack(t(checked.households$Households),hh_size,p,lambda))
+      print("do convert")
+      Individuals_extra[[batch.index]] <- households2individuals(checked.households$Households,hh_size)
+      DIM <- p + length(lambda) + 1
+      z_HH_extra[[batch.index]] <- checked.households$Households[hh_size * DIM +1,]
+      HHData_extra[[batch.index]] <- checked.households$Households[(p+3): DIM,]
+      print("done convert")
+    } else {
+      print("no batch")
     }
 
-    Individuals_extra[[batch.index]] <- households2individuals(checked.households$Households,hh_size)
-    DIM <- p + length(lambda) + 1
-    z_HH_extra[[batch.index]] <- checked.households$Households[hh_size * DIM +1,]
-    HHData_extra[[batch.index]] <- checked.households$Households[(p+3): DIM,]
+
     if (synindex > 0) {
-      synIndividuals[[batch.index]]  <- households2individuals(checked.households$synHouseholds,hh_size)
+      if (length(checked.households$synHouseholds) > 0) {
+        #checked.households$synHouseholds <- t(ConvertDataBack(t(checked.households$synHouseholds),hh_size,p,lambda))
+        synIndividuals[[batch.index]]  <- households2individuals(checked.households$synHouseholds,hh_size)
+      }
     }
   }
 

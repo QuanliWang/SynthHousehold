@@ -18,6 +18,19 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// checkconstraints_format2
+List checkconstraints_format2(NumericMatrix data, int neededpossiblehh, int hh_size);
+RcppExport SEXP NestedCategBayesImpute_checkconstraints_format2(SEXP dataSEXP, SEXP neededpossiblehhSEXP, SEXP hh_sizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< int >::type neededpossiblehh(neededpossiblehhSEXP);
+    Rcpp::traits::input_parameter< int >::type hh_size(hh_sizeSEXP);
+    __result = Rcpp::wrap(checkconstraints_format2(data, neededpossiblehh, hh_size));
+    return __result;
+END_RCPP
+}
 // households2individuals
 NumericMatrix households2individuals(NumericMatrix data, int hh_size);
 RcppExport SEXP NestedCategBayesImpute_households2individuals(SEXP dataSEXP, SEXP hh_sizeSEXP) {

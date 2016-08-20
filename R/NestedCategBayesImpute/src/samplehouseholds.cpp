@@ -35,9 +35,7 @@ NumericMatrix samplehouseholds(NumericMatrix phi, NumericMatrix w, NumericVector
     lambdas[i] = new double[l.length()];
     std::copy(l.begin(), l.end(), lambdas[i]);
   }
-
-//   NumericVector rand = runif(nHouseholds * (householdsize *(1+p) + 2));
-//  NumericVector rand = runif(nHouseholds * (householdsize *(1+p) + n_lambdas));
+  //printf("in samplehouseholds\n");
   NumericVector rand = runif(nHouseholds * ncol); //at most this many
   sampleHouseholds_imp(data.begin(), rand.begin(), lambdas, lambda_columns, w.begin(),
                    phi.begin(), pi.begin(),d.begin(),
@@ -49,5 +47,6 @@ NumericMatrix samplehouseholds(NumericMatrix phi, NumericMatrix w, NumericVector
     delete [] lambdas[i];
   }
   delete [] lambdas;
+  //printf("done samplehouseholds\n");
   return data;
 }
