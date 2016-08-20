@@ -15,7 +15,7 @@ household <- orig.data %>% inner_join(household.size)
 
 individual_varible_index = c(3:7)
 
-#column 8 to 14 are household level data
+#column 8 to 13 are household level data
 household_variable_index = c(8:13) #make sure the last one is household size
 
 orig <- initData(household, individual_varible_index,household_variable_index)
@@ -44,13 +44,22 @@ for (i in 1:mc$nrun) {
   t <- proc.time()
   # update zHH
   print("update zHH")
-  z_household <- samplezHH(para$phi,orig$dataT,para$w,para$pi,orig$SS,t(para$HHdata_all[,1:orig$n]),
-            para$lambda)
 
+  stopifnot(!any(is.na(para$phi)))
+  stopifnot(sum(para$phi) == 3000)
+  stopifnot(length(para$w) == 600)
+  stopifnot(sum(para$w) == 40)
+  stopifnot(!any(is.na(para$w)))
+  stopifnot(!any(is.na(para$pi)))
+  stopifnot(length(unlist(para$lambda)) == 4680)
+  z_household <- samplezHH(para$phi,orig$dataT,para$w,para$pi,orig$SS,t(para$HHdata_all[,1:orig$n]),para$lambda)
+
+  stopifnot(max(z_household$z_HH)<=hyper$K && min(z_household$z_HH)>=1)
   # update zIndividual
   print("update zIndividual")
   z_Individuals <- samplezmember(para$phi,orig$dataT,para$w,z_household$z_HH,orig$HHserial)
   print("get new household")
+  #save.image("debug.RData")
   data.extra <- GetImpossibleHouseholds(orig$d,orig$ACS_count,para$lambda,para$w,para$phi,
                   para$pi,hyper$blocksize,orig$n,is.element(i,synindex))
 
@@ -77,9 +86,16 @@ for (i in 1:mc$nrun) {
 
     #update W
     print("update W")
+    stopifnot(all(para$z_Individual_all[1,]>0))
+    stopifnot(all(para$z_Individual_all[1,]<=hyper$K))
+    stopifnot(all(para$z_Individual_all[2,]>0))
+    stopifnot(all(para$z_Individual_all[2,]<=hyper$L))
     W <- UpdateW(para$beta,para$z_Individual_all, hyper$K, hyper$L)
     para$w <- W$w
     para$v <- W$v
+    stopifnot(length(para$w) == 600)
+    stopifnot(sum(para$w) == 40)
+
 
   # update lambda
     print("update lambda")
