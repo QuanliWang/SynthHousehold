@@ -25,6 +25,10 @@ samplehouseholds <- function(phi, w, pi, d, lambda, currrentbatch, nHouseholds, 
     .Call('NestedCategBayesImpute_samplehouseholds', PACKAGE = 'NestedCategBayesImpute', phi, w, pi, d, lambda, currrentbatch, nHouseholds, householdsize)
 }
 
+samplehouseholds_format2 <- function(phi, w, pi, d, lambda, currrentbatch, nHouseholds, householdsize) {
+    .Call('NestedCategBayesImpute_samplehouseholds_format2', PACKAGE = 'NestedCategBayesImpute', phi, w, pi, d, lambda, currrentbatch, nHouseholds, householdsize)
+}
+
 samplezHH <- function(phi, data, w, pi, S, HHdata, lambda) {
     .Call('NestedCategBayesImpute_samplezHH', PACKAGE = 'NestedCategBayesImpute', phi, data, w, pi, S, HHdata, lambda)
 }

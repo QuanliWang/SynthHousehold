@@ -6,7 +6,7 @@ using namespace Rcpp;
 NumericVector samplezmember(NumericMatrix phi, NumericMatrix data,
                NumericMatrix w, NumericVector zHH, NumericVector serial) {
 
-  printf("in samplezmember\n");
+  //printf("in samplezmember\n");
   int p = data.nrow();
   int nIndividuals = data.ncol();
   int K = w.nrow();
@@ -35,10 +35,10 @@ NumericVector samplezmember(NumericMatrix phi, NumericMatrix data,
       }
     }
     indi[m] = samplew(zupdateprob2, L, rand[m]);
-    printf("indi = (%d,%d)\n",m, (int)indi[m]);
+    //printf("indi = (%d,%d)\n",m, (int)indi[m]);
   }
   delete [] zupdateprob2;
-  printf("done samplezmember\n");
+  //printf("done samplezmember\n");
   return indi;
 }
 

@@ -87,6 +87,24 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// samplehouseholds_format2
+NumericMatrix samplehouseholds_format2(NumericMatrix phi, NumericMatrix w, NumericVector pi, NumericVector d, List lambda, int currrentbatch, int nHouseholds, int householdsize);
+RcppExport SEXP NestedCategBayesImpute_samplehouseholds_format2(SEXP phiSEXP, SEXP wSEXP, SEXP piSEXP, SEXP dSEXP, SEXP lambdaSEXP, SEXP currrentbatchSEXP, SEXP nHouseholdsSEXP, SEXP householdsizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericMatrix >::type phi(phiSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type w(wSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type pi(piSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< List >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< int >::type currrentbatch(currrentbatchSEXP);
+    Rcpp::traits::input_parameter< int >::type nHouseholds(nHouseholdsSEXP);
+    Rcpp::traits::input_parameter< int >::type householdsize(householdsizeSEXP);
+    __result = Rcpp::wrap(samplehouseholds_format2(phi, w, pi, d, lambda, currrentbatch, nHouseholds, householdsize));
+    return __result;
+END_RCPP
+}
 // samplezHH
 List samplezHH(NumericMatrix phi, NumericMatrix data, NumericMatrix w, NumericVector pi, NumericVector S, NumericMatrix HHdata, List lambda);
 RcppExport SEXP NestedCategBayesImpute_samplezHH(SEXP phiSEXP, SEXP dataSEXP, SEXP wSEXP, SEXP piSEXP, SEXP SSEXP, SEXP HHdataSEXP, SEXP lambdaSEXP) {
