@@ -1,4 +1,4 @@
-.GenerateData <- function(hh_size,lambda, w, phi,pi, d, total.batch,possiblehhcount,howmany,synindex) {
+.GenerateData <- function(hh_size,lambda, w, phi,pi, d, total.batch,possiblehhcount,howmany,synindex,format2) {
   #save(hh_size,lambda, w, phi,pi, d, total.batch,possiblehhcount,howmany,synindex, file = "last2.RData")
   #return(NULL)
   Individuals_extra <- list()
@@ -13,22 +13,30 @@
     batch.index <- batch.index + 1
     #print(batch.index)
     #generate a batch of 10K household
-    data_to_check <- samplehouseholds(phi,w, pi, d, lambda,batch.index+total.batch, howmany,hh_size)
+    if (format2) {
+      data_to_check <- samplehouseholds_format2(phi,w, pi, d, lambda,batch.index+total.batch, howmany,hh_size)
+    } else {
+      data_to_check <- samplehouseholds(phi,w, pi, d, lambda,batch.index+total.batch, howmany,hh_size)
+    }
 
     #impossible household
 
     #data_to_check_old_format <- ConvertDataForward(data_to_check,hh_size,p,lambda)
-    print("do_check")
-    checked.households <- checkconstraints_format2(data_to_check,possiblehhcount-n_possible_household, hh_size)
+    #print("do_check")
+    if (format2) {
+      checked.households <- checkconstraints_format2(data_to_check,possiblehhcount-n_possible_household, hh_size)
+    } else {
+      checked.households <- checkconstraints(data_to_check,possiblehhcount-n_possible_household, hh_size)
+    }
     n_possible_household <- n_possible_household + checked.households$possible
     if (length(checked.households$Households) > 0) {
       #checked.households$Households <- t(ConvertDataBack(t(checked.households$Households),hh_size,p,lambda))
-      print("do convert")
+      #print("do convert")
       Individuals_extra[[batch.index]] <- households2individuals(checked.households$Households,hh_size)
       DIM <- p + length(lambda) + 1
       z_HH_extra[[batch.index]] <- checked.households$Households[hh_size * DIM +1,]
       HHData_extra[[batch.index]] <- checked.households$Households[(p+3): DIM,]
-      print("done convert")
+      #print("done convert")
     } else {
       print("no batch")
     }
@@ -56,7 +64,7 @@
               batch.index = batch.index))
 }
 
-GetImpossibleHouseholds <- function(d,ACS_count,lambda,w,phi,pi,howmany,n,synindex) {
+GetImpossibleHouseholds <- function(d,ACS_count,lambda,w,phi,pi,howmany,n,synindex,format2) {
   #save(d,ACS_count,lambda,w,phi,pi,howmany,n,synindex, file = "last.RData")
   #return(NULL)
   cumsize <- 0
@@ -70,7 +78,7 @@ GetImpossibleHouseholds <- function(d,ACS_count,lambda,w,phi,pi,howmany,n,synind
   ##
   total.batch <- 0
   for (hh_size in  1:(length(ACS_count))) {
-    batch <- .GenerateData(hh_size,lambda, w, phi,pi, d, total.batch,ACS_count[hh_size],howmany,synindex)
+    batch <- .GenerateData(hh_size,lambda, w, phi,pi, d, total.batch,ACS_count[hh_size],howmany,synindex,format2)
 
     hh_size_new[hh_size] <- length(batch$z_HH_extra)
     hh_index[[hh_size]] <- cumsize + rep(1:hh_size_new[hh_size], each = hh_size)
