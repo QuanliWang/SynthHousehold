@@ -38,30 +38,31 @@ output <- initOutput(orig,hyper,mc)
 synindex <- c(100,9920,9930,9940,9950,9960,9970,9980,9990,10000)
 synData <- list()
 
+format2 = TRUE #set format2 to TRUE for the new format
+
 #Rprof("R1.out",interval = 0.001)
 for (i in 1:mc$nrun) {
   cat(paste("iteration ", i,"\n", sep = ""))
   t <- proc.time()
   # update zHH
-  print("update zHH")
+  #print("update zHH")
 
-  stopifnot(!any(is.na(para$phi)))
-  stopifnot(sum(para$phi) == 3000)
-  stopifnot(length(para$w) == 600)
-  stopifnot(sum(para$w) == 40)
-  stopifnot(!any(is.na(para$w)))
-  stopifnot(!any(is.na(para$pi)))
-  stopifnot(length(unlist(para$lambda)) == 4680)
+  #stopifnot(!any(is.na(para$phi)))
+  #stopifnot(sum(para$phi) == 3000)
+  #stopifnot(length(para$w) == 600)
+  #stopifnot(sum(para$w) == 40)
+  #stopifnot(!any(is.na(para$w)))
+  #stopifnot(!any(is.na(para$pi)))
+  #stopifnot(length(unlist(para$lambda)) == 4680)
   z_household <- samplezHH(para$phi,orig$dataT,para$w,para$pi,orig$SS,t(para$HHdata_all[,1:orig$n]),para$lambda)
 
-  stopifnot(max(z_household$z_HH)<=hyper$K && min(z_household$z_HH)>=1)
+  #stopifnot(max(z_household$z_HH)<=hyper$K && min(z_household$z_HH)>=1)
   # update zIndividual
-  print("update zIndividual")
+  #print("update zIndividual")
   z_Individuals <- samplezmember(para$phi,orig$dataT,para$w,z_household$z_HH,orig$HHserial)
-  print("get new household")
-  #save.image("debug.RData")
+  #print("get new household")
   data.extra <- GetImpossibleHouseholds(orig$d,orig$ACS_count,para$lambda,para$w,para$phi,
-                  para$pi,hyper$blocksize,orig$n,is.element(i,synindex))
+                  para$pi,hyper$blocksize,orig$n,is.element(i,synindex),format2)
 
   para$hh_size_new <- as.vector(data.extra$hh_size_new)
   DIM <- dim(data.extra$IndividualData_extra)[1]
@@ -69,7 +70,7 @@ for (i in 1:mc$nrun) {
     synData[[which(synindex ==i)]] <- data.extra$synIndividuals_all[1:DIM,]
   }
     #combine data and indicators
-   print("combine")
+   #print("combine")
     para$z_HH_all <- c(z_household$z_HH, data.extra$z_HH_extra)
     para$HHdata_all <- orig$HHdataorigT
     para$HHdata_all <- cbind(para$HHdata_all,data.extra$HHdata_extra)
@@ -80,42 +81,42 @@ for (i in 1:mc$nrun) {
     para$z_Individual_all  <- cbind(temp,data.extra$z_HHdata_individual_extra)
 
     # update phi
-    print("update phi")
+    #print("update phi")
     para$phi <- UpdatePhi(para$IndividualData_all,para$z_Individual_all,
                     hyper$K,hyper$L,orig$p,orig$d,orig$maxd,individual_varible_index)
 
     #update W
-    print("update W")
-    stopifnot(all(para$z_Individual_all[1,]>0))
-    stopifnot(all(para$z_Individual_all[1,]<=hyper$K))
-    stopifnot(all(para$z_Individual_all[2,]>0))
-    stopifnot(all(para$z_Individual_all[2,]<=hyper$L))
+    #print("update W")
+    #stopifnot(all(para$z_Individual_all[1,]>0))
+    #stopifnot(all(para$z_Individual_all[1,]<=hyper$K))
+    #stopifnot(all(para$z_Individual_all[2,]>0))
+    #stopifnot(all(para$z_Individual_all[2,]<=hyper$L))
     W <- UpdateW(para$beta,para$z_Individual_all, hyper$K, hyper$L)
     para$w <- W$w
     para$v <- W$v
-    stopifnot(length(para$w) == 600)
-    stopifnot(sum(para$w) == 40)
+    #stopifnot(length(para$w) == 600)
+    #stopifnot(sum(para$w) == 40)
 
 
   # update lambda
-    print("update lambda")
+  #print("update lambda")
   para$lambda <- UpdateLambda(hyper$dHH,hyper$K,para$z_HH_all,para$HHdata_all)
 
   # update pi
-  print("update pi")
+  #print("update pi")
   Pi <- UpdatePi(para$alpha,para$z_HH_all,hyper$K)
   para$pi <- Pi$pi
   para$u <- Pi$u
 
   #update alpha
-  print("update alpha")
+  #print("update alpha")
   para$alpha <- UpdateAlpha(hyper$aa,hyper$ab,para$u)
 
   #update beta
-  print("update beta")
+  #print("update beta")
   para$beta <- UpdateBeta(hyper$ba,hyper$bb,para$v)
 
-  print("save")
+  #print("save")
   #post save
   if (i %% mc$thin == 0 && i > mc$burn)  {
     index <- (i-mc$burn)/mc$thin
