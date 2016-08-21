@@ -124,8 +124,8 @@ for (i in 1:mc$nrun) {
     output$wout[index,,] <- para$w
     output$newphiout[index,,] <- para$phi
 
-    output$lambda1out[index,,] <- para$lambda[[1]]
-    output$lambda2out[index,,] <- para$lambda[[2]]
+    output$lambdaout[[1]][index,,] <- para$lambda[[1]]
+    output$lambdaout[[2]][index,,] <- para$lambda[[2]]
   }
 
   total_household <- dim(para$HHdata_all)[2]
