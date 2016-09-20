@@ -52,7 +52,12 @@
 
   Individuals_extra <- do.call(cbind, Individuals_extra)
   z_HH_extra <- unlist(z_HH_extra)
-  HHData_extra <- do.call(cbind, HHData_extra)
+  if (format2) {
+    HHData_extra <- do.call(cbind, HHData_extra)
+  } else {
+    HHData_extra <- unlist(HHData_extra)
+  }
+
   if (synindex > 0) {
     synIndividuals <- do.call(cbind, synIndividuals)
   }
@@ -78,10 +83,15 @@ GetImpossibleHouseholds <- function(d,ACS_count,lambda,w,phi,pi,howmany,n,synind
   ##
   total.batch <- 0
   for (hh_size in  1:(length(ACS_count))) {
-    batch <- .GenerateData(hh_size,lambda, w, phi,pi, d, total.batch,ACS_count[hh_size],howmany,synindex,format2)
+    if (format2) {
+      hh_size_real <- hh_size
+    } else {
+      hh_size_real <- hh_size + 1
+    }
+    batch <- .GenerateData(hh_size_real,lambda, w, phi,pi, d, total.batch,ACS_count[hh_size],howmany,synindex,format2)
 
     hh_size_new[hh_size] <- length(batch$z_HH_extra)
-    hh_index[[hh_size]] <- cumsize + rep(1:hh_size_new[hh_size], each = hh_size)
+    hh_index[[hh_size]] <- cumsize + rep(1:hh_size_new[hh_size], each = hh_size_real)
     cumsize <- cumsize + hh_size_new[hh_size]
     ImpossibleIndividuals[[hh_size]] <- batch$Individuals_extra
     z_HH_extra[[hh_size]] <-  batch$z_HH_extra

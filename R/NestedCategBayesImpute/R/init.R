@@ -32,7 +32,7 @@ initData <- function(household, individual_varible_index, household_variable_ind
 }
 
 
-initParameters <- function(data,hyper) {
+initParameters <- function(data,hyper,format2) {
   para <- list()
   para$alpha <- 1 #hyperparameters for stick-breaking weights
   para$beta <- 1
@@ -51,9 +51,9 @@ initParameters <- function(data,hyper) {
   }
 
   para$HHdata_all <- data$HHdataorigT
-  #dont adjust household size anymore
-  #para$HHdata_all[2,] <- para$HHdata_all[2,] - 1 #household size
-
+  if (!format2) {
+    para$HHdata_all[2,] <- para$HHdata_all[2,] - 1 #household size
+  }
   #initialize lambda
   para$lambda <- list()
   for (i in 1:length(hyper$dHH)) {
