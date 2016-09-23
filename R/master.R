@@ -60,13 +60,16 @@ synindex <- sort(sample(seq((mc$nrun*0.8 +1),mc$nrun,mc$eff.sam),10,replace=F))
 synData <- list()
 
 #weighting
-struc_weight <- c(1,1,1,1/2,1/3) # must be ordered & no household size must be excluded
-struc_weight <- c(1,struc_weight) #add 1 for the weight of the observed data
-weighted_z_HH_all <- vector("list",length(struc_weight))
-weighted_HHdata_all <- vector("list",length(struc_weight))
-weighted_IndividualData_all <- vector("list",length(struc_weight))
-weighted_z_Individual_all <- vector("list",length(struc_weight))
+weight_option <- TRUE #set to true for weighting/capping option
+struc_weight <- c(1,1,1/2,1/3,1/3) #set weights: must be ordered & no household size must be excluded
 
+if(weight_option){
+  struc_weight <- c(1,struc_weight) #add 1 for the weight of the observed data
+  weighted_z_HH_all <- vector("list",length(struc_weight))
+  weighted_HHdata_all <- vector("list",length(struc_weight))
+  weighted_IndividualData_all <- vector("list",length(struc_weight))
+  weighted_z_Individual_all <- vector("list",length(struc_weight))
+}
 
 #source("../mcmc.R")
 source("mcmc.R")
@@ -76,13 +79,13 @@ source("mcmc.R")
 writeFun <- function(LL){
   for(i in 1:length(LL)){
     if(format2){
-      if(length(which(struc_weight!=1))>0){
+      if(weight_option){
         write.table(t(LL[[i]]),paste0("synData_newFormat_weighted",i,".txt"),row.names = F,col.names = F)
       } else {
         write.table(t(LL[[i]]),paste0("synData_newFormat",i,".txt"),row.names = F,col.names = F)
       }
     } else {
-      if(length(which(struc_weight!=1))>0){
+      if(weight_option){
         write.table(t(LL[[i]]),paste0("synData_oldFormat_weighted",i,".txt"),row.names = F,col.names = F)
       } else {
         write.table(t(LL[[i]]),paste0("synData_oldFormat",i,".txt"),row.names = F,col.names = F)

@@ -1,3 +1,4 @@
+
 UpdatePhi <- function(IndividualData_all, z_Individual_all, K, L, p, d, maxd,individual_varible_index) {
   phi <- array(0,dim = c(maxd,p, K*L))
   data = IndividualData_all[individual_varible_index,]
@@ -11,8 +12,7 @@ UpdatePhi <- function(IndividualData_all, z_Individual_all, K, L, p, d, maxd,ind
   return(phi)
 }
 
-UpdatePhiWeighted <- function(IndividualData_all, z_Individual_all, K, L, p, d, maxd,individual_varible_index,
-                              struc_weight) {
+UpdatePhiWeighted <- function(IndividualData_all, z_Individual_all, K, L, p, d, maxd,individual_varible_index, struc_weight) {
   phi <- array(0,dim = c(maxd,p, K*L))
   data <- lapply(IndividualData_all,function(x) x[individual_varible_index,])
   groupIndex <- lapply(z_Individual_all,function(x) hyper$L*(x[1,]-1)+x[2,])
@@ -42,7 +42,7 @@ UpdateW <- function(beta,z_Individual_all, K, L) {
   return(list(w = w, v = v))
 }
 
-UpdateWWeighted <- function(beta,z_Individual_all, K, L,struc_weight) {
+UpdateWWeighted <- function(beta,z_Individual_all, K, L, struc_weight) {
   phicountcluster <- 0
   for(w_i in 1:length(struc_weight)){
     z_Individual_all_w_i <- z_Individual_all[[w_i]]
