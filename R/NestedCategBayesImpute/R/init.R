@@ -1,24 +1,29 @@
-initData <- function(household) {
+initData <- function(household, individual_varible_index, household_variable_index) {
   orig <- list()
   orig$origdata <- household
+  if (which(names(household) == "Hhindex") != 1) {
+    stop("The first column of input has to be 'Hhindex'")
+  }
   orig$SS <- as.data.frame(table(household[,'Hhindex']))$Freq
   orig$n <- length(orig$SS)
 
   HHrowIndex <- c(1, cumsum(orig[["SS"]])+1)
-  #column 8 and 9 are household level data
-  orig$HHdataorigT <- t(household[HHrowIndex[1:orig$n],c(8,9)])
-  orig$HHserial <- household[,1]
+
+  #household level data is in household_variable_index
+  orig$HHdataorigT <- t(household[HHrowIndex[1:orig$n],household_variable_index])
+  orig$HHserial <- household[,"Hhindex"]
 
   orig$n_individuals <- dim(household)[1]
-  #hard-coded data structure for now, as we don't know if it will apply to more general data set yet
-  orig$p <- dim(household)[2] - 4
+  orig$n_individuals_real <- dim(household)[1] + orig$n #the real number of individuals
 
-  #levels for each variable in the model. This might be different from the sun-sampled data in use
-  orig$d <- c(0,0,0,0,0)
-  for (i in 1: length(orig$d)) {
-    orig$d[i] <- max(household[,i+2])
+  #orig$p holds the number of individual level variables
+  orig$p <- length(individual_varible_index)
+  #levels for each variable in the model. This might be different from the sub-sampled data in use
+  orig$d <- rep(0,orig$p)
+  for (i in 1:length(orig$d)) {
+    orig$d[i] <- max(household[,individual_varible_index[i]])
   }
-  orig$dataT <- t(household[,3:7])
+  orig$dataT <- t(household[,individual_varible_index])
   orig$maxd <- max(orig$d)
 
   counts <- as.data.frame(table(orig$SS))
@@ -27,7 +32,7 @@ initData <- function(household) {
 }
 
 
-initParameters <- function(data,hyper) {
+initParameters <- function(data,hyper,format2) {
   para <- list()
   para$alpha <- 1 #hyperparameters for stick-breaking weights
   para$beta <- 1
@@ -37,7 +42,7 @@ initParameters <- function(data,hyper) {
   phi_1 <- matrix(0, nrow = data$maxd, ncol = data$p)
   for (i in 1:data$p) {
     for (j in 1:data$d[i]) {
-      phi_1[j,i] <-sum(data$dataT[i,]==j)/data$n_individuals; #should we optimize this later?
+      phi_1[j,i] <-sum(data$dataT[i,]==j)/data$n_individuals
     }
   }
   phi_1 <- as.vector(phi_1)
@@ -45,9 +50,10 @@ initParameters <- function(data,hyper) {
     para$phi[,i] <- phi_1
   }
 
-  para$HHdata_all <- data$HHdataorigT;
-  para$HHdata_all[2,] <- para$HHdata_all[2,] - 1
-
+  para$HHdata_all <- data$HHdataorigT
+  if (!format2) {
+    para$HHdata_all[2,] <- para$HHdata_all[2,] - 1 #household size
+  }
   #initialize lambda
   para$lambda <- list()
   for (i in 1:length(hyper$dHH)) {
@@ -87,7 +93,10 @@ initOutput <- function(data,hyper,mc) {
   output$elapsed_time <-  matrix(0,nrow = mc$nrun,ncol = 1)
   output$newphiout <- array(0, dim=c(mc$eff.sam,data$maxd*data$p,hyper$K*hyper$L))
 
-  output$lambda1out = array(0, dim=c(mc$eff.sam,hyper$K, hyper$dHH[1]))
-  output$lambda2out = array(0, dim=c(mc$eff.sam,hyper$K, hyper$dHH[2]))
+  output$lambdaout = list()
+
+  for (i in 1:length(hyper$dHH)) {
+    output$lambdaout[[i]] = array(0, dim=c(mc$eff.sam,hyper$K, hyper$dHH[i]))
+  }
   return(output)
 }

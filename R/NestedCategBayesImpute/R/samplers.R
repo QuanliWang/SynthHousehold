@@ -1,9 +1,27 @@
-UpdatePhi <- function(IndividualData_all, z_Individual_all, K, L, p, d, maxd) {
-  phi <- array(NA,dim = c(maxd,p, K*L))
-  data = IndividualData_all[3:7,]
+
+UpdatePhi <- function(IndividualData_all, z_Individual_all, K, L, p, d, maxd,individual_varible_index) {
+  phi <- array(0,dim = c(maxd,p, K*L))
+  data = IndividualData_all[individual_varible_index,]
   groupIndex <- L*(z_Individual_all[1,]-1)+z_Individual_all[2,]
   for (j in 1:p) {
     phicount <- groupcount(groupIndex, data[j,], K*L, d[j])
+    phi_j <- apply(phicount, c(1,2), function(x) rgamma(1,x+1,1))
+    phi[1:d[j], j,] <- apply(phi_j, 1, function(x) x / sum(x))
+  }
+  dim(phi) <- c(maxd*p,K * L) #reshape to a 2D matrix
+  return(phi)
+}
+
+UpdatePhiWeighted <- function(IndividualData_all, z_Individual_all, K, L, p, d, maxd,individual_varible_index, struc_weight) {
+  phi <- array(0,dim = c(maxd,p, K*L))
+  data <- lapply(IndividualData_all,function(x) x[individual_varible_index,])
+  groupIndex <- lapply(z_Individual_all,function(x) hyper$L*(x[1,]-1)+x[2,])
+  for (j in 1:p) {
+    phicount <- 0
+    for(w_i in 1:length(struc_weight)){
+      data_w_i <- data[[w_i]]
+      phicount <- phicount + (groupcount(groupIndex[[w_i]], data_w_i[j,], K*L, d[j]) / struc_weight[w_i])
+    }
     phi_j <- apply(phicount, c(1,2), function(x) rgamma(1,x+1,1))
     phi[1:d[j], j,] <- apply(phi_j, 1, function(x) x / sum(x))
   }
@@ -24,6 +42,23 @@ UpdateW <- function(beta,z_Individual_all, K, L) {
   return(list(w = w, v = v))
 }
 
+UpdateWWeighted <- function(beta,z_Individual_all, K, L, struc_weight) {
+  phicountcluster <- 0
+  for(w_i in 1:length(struc_weight)){
+    z_Individual_all_w_i <- z_Individual_all[[w_i]]
+    phicountcluster <- phicountcluster + (groupcount(z_Individual_all_w_i[1,],z_Individual_all_w_i[2,],K,L) / struc_weight[w_i])
+  }
+  
+  cum <- t(apply(phicountcluster[,seq(L,1)],1, cumsum))[,seq(L,1)]
+  v <- mapply(function(x,y) rbeta(1,x,y), 1 + phicountcluster[,1:(L-1)], beta + cum[,2:L])
+  dim(v) <- c(K, L-1)
+  v[v>1-1e-5] <- 1-1e-5
+  v = cbind(v,1)
+  w <- v * t(apply(cbind(1, 1-v[,1:(L-1)]), 1, cumprod))
+  
+  return(list(w = w, v = v))
+}
+
 UpdateLambda <- function(dHH,K,z_HH_all,HHdata_all) {
   lambda <- list()
   for (i in 1:length(dHH)) {
@@ -36,8 +71,23 @@ UpdateLambda <- function(dHH,K,z_HH_all,HHdata_all) {
   return(lambda)
 }
 
-UpdatePi <- function(alpha,z_HH_all,K) {
+UpdateLambdaWeighted <- function(dHH,K,z_HH_all,HHdata_all,struc_weight) {
+  lambda <- list()
+  for (i in 1:length(dHH)) {
+    lambdacount <- 0
+    for(w_i in 1:length(struc_weight)){
+      HHdata_all_w_i <- HHdata_all[[w_i]]
+      lambdacount <- lambdacount + (groupcount(z_HH_all[[w_i]],HHdata_all_w_i[i,],K, dHH[i])/ struc_weight[w_i])
+    }
+    lam <- apply(lambdacount, c(1,2), function(x) rgamma(1,x+1,1))
+    lam <- t(apply(lam, 1, function(x) x / sum(x)))
+    lambda[[i]] = lam;
+  }
+  
+  return(lambda)
+}
 
+UpdatePi <- function(alpha,z_HH_all,K) {
   kcount <- groupcount1D(z_HH_all, K)
   s <- seq(K,1)
   cum <- cumsum(kcount[s])[s]
@@ -48,6 +98,23 @@ UpdatePi <- function(alpha,z_HH_all,K) {
 
   pi  <- u* cumprod(c(1,1-u[1:K-1]))
 
+  return(list(pi = pi, u = u))
+}
+
+UpdatePiWeighted <- function(alpha,z_HH_all,K,struc_weight) {
+  kcount <- 0
+  for(w_i in 1:length(struc_weight)){
+    kcount <- kcount + (groupcount1D(z_HH_all[[w_i]], K)/ struc_weight[w_i])
+  }
+  s <- seq(K,1)
+  cum <- cumsum(kcount[s])[s]
+  u <- mapply(function(x,y) rbeta(1,x,y), 1 + kcount[1:K-1], alpha + cum[2:K])
+  u[u > 1-1e-5] <- 1-1e-5
+  u <- c(u,1)
+  u[K] <- 1
+  
+  pi  <- u* cumprod(c(1,1-u[1:K-1]))
+  
   return(list(pi = pi, u = u))
 }
 

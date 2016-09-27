@@ -172,7 +172,6 @@ inline bool IsValidGrandChild(double *record, int hhsize, int spouse, int head) 
 
 int isValid(double *datah, int hh_size) {
 
-    //mexPrintf("check head 0\n");
     int head = GetHead(datah,hh_size);
     if (head <=0) {return 0;}
 
@@ -202,7 +201,7 @@ int isValid(double *datah, int hh_size) {
 
 }
 
-int checkconstraints_imp(double *data, double *isPossible,int hh_size, int nHouseholds) {
+int checkconstraints_imp(double *data, double *isPossible,int hh_size, int DIM, int nHouseholds) {
 
     int totalpossible = 0;
     double *datah = new double[hh_size * 3 + 1];
@@ -212,7 +211,7 @@ int checkconstraints_imp(double *data, double *isPossible,int hh_size, int nHous
 	for (int m = 1; m <= nHouseholds; m++){
         for (int j = 1; j <= hh_size; j++) {
             for (int k = 0; k < COL; k++) {
-                datah[k * hh_size + j] = data[((j-1) * 8 + column[k] -1) * nHouseholds + (m-1)];
+                datah[k * hh_size + j] = data[((j-1) * DIM + column[k] -1) * nHouseholds + (m-1)];
             }
         }
 		isPossible[m-1] = isValid(datah, hh_size);
@@ -221,4 +220,33 @@ int checkconstraints_imp(double *data, double *isPossible,int hh_size, int nHous
 
 	delete [] datah;
     return totalpossible;
+}
+
+int checkconstraints_imp_format2(double *data, double *isPossible,int hh_size, int DIM, int nHouseholds) {
+  int realsize = hh_size + 1;
+  int totalpossible = 0;
+  double *datah = new double[realsize * 3 + 1];
+  //column 2, 5, 6 = sex, age and relte //zero-based here
+  int column[COL]; column[0] = 0; column[1] = 3; column[2] = 4;
+
+  for (int m = 1; m <= nHouseholds; m++){
+    //for each household member
+    for (int j = 1; j < realsize; j++) {
+      for (int k = 0; k < COL; k++) {
+        datah[k * realsize + j] = data[((j-1) * DIM + column[k]+2) * nHouseholds + (m-1)];
+        if (k+1 == COL) { //relate column
+          datah[k * realsize + j] = datah[k * realsize + j] + 1; //addjust by adding 1
+        }
+      }
+    }
+    datah[realsize] = data[(column[0]+8) * nHouseholds + (m-1)];
+    datah[2 * realsize] = data[(column[1]+8) * nHouseholds + (m-1)];
+    datah[3 * realsize] = 1;
+
+    isPossible[m-1] = isValid(datah, realsize);
+    totalpossible+= (int)isPossible[m-1];
+  }
+
+  delete [] datah;
+  return totalpossible;
 }

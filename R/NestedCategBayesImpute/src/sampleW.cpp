@@ -10,15 +10,17 @@ int samplew(double *p, int n, double d) {
     for (i = 0; i < n;i++) {
         dsum+=p[i];
     }
+    if (dsum <=0 ) {dsum =1;}
     myw[0] = p[0] / dsum;
     for (i = 1; i < n;i++) {
         myw[i] = p[i] / dsum + myw[i-1];
     }
-    
+
     for(k=0;k < n && d>myw[k];k++)
         ;
     delete [] myw;
-    return k+1;
+    if (k == n) {k = n-1;}
+     return k+1;
 }
 
 void samplew_multi(double *p, int n, double *d,int howmany) {
@@ -30,6 +32,7 @@ void samplew_multi(double *p, int n, double *d,int howmany) {
     for (i = 0; i < n;i++) {
         dsum+=p[i];
     }
+    if (dsum <=0 ) {dsum =1;}
     myw[0] = p[0] / dsum;
     for (i = 1; i < n;i++) {
         myw[i] = p[i] / dsum + myw[i-1];
@@ -37,7 +40,9 @@ void samplew_multi(double *p, int n, double *d,int howmany) {
     for (int h=0; h < howmany; h++) {
         for(k=0;k < n && d[h]>myw[k];k++)
             ;
+        if (k == n) {k = n-1;}
         d[h] = k+1;
+
     }
     delete [] myw;
 }
@@ -52,6 +57,7 @@ void samplew_multi2(double *p, int n, double *d, double* result,int howmany) {
     for (i = 0; i < n;i++) {
         dsum+=p[i];
     }
+    if (dsum <=0 ) {dsum =1;}
     myw[0] = p[0] / dsum;
     for (i = 1; i < n;i++) {
         myw[i] = p[i] / dsum + myw[i-1];
@@ -59,6 +65,7 @@ void samplew_multi2(double *p, int n, double *d, double* result,int howmany) {
     for (int h=0; h < howmany; h++) {
         for(k=0;k < n && d[h]>myw[k];k++)
             ;
+        if (k == n) {k = n-1;}
         result[h] = k+1;
     }
     delete [] myw;
