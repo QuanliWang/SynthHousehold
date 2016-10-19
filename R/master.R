@@ -4,7 +4,7 @@ rm(list = ls())
 library(NestedCategBayesImpute)
 library(dplyr)
 
-format2 = TRUE #set format2 to TRUE for the new format
+format2 = FALSE #set format2 to TRUE for the new format
 
 if (format2) {
   orig.file <- system.file("extdata", "origdata_newFormat.txt", package = "NestedCategBayesImpute")
@@ -61,7 +61,7 @@ synData <- list()
 
 #weighting
 weight_option <- TRUE #set to true for weighting/capping option
-struc_weight <- c(1,1,1/2,1/3,1/3) #set weights: must be ordered & no household size must be excluded
+struc_weight <- c(1/2,1/2,1/3,1/4,1/4) #set weights: must be ordered & no household size must be excluded
 
 if(weight_option){
   struc_weight <- c(1,struc_weight) #add 1 for the weight of the observed data
@@ -71,8 +71,11 @@ if(weight_option){
   weighted_z_Individual_all <- vector("list",length(struc_weight))
 }
 
+Rprof("path_to_hold_output", append=TRUE)
 #source("../mcmc.R")
 source("mcmc.R")
+Rprof(NULL)
+summaryRprof("path_to_hold_output")
 
 
 #save synthetic data

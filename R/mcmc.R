@@ -33,17 +33,17 @@ for (i in 1:mc$nrun) {
     
     if (!format2){
       for(w_i in 2:length(struc_weight)){
-        weighted_z_HH_all[[w_i]] <- data.extra$z_HH_extra[which(n_i == w_i)]
-        weighted_HHdata_all[[w_i]] <- data.extra$HHdata_extra[,which(n_i == w_i)]
-        weighted_IndividualData_all[[w_i]] <- data.extra$IndividualData_extra[,which(n_i_index == w_i)]
-        weighted_z_Individual_all[[w_i]] <- data.extra$z_HHdata_individual_extra[,which(n_i_index == w_i)]
+        weighted_z_HH_all[[w_i]] <- data.extra$z_HH_extra[(n_i == w_i)]
+        weighted_HHdata_all[[w_i]] <- data.extra$HHdata_extra[,(n_i == w_i)]
+        weighted_IndividualData_all[[w_i]] <- data.extra$IndividualData_extra[,(n_i_index == w_i)]
+        weighted_z_Individual_all[[w_i]] <- data.extra$z_HHdata_individual_extra[,(n_i_index == w_i)]
       }
     } else{
       for(w_i in 2:length(struc_weight)){
-        weighted_z_HH_all[[w_i]] <- data.extra$z_HH_extra[which(n_i == (w_i-1))]
-        weighted_HHdata_all[[w_i]] <- data.extra$HHdata_extra[,which(n_i == (w_i-1))]
-        weighted_IndividualData_all[[w_i]] <- data.extra$IndividualData_extra[,which(n_i_index == (w_i-1))]
-        weighted_z_Individual_all[[w_i]] <- data.extra$z_HHdata_individual_extra[,which(n_i_index == (w_i-1))]
+        weighted_z_HH_all[[w_i]] <- data.extra$z_HH_extra[(n_i == (w_i-1))]
+        weighted_HHdata_all[[w_i]] <- data.extra$HHdata_extra[,(n_i == (w_i-1))]
+        weighted_IndividualData_all[[w_i]] <- data.extra$IndividualData_extra[,(n_i_index == (w_i-1))]
+        weighted_z_Individual_all[[w_i]] <- data.extra$z_HHdata_individual_extra[,(n_i_index == (w_i-1))]
       }
     }
     
