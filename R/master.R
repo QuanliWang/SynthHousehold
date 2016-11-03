@@ -56,12 +56,13 @@ para <- initParameters(orig,hyper,format2)
 output <- initOutput(orig,hyper,mc)
 
 #synindex <- c(9910,9920,9930,9940,9950,9960,9970,9980,9990,10000)
-synindex <- sort(sample(seq((mc$nrun*0.8 +1),mc$nrun,mc$eff.sam),10,replace=F))
+mm <- 50
+synindex <- sort(sample(seq((mc$burn +1),mc$nrun,by=mc$thin),mm,replace=F))
 synData <- list()
 
 #weighting
 weight_option <- TRUE #set to true for weighting/capping option
-struc_weight <- c(1/2,1/2,1/3,1/4,1/4) #set weights: must be ordered & no household size must be excluded
+struc_weight <- c(1,1,1/2,1/3,1/3) #set weights: must be ordered & no household size must be excluded
 
 if(weight_option){
   struc_weight <- c(1,struc_weight) #add 1 for the weight of the observed data
@@ -71,11 +72,13 @@ if(weight_option){
   weighted_z_Individual_all <- vector("list",length(struc_weight))
 }
 
-Rprof("path_to_hold_output", append=TRUE)
+#Rprof("path_to_hold_output", append=TRUE)
+proc_t <- proc.time()
 #source("../mcmc.R")
 source("mcmc.R")
-Rprof(NULL)
-summaryRprof("path_to_hold_output")
+total_time <- (proc.time() - proc_t)[["elapsed"]]
+#Rprof(NULL)
+#summaryRprof("path_to_hold_output")
 
 
 #save synthetic data
@@ -97,6 +100,27 @@ writeFun <- function(LL){
   }
 }
 writeFun(synData)
+
+#save computational time
+if(format2){
+  if(weight_option){
+    write.table(total_time,"total_time_newFormat_weighted.txt",row.names = F,col.names = F)
+  } else {
+    write.table(total_time,"total_time_newFormat.txt",row.names = F,col.names = F)
+  }
+} else {
+  if(weight_option){
+    write.table(total_time,"synData_oldFormat_weighted.txt",row.names = F,col.names = F)
+  } else {
+    write.table(total_time,"synData_oldFormat.txt",row.names = F,col.names = F)
+  }
+}
+
+
+
+
+
+
 
 
 

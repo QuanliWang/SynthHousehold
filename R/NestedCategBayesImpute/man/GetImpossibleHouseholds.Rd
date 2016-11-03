@@ -7,7 +7,7 @@ Generate the desired number of impossible households for given household size an
 Generate the desired number of impossible households for given household size and model parameters. Also generate possible household data (synthetic data) when required.
 }
 \usage{
-GetImpossibleHouseholds(d, ACS_count, lambda, w, phi, pi, howmany, n, synindex)
+GetImpossibleHouseholds(d, ACS_count, lambda, w, phi, pi, howmany, n, synindex, format2)
 }
 \arguments{
   \item{d}{
@@ -35,6 +35,9 @@ GetImpossibleHouseholds(d, ACS_count, lambda, w, phi, pi, howmany, n, synindex)
 }
   \item{synindex}{
   indicates if a possible household data(synthetic data) is needed.
+}
+  \item{format2}{
+  indicator for whether or not the household head is moved to the household level (TRUE) or included as an individual within the household (FALSE) . 
 }
 }
 
