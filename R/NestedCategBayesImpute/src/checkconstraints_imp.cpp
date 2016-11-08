@@ -222,7 +222,7 @@ int checkconstraints_imp(double *data, double *isPossible,int hh_size, int DIM, 
     return totalpossible;
 }
 
-int checkconstraints_imp_format2(double *data, double *isPossible,int hh_size, int DIM, int nHouseholds) {
+int checkconstraints_imp_HHhead_at_group_level(double *data, double *isPossible,int hh_size, int DIM, int nHouseholds) {
   int realsize = hh_size + 1;
   int totalpossible = 0;
   double *datah = new double[realsize * 3 + 1];

@@ -1,13 +1,13 @@
-\name{UpdateLambda}
-\alias{UpdateLambda}
+\name{UpdateLambdaWeighted}
+\alias{UpdateLambdaWeighted}
 \title{
 Update lambda.
 }
 \description{
-Update lambda -- the list of matrices of the group-level probabilities for each group-level variable by the group-level latent classes when the weighting/capping option is not used. Each matrix in the list is for each group-level variable.
+Update lambda -- the list of matrices of the group-level probabilities for each group-level variable by the group-level latent classes -- when the weighting/capping option is used. Each matrix in the list is for each group-level variable.
 }
 \usage{
-UpdateLambda(dHH, FF, G_all, HHdata_all)
+UpdateLambdaWeighted(dHH, FF, G_all, HHdata_all,struc_weight)
 }
 \arguments{
   \item{dHH}{
@@ -22,9 +22,10 @@ UpdateLambda(dHH, FF, G_all, HHdata_all)
   \item{HHdata_all}{
   Data matrix for the household-level data from both the original data and the sampled impossible households.
 }
+\item{struc_weight}{A vector of weights by household sizes used in capping the number of sampled impossible households.}
 }
 \details{
-Function for obtaining a posterior sample of lambda when the weighting/capping option is not used.
+Function for obtaining a posterior sample of lambda when the weighting/capping option is used.
 }
 \value{
 Updated (posterior) value for lambda based on the corresponding full conditional distribution.

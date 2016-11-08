@@ -1,5 +1,5 @@
-\name{samplehouseholds}
-\alias{samplehouseholds}
+\name{samplehouseholds_HHhead_at_group_level}
+\alias{samplehouseholds_HHhead_at_group_level}
 \title{
 Rcpp implementation for sampling household data without constraints.
 }
@@ -7,7 +7,7 @@ Rcpp implementation for sampling household data without constraints.
 Rcpp implementation for sampling household data without constraints.
 }
 \usage{
-samplehouseholds(phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize)
+samplehouseholds_HHhead_at_group_level(phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize)
 }
 \arguments{
   \item{phi}{Matrix of posterior samples for the individual-level probabilities for each individual-level variable by each pair of group-level and individual-level latent classes.}
@@ -26,7 +26,7 @@ samplehouseholds(phi, omega, pi, d, lambda, currrentbatch, nHouseholds, househol
 }
 }
 \details{
- This function allows the model to generate a batch of \verb{nHouseholds} with each household of size \verb{householdsize}. The generated household data will include both possible and impossible households. Use \verb{samplehouseholds} when the household head is included as an individual within the household.
+ This function allows the model to generate a batch of \verb{nHouseholds} with each household of size \verb{householdsize}. The generated household data will include both possible and impossible households. Use \verb{samplehouseholds_HHhead_at_group_level} when the household head is moved to the household level.
 }
 \value{
 A data matrix with each row for one household.

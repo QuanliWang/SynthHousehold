@@ -1,54 +1,49 @@
 \name{GetImpossibleHouseholds}
 \alias{GetImpossibleHouseholds}
 \title{
-Generate the desired number of impossible households for given household size and model parameters.
+Generate the desired number of impossible households required to observe a given number of possible households.
 }
 \description{
-Generate the desired number of impossible households for given household size and model parameters. Also generate possible household data (synthetic data) when required.
+Given model parameters, generate the desired number of impossible households required to observe a given number of possible households. Also generate synthetic (and valid) data of the same size as the observed data when required.
 }
 \usage{
-GetImpossibleHouseholds(d, ACS_count, lambda, w, phi, pi, howmany, n, synindex, format2)
+GetImpossibleHouseholds(d, n_star_h, lambda, omega, phi, pi, howmany, n, synindex, HHhead_at_group_level)
 }
 \arguments{
   \item{d}{
-  number of levels for each variable.
+  Vector containing the number of levels for each individual-level variable.
 }
-  \item{ACS_count}{
-  number of households for different household size. Need to change this name later.
+  \item{n_star_h}{
+  Vector containing the number of observed households for the different household sizes in the original data.
 }
-  \item{lambda}{lambda parameters for the household level variables.
+  \item{lambda}{Multinomial probabilities for each group-level variable.
 }
-  \item{w}{
-  w parameter.
+  \item{omega}{Latent class probabilities for the group-level and individual-level latent class pairs.
 }
-  \item{phi}{
-  phi parameter.
+  \item{phi}{Multinomial probabilities for each individual-level variable by each pair of group-level and individual-level latent classes.
 }
-  \item{pi}{
-  pi parameter.
+  \item{pi}{Latent class probabilities for the group-level latent classes.
 }
   \item{howmany}{
-  number households to be generated at each batch. It is used as a tuning parameter for performance.
+  Number of households to be generated at a time; batch sampling is used to improve computing speed.
 }
   \item{n}{
-  number of household in the original input data.
+  Number of households in the original input data and the sum of \verb{n_star_h}.
 }
-  \item{synindex}{
-  indicates if a possible household data(synthetic data) is needed.
+  \item{synindex}{Logical indicator for sampling synthetic data. Set to TRUE when synthetic data is needed.
 }
-  \item{format2}{
-  indicator for whether or not the household head is moved to the household level (TRUE) or included as an individual within the household (FALSE) . 
+  \item{HHhead_at_group_level}{
+  Logical indicator for data structure with respect to the household head. Set to TRUE if the household head has been moved to the household level and FALSE otherwise.
 }
 }
 
 \value{
-A list of variales  relating to impossible household/individuals and synthetic data. Really confusing here and need more clarifiction.
-  \item{Individuals_extra }{A data matrix for individual members from the impossible households.}
-  \item{HHdata_extra }{A data matrix for impossible household level variables.}
-  \item{z_HHdata_individual_extra }{A data matrix for impossible household level component indicators. The household level indicators are expanded to individual members within this data matrix.}
-  \item{z_HH_extra }{A vector for the household level compoment indicators.}
-  \item{hh_size_new }{A vector for the number of impossible households for different household size.}
-  \item{synIndividuals_all }{A data matrix for individual members from the possible(synthetic) households when synindex is non-zero. NULL otherwise.}
+  \item{G_Individuals_and_M_extra}{A data matrix containing both the group-level (in long format) and individual-level latent classes for the impossible households.}
+  \item{G_extra }{A vector containing the group-level latent classes for the impossible households.}
+  \item{IndividualData_extra }{A data matrix containing the individual-level data for the impossible households.}
+  \item{HHdata_extra}{A data matrix containing the group-level data for the impossible households.}
+  \item{hh_size_new }{A vector for the number of impossible households for the different household sizes.}
+  \item{synIndividuals_all }{Synthetic data when synindex is TRUE. NULL otherwise.}
 }
 
 \author{

@@ -1,10 +1,10 @@
 \name{households2individuals}
 \alias{households2individuals}
 \title{
-Convert a household data matrix to the corresponding individual household member data matrix.
+Convert a household data matrix to the corresponding individual member data matrix.
 }
 \description{
-Convert a household data matrix to the corresponding individual household member data matrix.
+Convert a household data matrix to the corresponding individual member data matrix.
 }
 \usage{
 households2individuals(data, hh_size)
@@ -19,7 +19,7 @@ households2individuals(data, hh_size)
 }
 
 \value{
-Individual household member data matrix.
+Individual member data matrix.
 }
 
 \author{

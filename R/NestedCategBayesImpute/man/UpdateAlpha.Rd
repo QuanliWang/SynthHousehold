@@ -1,28 +1,28 @@
 \name{UpdateAlpha}
 \alias{UpdateAlpha}
 \title{
-Update alpha parameter
+Update alpha.
 }
 \description{
-Update alpha parameter.
+Update alpha -- the concentration parameter in the Dirichlet process for the group-level latent classes.
 }
 \usage{
 UpdateAlpha(aa, ab, u)
 }
 \arguments{
   \item{aa}{
-  hyper parameter a for alpha
+  Hyper-parameter a for alpha.
 }
   \item{ab}{
-  hyper parameter b for alpha
+  Hyper-parameter b for alpha.
 }
   \item{u}{
-  u parameter
+  Vector of the beta-distributed variables in the stick breaking representation of the group-level latent classes.
 }
 }
 
 \value{
-updated alpha parameter.
+Updated (posterior) value for alpha based on the corresponding full conditional distribution.
 }
 
 \author{

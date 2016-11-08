@@ -12,4 +12,4 @@
 #define COL 3
 
 int checkconstraints_imp(double *data, double *isPossible,int hh_size, int DIM, int nHouseholds);
-int checkconstraints_imp_format2(double *data, double *isPossible,int hh_size, int DIM, int nHouseholds);
+int checkconstraints_imp_HHhead_at_group_level(double *data, double *isPossible,int hh_size, int DIM, int nHouseholds);

@@ -1,5 +1,5 @@
-\name{checkconstraints}
-\alias{checkconstraints}
+\name{checkconstraints_HHhead_at_group_level}
+\alias{checkconstraints_HHhead_at_group_level}
 \title{
 Checking a data matrix of households for the possible/impossible status under a predefined set of structural zeros.
 }
@@ -7,7 +7,7 @@ Checking a data matrix of households for the possible/impossible status under a 
 Checking a data matrix of households for the possible/impossible status under a predefined set of structural zeros.
 }
 \usage{
-checkconstraints(data, neededpossiblehh, hh_size)
+checkconstraints_HHhead_at_group_level(data, neededpossiblehh, hh_size)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
@@ -22,7 +22,7 @@ checkconstraints(data, neededpossiblehh, hh_size)
   }
 }
 \details{
-Given an input household data matrix, these functions will check the possible/impossible status of each household and also output the desired number of possible and impossible households separately. \verb{checkconstraints} checks constraints when the household head is included as an individual within the household.
+Given an input household data matrix, these functions will check the possible/impossible status of each household and also output the desired number of possible and impossible households separately. \verb{checkconstraints_HHhead_at_group_level} checks contraints when the household head is moved to the household level.
 
 The predefined list of structural zeros currently included is completely data driven. It does not fully represent the true list of impossible combinations in the true population from the American Community Survey (ACS) but rather represents a primary list of combinations not satisfied by our sample of size 10000 from the 2012 ACS. In fact, some of the structural zeros included here do not generalize to more recent ACS data sets. For example, we expect the true population to contain households with same sex couple but do not observe any in our sample and so we leave this in to be able to generate synthetic data with the properties of our sample data.
 

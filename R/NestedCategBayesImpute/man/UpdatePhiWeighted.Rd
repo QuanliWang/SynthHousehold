@@ -1,13 +1,13 @@
-\name{UpdatePhi}
-\alias{UpdatePhi}
+\name{UpdatePhiWeighted}
+\alias{UpdatePhiWeighted}
 \title{
 Update phi.
 }
 \description{
-Update phi -- the matrix of posterior samples for the individual-level probabilities for each individual-level variable by each pair of group-level and individual-level latent classes -- when the weighting/capping option is not used.
+Update phi -- the matrix of posterior samples for the individual-level probabilities for each individual-level variable by each pair of group-level and individual-level latent classes -- when the weighting/capping option is used.
 }
 \usage{
-UpdatePhi(IndividualData_all, M_all, FF, SS, p, d, maxd, individual_variable_index)
+UpdatePhiWeighted(IndividualData_all, M_all, FF, SS, p, d, maxd, individual_variable_index, struc_weight)
 }
 \arguments{
   \item{IndividualData_all}{
@@ -32,9 +32,10 @@ UpdatePhi(IndividualData_all, M_all, FF, SS, p, d, maxd, individual_variable_ind
   Maximum value in \verb{d}.
 }
 \item{individual_variable_index}{Vector of column indexes for the individual-level variables.}
+\item{struc_weight}{A vector of weights by household sizes used in capping the number of sampled impossible households.}
 }
 \details{
-Function for obtaining a posterior sample of phi when the weighting/capping option is not used.
+Function for obtaining a posterior sample of phi when the weighting/capping option is used.
 }
 \value{
 Updated (posterior) value for phi based on the corresponding full conditional distribution.
