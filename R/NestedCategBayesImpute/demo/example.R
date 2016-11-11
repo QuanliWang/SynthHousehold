@@ -1,6 +1,4 @@
 
-
-
 ###################################################################################
 ###################################### START ######################################
 ###################################################################################
@@ -89,14 +87,12 @@ output <- initOutput(orig,hyper,mc)
 
 ### Set number of synthetic data and the mcmc indexes for them
 mm <- 5
-synindex <- sort(sample(seq((mc$burn +1),mc$nrun,by=mc$thin),mm,replace=F))
+synindex <- sort(sample(seq((mc$burn +1),mc$nrun,by=mc$thin),mm,replace=FALSE))
 
 
 ### Run model
-proc_t <- proc.time()
 ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,individual_variable_index,household_variable_index,
                          HHhead_at_group_level,weight_option,struc_weight)
-total_time <- (proc.time() - proc_t)[["elapsed"]]
 
 
 ### View first few lines of the first synthetic data.
@@ -144,45 +140,6 @@ summary(S_occupied_max)
 ###################################################################################
 ####################################### END #######################################
 ###################################################################################
-
-
-#save synthetic data
-writeFun <- function(LL){
-  for(i in 1:length(LL)){
-    if(HHhead_at_group_level){
-      if(weight_option){
-        write.table(LL[[i]],paste0("synData_newFormat_weighted",i,".txt"),row.names = F,col.names = F)
-      } else {
-        write.table(LL[[i]],paste0("synData_newFormat",i,".txt"),row.names = F,col.names = F)
-      }
-    } else {
-      if(weight_option){
-        write.table(LL[[i]],paste0("synData_oldFormat_weighted",i,".txt"),row.names = F,col.names = F)
-      } else {
-        write.table(LL[[i]],paste0("synData_oldFormat",i,".txt"),row.names = F,col.names = F)
-      }
-    }
-  }
-}
-writeFun(ModelResults$synData)
-
-#save computational time
-if(HHhead_at_group_level){
-  if(weight_option){
-    write.table(total_time,"total_time_newFormat_weighted.txt",row.names = F,col.names = F)
-  } else {
-    write.table(total_time,"total_time_newFormat.txt",row.names = F,col.names = F)
-  }
-} else {
-  if(weight_option){
-    write.table(total_time,"total_time_oldFormat_weighted.txt",row.names = F,col.names = F)
-  } else {
-    write.table(total_time,"total_time_oldFormat.txt",row.names = F,col.names = F)
-  }
-}
-
-
-
 
 
 

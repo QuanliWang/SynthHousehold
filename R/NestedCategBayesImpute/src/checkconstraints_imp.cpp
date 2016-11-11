@@ -7,7 +7,7 @@
 //11 = partner, friend, visitor,
 //12 = other non-relatives
 inline bool IsHead(double relate, double age) {
-    return (relate == HEAD && age >=17);
+    return (relate == HEAD && age >=16);
 }
 
 inline int GetHead(double *record, int hhsize) {
@@ -40,7 +40,7 @@ inline int GetValidSpouse(double *record, int hhsize) {
     }
     if (nspouse > 1) {return 0;} //too many spouse
     if (nspouse == 0) { return -1;} //no spouse
-    if (record[hhsize+spouse]<17) {return 0;} //spouse is under-age
+    if (record[hhsize+spouse]<16) {return 0;} //spouse is under-age
     return spouse;
 }
 
@@ -50,7 +50,7 @@ inline bool IsValidCouple(double *record, int hh_size, int spouse, int head) {
     } else { //valid spouse or no spouse
         if (spouse>0) {//the only spouse, so check sex, and age difference
             if (record[head] == record[spouse]) {return false;}
-            if (std::abs(record[hh_size + head] - record[hh_size + spouse]) > 52) {return false;}
+            if (std::abs(record[hh_size + head] - record[hh_size + spouse]) > 49) {return false;}
         }
     }
     return true;
@@ -74,7 +74,7 @@ inline int GetOldestChild(double *record, int hhsize) {
 
 inline bool IsValidChild(double *record, int hh_size, int child, int head) {
     if (child>0) {//get a child, check age difference
-        if (record[hh_size + head] - record[hh_size + child] <12) {return false;}
+        if (record[hh_size + head] - record[hh_size + child] <7) {return false;}
     }
     return true;
 }
@@ -82,26 +82,26 @@ inline bool IsValidChild(double *record, int hh_size, int child, int head) {
 
 //return -1 if no child
 //return the record index of the oldest child otherwise
-inline int GetOldestChildInLaw(double *record, int hhsize) {
-    double age = -1;
-    int child = -1;  //no childen
-    for (int i = 1; i <= hhsize; i++) {
-        if (record[2*hhsize+i]==CHILDINLAW) {
-            if (record[hhsize+i] > age) {
-                age = record[hhsize+i];
-                child = i;
-            }
-        }
-    }
-    return child;
-}
+//inline int GetOldestChildInLaw(double *record, int hhsize) {
+//    double age = -1;
+//    int child = -1;  //no childen
+//    for (int i = 1; i <= hhsize; i++) {
+//        if (record[2*hhsize+i]==CHILDINLAW) {
+//            if (record[hhsize+i] > age) {
+//                age = record[hhsize+i];
+//                child = i;
+//            }
+//        }
+//    }
+//    return child;
+//}
 
-inline bool IsValidChildInLaw(double *record, int hh_size, int child, int head) {
-    if (child>0) {//get a child, check age difference
-        if (record[hh_size + head] - record[hh_size + child] <10) {return false;}
-    }
-    return true;
-}
+//inline bool IsValidChildInLaw(double *record, int hh_size, int child, int head) {
+//    if (child>0) {//get a child, check age difference
+//        if (record[hh_size + head] - record[hh_size + child] <10) {return false;}
+//    }
+//    return true;
+//}
 
 //return -1 if no parent
 //return the record index of the youngest parent otherwise
@@ -121,7 +121,7 @@ inline int GetYoungestParent(double *record, int hhsize) {
 
 inline bool IsValidParent(double *record, int hh_size, int parent, int head) {
     if (parent>0) {//get a child, check age difference
-        if (record[hh_size + parent] -record[hh_size + head] <13) {return false;}
+        if (record[hh_size + parent] -record[hh_size + head] <10) {return false;}
     }
     return true;
 }
@@ -142,7 +142,7 @@ inline int GetYoungestParentInLaw(double *record, int hhsize) {
 
 inline bool IsValidParentInLaw(double *record, int hh_size, int parent, int head) {
     if (parent>0) {//get a child, check age difference
-        if (record[hh_size + parent] -record[hh_size + head] <9) {return false;}
+        if (record[hh_size + parent] -record[hh_size + head] <4) {return false;}
     }
     return true;
 }
@@ -150,7 +150,7 @@ inline bool IsValidParentInLaw(double *record, int hh_size, int parent, int head
 inline bool IsValidSiblingOrSiblingInLaw(double *record, int hhsize, int head) {
     for (int i = 1; i <= hhsize; i++) {
         if (record[2*hhsize+i]== SIBLING || record[2*hhsize+i] == SIBLINGINLAW) {
-            if (std::abs(record[hhsize + i] - record[hhsize + head]) >33) {return false;}
+            if (std::abs(record[hhsize + i] - record[hhsize + head]) >37) {return false;}
         }
     }
     return true;
@@ -161,9 +161,9 @@ inline bool IsValidGrandChild(double *record, int hhsize, int spouse, int head) 
         if (record[2*hhsize+i]== GRANDCHILD) {
             if (record[hhsize + head] < 33) {return false;} //too young to be grand parent for the HEAD
             if (spouse > 0) { //make sure the spouse(if any) is not too young
-                if (record[hhsize + spouse] < 33) {return false;}
+                if (record[hhsize + spouse] < 17) {return false;}
             }
-            if (record[hhsize + head] - record[hhsize + i] <30 ) {return false;}
+            if (record[hhsize + head] - record[hhsize + i] <26 ) {return false;}
         }
     }
     return true;
@@ -184,8 +184,8 @@ int isValid(double *datah, int hh_size) {
     int oldestChild = GetOldestChild(datah,hh_size);
     if (!IsValidChild(datah,hh_size,oldestChild,head)) {return 0;}
 
-    int oldestChildInLaw = GetOldestChildInLaw(datah,hh_size);
-    if (!IsValidChildInLaw(datah,hh_size,oldestChildInLaw,head)) {return 0;}
+    //int oldestChildInLaw = GetOldestChildInLaw(datah,hh_size);
+    //if (!IsValidChildInLaw(datah,hh_size,oldestChildInLaw,head)) {return 0;}
 
     int youngestParent = GetYoungestParent(datah,hh_size);
     if (!IsValidParent(datah,hh_size,youngestParent,head)) {return 0;}

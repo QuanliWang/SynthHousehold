@@ -82,19 +82,17 @@ initParameters <- function(data,hyper,HHhead_at_group_level) {
 
 initOutput <- function(data,hyper,mc) {
   output <- list()
-  output$alphaout <- matrix(0,nrow = mc$nrun,ncol = 1)
-  output$betaout <- matrix(0, nrow = mc$nrun,ncol = 1)
+  output$alphaout <- matrix(0,nrow = mc$eff.sam,ncol = 1)
+  output$betaout <- matrix(0, nrow = mc$eff.sam,ncol = 1)
   output$piout <- matrix(0, mc$eff.sam,hyper$FF)
   output$omegaout <- array(0, dim=c(mc$eff.sam,hyper$FF,hyper$SS))
   output$nout <- matrix(0,nrow = mc$nrun,ncol = 1)
   output$extrasize <- matrix(0,nrow = mc$nrun,ncol = length(data$n_star_h))
-  #output$G_save <- matrix(0, nrow = mc$nrun, ncol = data$n_individuals)
-  #output$M_save <- matrix(0, nrow = mc$nrun, ncol = data$n_individuals)
+  output$F_occupied <- matrix(0, nrow = mc$eff.sam, ncol = 1)
+  output$S_occupied_max <- matrix(0, nrow = mc$eff.sam, ncol = 1)
   output$elapsed_time <-  matrix(0,nrow = mc$nrun,ncol = 1)
   output$newphiout <- array(0, dim=c(mc$eff.sam,data$maxd*data$p,hyper$FF*hyper$SS))
-
   output$lambdaout = list()
-
   for (i in 1:length(hyper$dHH)) {
     output$lambdaout[[i]] = array(0, dim=c(mc$eff.sam,hyper$FF, hyper$dHH[i]))
   }

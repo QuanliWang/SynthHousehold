@@ -4,7 +4,7 @@
 Update pi and u.
 }
 \description{
-Update pi -- the vector of the probabilities for the group-level latent classes -- and u -- the vector of the beta-distributed variables in the stick breaking representation of the group-level latent classes when the weighting/capping option is used.
+Update pi -- the vector of the probabilities for the group-level latent classes -- and u -- the vector of the beta-distributed variables in the stick breaking representation of the group-level latent classes when the weighting/capping option is used. The weighting options allows capping the number of impossible households to sample and re-weight the multinomial counts within each latent class back to the expected truth.
 }
 \usage{
 UpdatePiWeighted(alpha, G_all, FF, struc_weight)
@@ -29,7 +29,7 @@ A list containing the updated (posterior) values for pi and u based on the corre
 }
 
 \author{
-Quanli wang
+Quanli wang, Olanrewaju Akande
 }
 
 \keyword{ sampler }

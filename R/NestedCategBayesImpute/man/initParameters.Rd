@@ -12,7 +12,7 @@ initParameters(data, hyper, HHhead_at_group_level)
 %- maybe also 'usage' for other objects documented here.
 \arguments{
   \item{data}{
-  The input data to be used in the model.
+  A list object including all the necessary data variables needed by the sampler; output of the \verb{initData} function.
 }
   \item{hyper}{
   Hyper parameters for the prior distributions.

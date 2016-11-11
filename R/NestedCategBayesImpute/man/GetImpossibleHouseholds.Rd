@@ -7,7 +7,8 @@ Generate the desired number of impossible households required to observe a given
 Given model parameters, generate the desired number of impossible households required to observe a given number of possible households. Also generate synthetic (and valid) data of the same size as the observed data when required.
 }
 \usage{
-GetImpossibleHouseholds(d, n_star_h, lambda, omega, phi, pi, howmany, n, synindex, HHhead_at_group_level)
+GetImpossibleHouseholds(d, n_star_h, lambda, omega, phi, pi, howmany, n, synindex,
+                        HHhead_at_group_level)
 }
 \arguments{
   \item{d}{

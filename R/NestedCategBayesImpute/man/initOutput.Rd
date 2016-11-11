@@ -13,7 +13,7 @@ initOutput(data, hyper, mc)
 
 \arguments{
   \item{data}{
-  Input data (including household info and level of each variable); output of the \verb{initData} function.
+  A list object including all the necessary data variables needed by the sampler.; output of the \verb{initData} function.
 }
   \item{hyper}{
   Hyper parameters for priors.
@@ -33,12 +33,14 @@ A list of output parameters to be saved.
 \item{omegaout}{3D array of posterior samples for the matrix of probabilities for the group-level and individual-level latent class pairs.}
 \item{nout}{Vector of posterior samples for the total number of impossible households sampled.}
 \item{extrasize}{Matrix of posterior samples for the number of impossible households sampled, split by household size.}
+\item{F_occupied}{Vector of posterior samples for the number of occupied household-level latent classes.}
+\item{S_occupied_max}{Vector of posterior samples for the max number of occupied individual-level latent classes.}
 \item{elapsed_time}{Vector of time taken to run each iteration.}
 \item{newphiout}{3D array of posterior samples for the individual-level probabilities for each individual-level variable by each pair of group-level and individual-level latent classes.}
 \item{lambdaout}{A list of an array of posterior samples for the group-level probabilities for each group-level variable. Each array in the list is for each group-level variable.}
 }
 
 \author{
-Quanli Wang
+Quanli Wang, Olanrewaju Akande
 }
 

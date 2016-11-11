@@ -4,7 +4,7 @@
 Update omega and v.
 }
 \description{
-Update omega -- the matrix of the probabilities for the individual-level latent classes by the group-level latent classes -- and v -- the matrix of the beta-distributed variables in the stick breaking representation of the individual-level latent classes by the group-level latent classes -- when the weighting/capping option is used.
+Update omega -- the matrix of the probabilities for the individual-level latent classes by the group-level latent classes -- and v -- the matrix of the beta-distributed variables in the stick breaking representation of the individual-level latent classes by the group-level latent classes -- when the weighting/capping option is used. The weighting options allows capping the number of impossible households to sample and re-weight the multinomial counts within each latent class back to the expected truth.
 }
 \usage{
 UpdateOmegaWeighted(beta, M_all, FF, SS, struc_weight)
@@ -30,7 +30,7 @@ A list containing the updated (posterior) values for omega and v based on the co
 }
 
 \author{
-Quanli Wang
+Quanli Wang, Olanrewaju Akande
 }
 
 \keyword{sampler}

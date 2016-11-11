@@ -22,24 +22,7 @@ checkconstraints_HHhead_at_group_level(data, neededpossiblehh, hh_size)
   }
 }
 \details{
-Given an input household data matrix, these functions will check the possible/impossible status of each household and also output the desired number of possible and impossible households separately. \verb{checkconstraints_HHhead_at_group_level} checks contraints when the household head is moved to the household level.
-
-The predefined list of structural zeros currently included is completely data driven. It does not fully represent the true list of impossible combinations in the true population from the American Community Survey (ACS) but rather represents a primary list of combinations not satisfied by our sample of size 10000 from the 2012 ACS. In fact, some of the structural zeros included here do not generalize to more recent ACS data sets. For example, we expect the true population to contain households with same sex couple but do not observe any in our sample and so we leave this in to be able to generate synthetic data with the properties of our sample data.
-
-The structural zeros already included are:
-\itemize{
-\item Valid Head: Each household must contain exactly one head and he/she must be at least 17 years old.
-\item Valid Spouse: Each household cannot contain more than one spouse and he/she must be at least 17 years old.
-\item Valid Couple: No same sex couple and age difference between couples cannot exceed 52.
-\item Valid Children: The household head must be older than the oldest child by at least 12.
-\item Valid Children-in-Law: The household head must be older than the oldest child-in-law by at least 10.
-\item Valid Parents: The youngest parent must be older than the household head by at least 13.
-\item Valid Parents-in-Law: The youngest parent-in-law must be older than the household head by at least 9.
-\item Valid Siblings: The age difference between the household head and siblings cannot exceed 33.
-\item Valid Siblings-in-Law: The age difference between the household head and siblings-in-law cannot exceed 33.
-\item Valid Grandchildren: The household head and spouse must both be at least 34 years old. Also, the household head must be older than the grandchildren by at least 30.
-}
-Users can modify this list by downloading the package source, making changes only to the checkconstraints_imp.cpp file and re-building the package.
+Given an input household data matrix, these functions will check the possible/impossible status of each household and also output the desired number of possible and impossible households separately. \verb{checkconstraints_HHhead_at_group_level} checks contraints when the household head is moved to the household level. For the list of structural zeros currently included, see the documentation for \verb{checkconstraints}.
 }
 \value{
 A list containing information on checking result.
@@ -51,7 +34,7 @@ A list containing information on checking result.
 }
 
 \author{
-Quanli Wang
+Quanli Wang, Olanrewaju Akande
 }
 
 \keyword{constraints}
