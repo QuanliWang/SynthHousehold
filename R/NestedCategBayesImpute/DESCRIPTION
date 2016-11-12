@@ -1,6 +1,6 @@
 Package: NestedCategBayesImpute
 Type: Package
-Title: Modeling and generating synthetic versions of nested categorical data in the presence of impossible combinations
+Title: Modeling and Generating Synthetic Versions of Nested Categorical Data in the Presence of Impossible Combinations
 Version: 0.1
 Date: 2016-11-11
 Author: Quanli Wang, Jerry Reiter, Jingchen Hu, Olanrewaju Akande and Andres Barrientos
