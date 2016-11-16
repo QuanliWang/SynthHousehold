@@ -1,31 +1,33 @@
 \name{UpdateLambda}
 \alias{UpdateLambda}
 \title{
-Update lambda parameters
+Update lambda.
 }
 \description{
-Update lambda parameters.
+Update lambda -- the list of matrices of the group-level probabilities for each group-level variable by the group-level latent classes when the weighting/capping option is not used. Each matrix in the list is for each group-level variable.
 }
 \usage{
-UpdateLambda(dHH, K, z_HH_all, HHdata_all)
+UpdateLambda(dHH, FF, G_all, HHdata_all)
 }
 \arguments{
   \item{dHH}{
-  A vector for number of levels for each household level variable.
+  A vector containing the number of levels for each household-level variable.
 }
-  \item{K}{
-  Maximum number of components at the household level.
+  \item{FF}{
+  Maximum number of household-level latent classes allowed.
 }
-  \item{z_HH_all}{
-  Component indicators at the household level for all households, including all impossible households.
+  \item{G_all}{
+  A vector of the household-level latent class indexes for all households both in the original data and the sampled impossible households.
 }
   \item{HHdata_all}{
-  Data matrix for household level variables for all households, including all impossible households.
+  Data matrix for the household-level data from both the original data and the sampled impossible households.
 }
 }
-
+\details{
+Function for obtaining a posterior sample of lambda when the weighting/capping option is not used.
+}
 \value{
-Updated phi parameter.
+Updated (posterior) value for lambda based on the corresponding full conditional distribution.
 }
 
 \author{

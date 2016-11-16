@@ -18,7 +18,7 @@ groupcount1D(g, n)
 }
 }
 \details{
-This is implemented as an utility function for 1D histgram count. For efficiency, it does not check if the maxmim value in input vector exceeds the maximum value specified.
+This is implemented as an utility function for 1D histgram count. For efficiency, it does not check if the maximum value in the input vector exceeds the maximum value specified.
 }
 \value{
 The count values.
