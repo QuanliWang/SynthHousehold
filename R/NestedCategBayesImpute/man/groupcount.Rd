@@ -24,7 +24,7 @@ groupcount(g1, g2, n1, n2)
 }
 }
 \details{
-This is implemented as an utility function to build a 2D histogram count table. For efficiency, it does not check if the maxmim values in input vectors exceed the maximum values specified.
+This is implemented as an utility function to build a 2D histogram count table. For efficiency, it does not check if the maximum values in input vectors exceed the maximum values specified.
 }
 \value{
 The count table.

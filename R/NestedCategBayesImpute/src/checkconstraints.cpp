@@ -66,7 +66,7 @@ List checkconstraints(NumericMatrix data,int neededpossiblehh, int hh_size) {
 
 
 // [[Rcpp::export]]
-List checkconstraints_format2(NumericMatrix data,int neededpossiblehh, int hh_size) {
+List checkconstraints_HHhead_at_group_level(NumericMatrix data,int neededpossiblehh, int hh_size) {
   int nHouseholds = data.nrow(); //data item in rows. !!
 
   //use the raw data instead, which has hh_size * DIM + 1 + hh_size
@@ -75,7 +75,7 @@ List checkconstraints_format2(NumericMatrix data,int neededpossiblehh, int hh_si
   //int hh_size = (columns -1) / (DIM+1);
 
   NumericVector isPossible(nHouseholds);
-  int totalpossible = checkconstraints_imp_format2(data.begin(), isPossible.begin(), hh_size, DIM, nHouseholds);
+  int totalpossible = checkconstraints_imp_HHhead_at_group_level(data.begin(), isPossible.begin(), hh_size, DIM, nHouseholds);
 
   int rows = nHouseholds-totalpossible;
   NumericMatrix newdata(columns,rows);

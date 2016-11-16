@@ -3,12 +3,12 @@ using namespace Rcpp;
 #include "samplehouseholds.h"
 
 // [[Rcpp::export]]
-NumericMatrix samplehouseholds(NumericMatrix phi, NumericMatrix w, NumericVector pi,
+NumericMatrix samplehouseholds(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
                NumericVector d, List lambda,
                int currrentbatch, int nHouseholds,  int householdsize) {
 
-  int K = w.nrow();
-  int L = w.ncol();
+  int FF = omega.nrow();
+  int SS = omega.ncol();
   int p = d.length();
   int n_lambdas = lambda.length();
   int *lambda_columns = new int[n_lambdas];
@@ -37,9 +37,9 @@ NumericMatrix samplehouseholds(NumericMatrix phi, NumericMatrix w, NumericVector
   }
   //printf("in samplehouseholds\n");
   NumericVector rand = runif(nHouseholds * ncol); //at most this many
-  sampleHouseholds_imp(data.begin(), rand.begin(), lambdas, lambda_columns, w.begin(),
+  sampleHouseholds_imp(data.begin(), rand.begin(), lambdas, lambda_columns, omega.begin(),
                    phi.begin(), pi.begin(),d.begin(),
-                   nHouseholds, householdsize, K, L,maxdd,p, currrentbatch,n_lambdas);
+                   nHouseholds, householdsize, FF, SS,maxdd,p, currrentbatch,n_lambdas);
 
   //clean up
   delete [] lambda_columns;
@@ -52,12 +52,12 @@ NumericMatrix samplehouseholds(NumericMatrix phi, NumericMatrix w, NumericVector
 }
 
 // [[Rcpp::export]]
-NumericMatrix samplehouseholds_format2(NumericMatrix phi, NumericMatrix w, NumericVector pi,
+NumericMatrix samplehouseholds_HHhead_at_group_level(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
                                NumericVector d, List lambda,
                                int currrentbatch, int nHouseholds,  int householdsize) {
 
-  int K = w.nrow();
-  int L = w.ncol();
+  int FF = omega.nrow();
+  int SS = omega.ncol();
   int p = d.length();
   int n_lambdas = lambda.length();
   int *lambda_columns = new int[n_lambdas];
@@ -86,9 +86,9 @@ NumericMatrix samplehouseholds_format2(NumericMatrix phi, NumericMatrix w, Numer
   }
   //printf("in samplehouseholds\n");
   NumericVector rand = runif(nHouseholds * ncol); //at most this many
-  sampleHouseholds_imp_format2(data.begin(), rand.begin(), lambdas, lambda_columns, w.begin(),
+  sampleHouseholds_imp_HHhead_at_group_level(data.begin(), rand.begin(), lambdas, lambda_columns, omega.begin(),
                        phi.begin(), pi.begin(),d.begin(),
-                       nHouseholds, householdsize, K, L,maxdd,p, currrentbatch,n_lambdas);
+                       nHouseholds, householdsize, FF, SS,maxdd,p, currrentbatch,n_lambdas);
 
   //clean up
   delete [] lambda_columns;

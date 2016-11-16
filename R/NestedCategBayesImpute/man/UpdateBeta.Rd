@@ -1,28 +1,28 @@
 \name{UpdateBeta}
 \alias{UpdateBeta}
 \title{
-Update beta parameter
+Update beta.
 }
 \description{
-Update beta parameter.
+Update beta -- the concentration parameter in the Dirichlet process for the individual-level latent classes. Currently, this is assumed to be the same within all group-level classes.
 }
 \usage{
 UpdateBeta(ba, bb, v)
 }
 \arguments{
   \item{ba}{
-  hyper parameter a for beta.
+  Hyper-parameter a for beta.
 }
   \item{bb}{
-  hyper parameter b for beta.
+  Hyper-parameter b for beta.
 }
   \item{v}{
-  parameter v.
+  Matrix of the beta-distributed variables in the stick breaking representation of the individual-level latent classes by the group-level latent classes.
 }
 }
 
 \value{
-Updated beta parameter.
+Updated (posterior) value for beta based on the corresponding full conditional distribution..
 }
 
 \author{
