@@ -24,22 +24,22 @@ checkconstraints(data, neededpossiblehh, hh_size)
 \details{
 Given an input household data matrix, these functions will check the possible/impossible status of each household and also output the desired number of possible and impossible households separately. \verb{checkconstraints} checks constraints when the household head is included as an individual within the household.
 
-The predefined list of structural zeros currently included is completely data driven. It does not fully represent the true list of impossible combinations in the true population from the American Community Survey (ACS) but rather represents a primary list of combinations not satisfied by our samples of sizes 10000 from the 2012 ACS. In fact, some of the structural zeros included here do not generalize to more recent ACS data sets. For example, we expect the true population to contain households with same sex couple but do not observe any in our samples and so we leave this in to be able to generate synthetic data with the properties of our sample data sets.
+The predefined list of structural zeros currently included should be viewed as an example of a system of constraints. It was derived by treating a subset of the 2012 American Community Survey as a population, and identifying combinations involving the relationship variable that do not appear in the data.  This list should not be interpreted as a ``true'' list of impossible combinations in the target population. We force the combinations of variables in this list to have zero probability to be consistent with the 2012 ACS public use file that we used in the example.
 
 The structural zeros included are:
 \itemize{
-\item Valid Head: Each household must contain exactly one head and he/she must be at least 16 years old.
-\item Valid Spouse: Each household cannot contain more than one spouse and he/she must be at least 16 years old.
-\item Valid Couple: No same sex couple and age difference between couples cannot exceed 49.
-\item Valid Children: The household head must be older than the oldest child by at least 7.
-%\item Valid Children-in-Law: The household head must be older than the oldest child-in-law by at least 10.
-\item Valid Parents: The youngest parent must be older than the household head by at least 10.
-\item Valid Parents-in-Law: The youngest parent-in-law must be older than the household head by at least 4.
-\item Valid Siblings: The age difference between the household head and siblings cannot exceed 37.
+\item Each household must contain exactly one head and he/she must be at least 16 years old.
+\item Each household cannot contain more than one spouse and he/she must be at least 16 years old.
+\item Married couples are of opposite sex, and age difference between individuals in the couples cannot exceed 49.
+\item The household head must be older than the oldest child by at least 7.
+%\item The household head must be older than the oldest child-in-law by at least 10.
+\item The youngest parent must be older than the household head by at least 10.
+\item The youngest parent-in-law must be older than the household head by at least 4.
+\item The age difference between the household head and siblings cannot exceed 37.
 %\item Valid Siblings-in-Law: The age difference between the household head and siblings-in-law cannot exceed 33.
-\item Valid Grandchildren: The household head must be at least 34 years old. Also, the household head must be older than the oldest grandchild by at least 26.
+\item The household head must be at least 34 years old. Also, the household head must be older than the oldest grandchild by at least 26.
 }
-Users can modify this list by downloading the package source, making changes only to the checkconstraints_imp.cpp file and re-building the package.
+Users can modify the list of structural zeros by downloading the package source, making changes only to the checkconstraints_imp.cpp file and re-building the package. Please note that the structural zeros have been specified according to the structure of our example data so that the specific column indexes and levels of age, gender and relationship to household head variables in subsequent data sets must match those in our example data. For more information on the structure of the data, see the documentation of the \verb{RunModel} function.
 }
 \value{
 A list containing information on checking result.

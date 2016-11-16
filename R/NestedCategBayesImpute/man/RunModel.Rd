@@ -35,6 +35,20 @@ Please note that:
 \item{Moving the household head to the household level and setting the HHhead_at_group_level option to TRUE speeds up the sampler significantly.}
 \item{Setting the weight_option to TRUE and specifying weights also speeds up the sampler but the exact rate of speedup depends on the specific weights.}
 }
+
+Our example data set contains a sample of 2000 households and seven variables from the 2012 American Community Survey data. The variables are described below:
+\itemize{
+\item{ownership (ownership of dwelling): 1 = owned or being bought (loan), 2 = rented.}
+\item{householdsize (household size): 2 = 2 people, 3 = 3 people, 4 = 4 people, 5 = 5 people, 6 = 6 people.}
+\item{sex (gender): 1 = male, 2 = female.}
+\item{race: 1 = white, 2 = black, 3 = American Indian or Alaska Native, 4 = Chinese, 5 = Japanese, 6 = other Asian/Pacific Islander,
+7 = other race, 8 = two major races, 9 = three/more major races.}
+\item{hisp (Hispanic origin). 1 = not Hispanic, 2 = Mexican, 3 = Puerto Rican, 4 = Cuban, 5 = other.}
+\item{age: 1 = 0 (less then one year old), 2 = 1, 3 = 2,   . . . , 94 = 93}
+\item{relate (relationship to the household head): 1 = head/householder, 2 = spouse, 3 = child, 4 = child-in-law, 5 = parent, 6 = parent-in-
+law, 7 = sibling, 8 = sibling-in-law, 9 = grandchild, 10 = other relatives, 11 = partner, friend, visitor, 12 = other non-relatives}
+}
+Subsequent data sets must follow this structure because of the predefined list of structural zeros or users can modify the list of structural zeros by downloading the package source, making changes only to the checkconstraints_imp.cpp file and re-building the package.
 }
 
 \value{
