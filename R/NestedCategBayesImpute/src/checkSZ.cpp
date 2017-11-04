@@ -1,20 +1,8 @@
 #include <cmath>
+#include <Rcpp.h>
+using namespace Rcpp;
 #include "checkconstraints.h"
-  
-#define HEAD 1
-#define SPOUSE 2
-#define BIOLOGICALCHILD 3
-#define ADOPTEDCHILD 4
-#define STEPCHILD 5
-#define SIBLING 6
-#define PARENT 7
-#define GRANDCHILD 8
-#define PARENTINLAW 9
-#define CHILDINLAW 10
 
-#define GENDER 0
-#define AGE 3
-#define RELATE 4
 
 inline int GetHead(NumericMatrix hh_to_check, int h) {
   for(int kk = 0; kk < h; kk++){
@@ -208,35 +196,35 @@ inline bool IsValidGrandChild(NumericMatrix hh_to_check, int h, int spouse, int 
 }
 
 inline int isValid(NumericMatrix hh_to_check, int h) {
-  
+
   int head = GetHead(hh_to_check,h);
   if (head < 0) {return 0;}
-  
+
   if (!IsHead(hh_to_check(head,RELATE), hh_to_check(head,AGE))) {return 0;}
   if (MoreThanOneHead(hh_to_check,h)) {return 0;}
-  
+
   int spouse = GetValidSpouse(hh_to_check,h);
   if (!IsValidCouple(hh_to_check,spouse, head)) {return 0;}
-  
+
   int oldestBiologicalChild = GetOldestBiologicalChild(hh_to_check,h);
   if (!IsValidBiologicalChild(hh_to_check,oldestBiologicalChild,head)) {return 0;}
-  
+
   int oldestAdoptedChild = GetOldestAdoptedChild(hh_to_check,h);
   if (!IsValidAdoptedChild(hh_to_check,oldestAdoptedChild,head)) {return 0;}
-  
+
   int oldestStepChild = GetOldestStepChild(hh_to_check,h);
   if (!IsValidStepChild(hh_to_check,oldestStepChild,head)) {return 0;}
-  
+
   int youngestParent = GetYoungestParent(hh_to_check,h);
   if (!IsValidParent(hh_to_check,youngestParent,head)) {return 0;}
-  
+
   int youngestParentInLaw = GetYoungestParentInLaw(hh_to_check,h);
   if (!IsValidParentInLaw(hh_to_check,youngestParentInLaw,head)) {return 0;}
-  
+
   if (!IsValidSibling(hh_to_check,h,head)) {return 0;}
-  
+
   if (!IsValidGrandChild(hh_to_check,h,spouse,head)) {return 0;}
-  
+
   return 1;
 }
 
@@ -244,9 +232,9 @@ inline int isValid(NumericMatrix hh_to_check, int h) {
 NumericVector checkSZ(NumericMatrix Data_to_check, int h){
   int n0 = Data_to_check.nrow();
   int p = Data_to_check.ncol()/h;
-  
+
   NumericVector Data_checked(n0);
-  
+
   for (int i = 0; i < n0; i++) {
     NumericMatrix hh_to_check(h, p);
     for(int j = 0; j < p; j++){
