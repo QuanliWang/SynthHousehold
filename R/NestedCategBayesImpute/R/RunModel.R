@@ -1,8 +1,10 @@
 
 
 RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_index,household_variable_index,
-                     HHhead_at_group_level,weight_option,struc_weight){
+                     HHhead_at_group_level,weight_option,struc_weight,MissData){
   synData <- list()
+  impData <- list()
+
   if(weight_option){
     struc_weight <- c(1,struc_weight) #add 1 for the weight of the observed data
     G_all_weighted <- vector("list",length(struc_weight))
@@ -123,6 +125,20 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
     #update beta
     para$beta <- UpdateBeta(hyper$ba,hyper$bb,para$v)
 
+    #update missing data
+    MissData$n_batch_imp_sum <- MissData$n_batch_imp_sum +
+      ceiling(MissData$n_0_reject*MissData$prop_batch)
+    MissData$n_batch_imp <- ceiling(MissData$n_batch_imp_sum/i) + 1 #no. of batches of imputations to sample
+    MissData$n_0_reject[] <- 0
+    MissData <- SampleMissing(MissData,para,d,maxd,household_variable_index,individual_variable_index,G_household,M,hyper)
+    orig$origdata <- MissData$household
+    HHrowIndex <- c(1, cumsum(orig$n_i)+1)
+    orig$HHdataorigT <- t(MissData$household[HHrowIndex[1:orig$n],household_variable_index])
+    orig$dataT <- t(MissData$household[,individual_variable_index])
+    para$HHdata_all <- orig$HHdataorigT
+    if (is.element(i,miss_index)){
+      impData[[which(miss_index ==i)]] <- MissData$household
+    }
 
 
     #post save
@@ -172,5 +188,5 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
     }
   }
 
-  return(list(synData=synData,output=output))
+  return(list(synData=synData,impData=impData,output=output))
 }
