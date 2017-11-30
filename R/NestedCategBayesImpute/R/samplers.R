@@ -131,7 +131,7 @@ UpdateBeta <- function(ba,bb,v) {
   return(beta)
 }
 
-SampleMissing <- function(MissData,para,d,maxd,household_variable_index,individual_variable_index,
+SampleMissing <- function(MissData,para,orig, household_variable_index,individual_variable_index,
                           G_household,M,hyper){
   nonstruc_zero_variables <- MissData$nonstruc_zero_variables
   nonstruc_zero_variables_house <-
@@ -177,7 +177,7 @@ SampleMissing <- function(MissData,para,d,maxd,household_variable_index,individu
 
   #sample structural zeros variables one household at a time
   for(sss in MissData$miss_Hhindex){
-    another_index <- which(household$Hhindex==sss)
+    another_index <- which(MissData$household_with_miss$Hhindex==sss)
     X_house_sss_prop <- MissData$household[another_index[1],household_variable_index]
     X_house_sss_prop <- matrix(rep(t(X_house_sss_prop),MissData$n_batch_imp[sss]),byrow=T,
                                ncol=length(household_variable_index))

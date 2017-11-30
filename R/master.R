@@ -65,7 +65,9 @@ if(weight_option){
 
 
 ### Set mcmc parameters
-mc <- list(nrun = 10000, burn = 5000, thin = 5)
+
+mc <- list(nrun = 1000, burn = 500, thin = 5)
+#mc <- list(nrun = 10000, burn = 5000, thin = 5)
 mc$eff.sam <- (mc$nrun-mc$burn)/mc$thin
 
 
@@ -95,14 +97,16 @@ output <- initOutput(orig,hyper,mc)
 ### Set number of synthetic data and the mcmc indexes for them
 mm <- 50
 synindex <- NULL
-miss_index <- sort(sample(seq((mc$burn +1),mc$nrun,by=mc$thin),mm,replace=F))
+MissData$miss_index <- sort(sample(seq((mc$burn +1),mc$nrun,by=mc$thin),mm,replace=F))
 #round(seq((mc$burn +1),mc$burn$nrun,length.out=mm))
 
 
 ### Run model
 proc_t <- proc.time()
+Rprof()
 ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,individual_variable_index,household_variable_index,
                          HHhead_at_group_level,weight_option,struc_weight,MissData)
+Rprof(NULL)
 total_time <- (proc.time() - proc_t)[["elapsed"]]
 
 
