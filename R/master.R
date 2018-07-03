@@ -1,6 +1,3 @@
-
-
-
 ###################################################################################
 ###################################### START ######################################
 ###################################################################################
@@ -10,16 +7,15 @@ rm(list = ls())
 library(NestedCategBayesImpute)
 library(dplyr)
 
-
 ### Set indicator for whether of not to move the household head
 ### Also set indicator for the weighting/capping option
 HHhead_at_group_level <- TRUE #set to TRUE to move household head to the group level
-weight_option <- TRUE #set to TRUE for weighting/capping option. If TRUE, must supply weights
+weight_option <- FALSE #set to TRUE for weighting/capping option. If TRUE, must supply weights
 
 
 ### Use data included in package; prepare data and specify variable indexes
 if (HHhead_at_group_level) {
-  orig.file <- system.file("extdata","origdata_newFormat.txt",package="NestedCategBayesImpute")
+  orig.file <- system.file("extdata","origdata.txt",package="NestedCategBayesImpute")
   orig.data <- read.table(orig.file,header = TRUE, sep = " ")
   orig.data$relate <- orig.data$relate - 1L #recode relate variable to 11 levels
   household.size <- as.data.frame(table(orig.data$Hhindex))
@@ -29,6 +25,7 @@ if (HHhead_at_group_level) {
 
   individual_variable_index = c(3:7)
   household_variable_index = c(8:13) #make sure the last column represents household size
+
 } else {
   orig.file <- system.file("extdata","origdata_oldFormat.txt",package="NestedCategBayesImpute")
   orig.data <- read.table(orig.file,header = TRUE, sep = " ")
@@ -43,12 +40,20 @@ if (HHhead_at_group_level) {
 }
 
 
+### Initialize and set parameters for missing data
+MissData <- list()
+MissData <- initMissing(household,individual_variable_index,household_variable_index,miss_batch=10,
+                             struc_zero_variables=c("sex","age","relate","headsex","headage"))
+MissData$prop_batch <- 1.2
+
+
 ### Initialize the input data structure
-orig <- initData(household,individual_variable_index,household_variable_index)
+orig <- initData(MissData$household,individual_variable_index,household_variable_index)
 
 
 ### Check first few lines of data
-#head(household)
+#head(MissDataHyper$household_with_miss)
+#head(MissDataHyper$household)
 
 
 ### Supply weights; one for each household size
@@ -60,14 +65,16 @@ if(weight_option){
 
 
 ### Set mcmc parameters
-mc <- list(nrun = 10000, burn = 5000, thin = 5)
+
+mc <- list(nrun = 1000, burn = 500, thin = 5)
+#mc <- list(nrun = 10000, burn = 5000, thin = 5)
 mc$eff.sam <- (mc$nrun-mc$burn)/mc$thin
 
 
 ### Set number of categories for each household level variable
 dHH <- rep(0,length(household_variable_index))
 for (i in 1:length(dHH)) {
-  dHH[i] <- max(household[,household_variable_index[i]])
+  dHH[i] <- max(na.omit(household[,household_variable_index[i]]))
   if (i == length(dHH) & !HHhead_at_group_level) {
     dHH[length(dHH)] <- dHH[length(dHH)] - 1 #Household head within household assumes that the household size starts from 2
   }
@@ -88,14 +95,18 @@ output <- initOutput(orig,hyper,mc)
 
 
 ### Set number of synthetic data and the mcmc indexes for them
-mm <- 5
-synindex <- sort(sample(seq((mc$burn +1),mc$nrun,by=mc$thin),mm,replace=F))
+mm <- 50
+synindex <- NULL
+MissData$miss_index <- sort(sample(seq((mc$burn +1),mc$nrun,by=mc$thin),mm,replace=F))
+#round(seq((mc$burn +1),mc$burn$nrun,length.out=mm))
 
 
 ### Run model
 proc_t <- proc.time()
+Rprof()
 ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,individual_variable_index,household_variable_index,
-                         HHhead_at_group_level,weight_option,struc_weight)
+                         HHhead_at_group_level,weight_option,struc_weight,MissData)
+Rprof(NULL)
 total_time <- (proc.time() - proc_t)[["elapsed"]]
 
 
@@ -180,13 +191,4 @@ if(HHhead_at_group_level){
     write.table(total_time,"total_time_oldFormat.txt",row.names = F,col.names = F)
   }
 }
-
-
-
-
-
-
-
-
-
 
