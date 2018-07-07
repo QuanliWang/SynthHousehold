@@ -1,6 +1,9 @@
+#include <Rcpp.h>
+using namespace Rcpp;
+#include "sampleW.h"
+
 //  sampleW.cpp
 //  Created by Quanli Wang on 2/20/16.
-
 int samplew(double *p, int n, double d) {
     double dsum;
     int i,k;
@@ -69,4 +72,13 @@ void samplew_multi2(double *p, int n, double *d, double* result,int howmany) {
         result[h] = k+1;
     }
     delete [] myw;
+}
+
+// [[Rcpp::export]]
+NumericVector sampleW_multi(NumericVector p, NumericVector d) {
+  int howmany = d.length();
+  NumericVector samples(howmany);
+  int n = p.length();
+  samplew_multi2(p.begin(), n, d.begin(), samples.begin(), howmany);
+  return samples;
 }

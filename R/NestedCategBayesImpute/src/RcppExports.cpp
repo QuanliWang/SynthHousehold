@@ -149,6 +149,43 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// SampleMatrixByColumnC
+NumericVector SampleMatrixByColumnC(NumericMatrix data, NumericVector r, NumericVector dup);
+RcppExport SEXP _NestedCategBayesImpute_SampleMatrixByColumnC(SEXP dataSEXP, SEXP rSEXP, SEXP dupSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type r(rSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type dup(dupSEXP);
+    rcpp_result_gen = Rcpp::wrap(SampleMatrixByColumnC(data, r, dup));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SampleMatrixByRowC
+NumericVector SampleMatrixByRowC(NumericMatrix data, NumericVector r);
+RcppExport SEXP _NestedCategBayesImpute_SampleMatrixByRowC(SEXP dataSEXP, SEXP rSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type r(rSEXP);
+    rcpp_result_gen = Rcpp::wrap(SampleMatrixByRowC(data, r));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sampleW_multi
+NumericVector sampleW_multi(NumericVector p, NumericVector d);
+RcppExport SEXP _NestedCategBayesImpute_sampleW_multi(SEXP pSEXP, SEXP dSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type p(pSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
+    rcpp_result_gen = Rcpp::wrap(sampleW_multi(p, d));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_checkconstraints", (DL_FUNC) &_NestedCategBayesImpute_checkconstraints, 3},
@@ -161,6 +198,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_samplehouseholds", (DL_FUNC) &_NestedCategBayesImpute_samplehouseholds, 8},
     {"_NestedCategBayesImpute_samplehouseholds_HHhead_at_group_level", (DL_FUNC) &_NestedCategBayesImpute_samplehouseholds_HHhead_at_group_level, 8},
     {"_NestedCategBayesImpute_sampleM", (DL_FUNC) &_NestedCategBayesImpute_sampleM, 5},
+    {"_NestedCategBayesImpute_SampleMatrixByColumnC", (DL_FUNC) &_NestedCategBayesImpute_SampleMatrixByColumnC, 3},
+    {"_NestedCategBayesImpute_SampleMatrixByRowC", (DL_FUNC) &_NestedCategBayesImpute_SampleMatrixByRowC, 2},
+    {"_NestedCategBayesImpute_sampleW_multi", (DL_FUNC) &_NestedCategBayesImpute_sampleW_multi, 2},
     {NULL, NULL, 0}
 };
 

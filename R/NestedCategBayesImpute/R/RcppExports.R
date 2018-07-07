@@ -41,3 +41,15 @@ sampleM <- function(phi, data, omega, G, serial) {
     .Call('_NestedCategBayesImpute_sampleM', PACKAGE = 'NestedCategBayesImpute', phi, data, omega, G, serial)
 }
 
+SampleMatrixByColumnC <- function(data, r, dup) {
+    .Call('_NestedCategBayesImpute_SampleMatrixByColumnC', PACKAGE = 'NestedCategBayesImpute', data, r, dup)
+}
+
+SampleMatrixByRowC <- function(data, r) {
+    .Call('_NestedCategBayesImpute_SampleMatrixByRowC', PACKAGE = 'NestedCategBayesImpute', data, r)
+}
+
+sampleW_multi <- function(p, d) {
+    .Call('_NestedCategBayesImpute_sampleW_multi', PACKAGE = 'NestedCategBayesImpute', p, d)
+}
+

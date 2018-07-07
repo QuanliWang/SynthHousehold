@@ -1,74 +1,30 @@
 
-initMissing <- function(household,individual_variable_index,household_variable_index,
-                        miss_batch,struc_zero_variables){
-  all_variables_index <- c(individual_variable_index,household_variable_index)
-  n <- length(as.data.frame(table(household$Hhindex))$Freq)
-  MissData <- list()
-  MissData$household_with_miss <- household
-  MissData$struc_zero_variables <-
-    which(is.element(colnames(household),struc_zero_variables))
-  MissData$nonstruc_zero_variables <-
-    all_variables_index[!is.element(all_variables_index,MissData$struc_zero_variables)]
-  MissData$n_batch_imp_sum <- rep(miss_batch,n)
-  MissData$n_0_reject <- rep(1,n)
-  MissData$miss_Hhindex <- sort(unique(household$Hhindex[!complete.cases(household[,MissData$struc_zero_variables])]))
-  MissData$n_miss <- length(MissData$miss_Hhindex)
-
-  if (sum(is.na(household)) == 0) {
-    stop("No missing entries in data or missing data isn't coded as 'NA'")
-  }
-  if (sum(is.na(household[,c("Hhindex","pernum")])) > 0) {
-    stop("Hhindex and pernum cannot contain missing entries")
-  }
-  for(j in individual_variable_index){
-    levels_j <- sort(unique(household[,j]),na.last = NA)
-    household[is.na(household[,j]),j] <-
-      sample(levels_j,sum(is.na(household[,j])),replace=T,prob=summary(as.factor(na.omit(household[,j]))))
-  }
-  for(jj in household_variable_index){
-    levels_j <- sort(unique(household[,jj]),na.last = NA)
-    for(i in 1:n){
-      which_indiv <- which(household$Hhindex==i)
-      if(is.na(household[which_indiv[1],jj])==TRUE){
-        household[which_indiv,jj] <-
-          sample(levels_j,1,replace=T,prob=summary(as.factor(na.omit(household[,jj]))))
-      }
-    }
-  }
-
-  MissData$household <- household
-
-  print("missing data must be coded as 'NA'")
-  return(MissData)
-}
-
-
-initData <- function(household, individual_variable_index, household_variable_index) {
+initData <- function(md) {
   orig <- list()
-  orig$origdata <- household
-  if (which(names(household) == "Hhindex") != 1) {
+  orig$origdata <- md$household
+  if (which(names(md$household) == "Hhindex") != 1) {
     stop("The first column of input has to be 'Hhindex'")
   }
-  orig$n_i <- as.data.frame(table(household[,'Hhindex']))$Freq
+  orig$n_i <- as.data.frame(table(md$household[,'Hhindex']))$Freq
   orig$n <- length(orig$n_i)
 
   HHrowIndex <- c(1, cumsum(orig[["n_i"]])+1)
 
   #household level data is in household_variable_index
-  orig$HHdataorigT <- t(household[HHrowIndex[1:orig$n],household_variable_index])
-  orig$HHserial <- household[,"Hhindex"]
+  orig$HHdataorigT <- t(md$household[HHrowIndex[1:orig$n],md$household_variable_index])
+  orig$HHserial <- md$household[,"Hhindex"]
 
-  orig$n_individuals <- dim(household)[1]
-  orig$n_individuals_real <- dim(household)[1] + orig$n #the real number of individuals
+  orig$n_individuals <- dim(md$household)[1]
+  orig$n_individuals_real <- dim(md$household)[1] + orig$n #the real number of individuals
 
   #orig$p holds the number of individual level variables
-  orig$p <- length(individual_variable_index)
+  orig$p <- length(md$individual_variable_index)
   #levels for each variable in the model. This might be different from the sub-sampled data in use
   orig$d <- rep(0,orig$p)
   for (i in 1:length(orig$d)) {
-    orig$d[i] <- max(household[,individual_variable_index[i]])
+    orig$d[i] <- max(md$household[,md$individual_variable_index[i]])
   }
-  orig$dataT <- t(household[,individual_variable_index])
+  orig$dataT <- t(md$household[,md$individual_variable_index])
   orig$maxd <- max(orig$d)
 
   counts <- as.data.frame(table(orig$n_i))
