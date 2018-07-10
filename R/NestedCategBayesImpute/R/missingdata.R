@@ -1,4 +1,13 @@
 ## All missing data realated code should stay in this file
+CheckSZ_HV_batch <- function(X_house, X_indiv, relate_index, household_size, batch) {
+  X_indiv_orig <- X_indiv
+  X_indiv_orig[,relate_index] <- X_indiv_orig[,relate_index] + 1 #recode relate
+  comb_to_check <- X_house[,-1]
+  comb_to_check[,relate_index] <- 1 #Set relate to 1
+  comb_to_check <- cbind(comb_to_check,matrix(t(X_indiv_orig),nrow=batch,byrow=TRUE))
+  check_counter <- checkSZ2(comb_to_check,household_size)
+  return(list(check_counter=check_counter, comb_to_check = comb_to_check ))
+}
 SampleMissing_imp <- function(MissData,para,orig,G_household,M,hyper){
   MissData$household <- as.matrix(MissData$household)
 
@@ -13,22 +22,18 @@ SampleMissing_imp <- function(MissData,para,orig,G_household,M,hyper){
                                                     MissData$house_non_szv_index,para$lambda, G_household$G,
                                                     orig$n_i)
 
-  household_variables <- MissData$household[,MissData$household_variable_index]
-  individual_variables  <- MissData$household[,MissData$individual_variable_index]
-
-  household_variables_with_miss <- as.matrix(MissData$household_with_miss[,MissData$household_variable_index])
-  relate_index <- which(colnames(individual_variables)=="relate")
+  relate_index <- which(colnames(MissData$household)[MissData$individual_variable_index] == "relate")
 
   for(s in MissData$miss_Hhindex){
     another_index <- MissData$miss_Hh_invidual_index[[s]] #the row index for all family members
+    X_house_s_prop <- MissData$household[rep(another_index[1],MissData$n_batch_imp[s]), MissData$household_variable_index]
+    X_indiv_s_prop <- MissData$household[rep(another_index,   MissData$n_batch_imp[s]), MissData$individual_variable_index]
 
-    X_indiv_s_prop <- individual_variables[rep(another_index,  MissData$n_batch_imp[s]),]
-    X_house_s_prop <- household_variables[rep(another_index[1],MissData$n_batch_imp[s]),]
     index <- M[another_index] + (G_household$G[s]-1)*hyper$SS
     check_counter_s <- 0;
     while(check_counter_s < 1){
       for(real_k in MissData$house_szv_index){
-        if(is.na(household_variables_with_miss[another_index[1],real_k])){
+        if(MissData$NA_house_missing_status[another_index[1],real_k]) {
           X_house_s_prop[,real_k] <- sampleW_multi(para$lambda[[real_k]][G_household$G[s],],
                                                      runif(MissData$n_batch_imp[s]))
         }
@@ -49,26 +54,23 @@ SampleMissing_imp <- function(MissData,para,orig,G_household,M,hyper){
 
       #Check edit rules; Need to make this part more general, very specific for this data and assumes head is
       #at the household level
-      X_indiv_s_prop_orig <- X_indiv_s_prop
-      X_indiv_s_prop_orig[,relate_index] <- X_indiv_s_prop_orig[,relate_index] + 1 #recode relate
-      comb_to_check <- X_house_s_prop[,-1]
-      comb_to_check[,relate_index] <- 1 #Set relate to 1
-      comb_to_check <- cbind(comb_to_check,matrix(t(X_indiv_s_prop_orig),nrow=MissData$n_batch_imp[s],byrow=TRUE))
-      check_counter <- checkSZ(comb_to_check,(length(another_index) + 1))
-      check_counter_s <- check_counter_s + sum(check_counter)
+      check_result <-CheckSZ_HV_batch(X_house_s_prop, X_indiv_s_prop, relate_index,
+                                         length(another_index) + 1, MissData$n_batch_imp[s])
+      check_counter_s <- check_counter_s + sum(check_result$check_counter)
 
-      if(length(which(check_counter==1))>0){
+      if(length(which(check_result$check_counter==1))>0){
         MissData$n_0_reject[s] <- MissData$n_0_reject[s] +
-          length(which(check_counter[1:which(check_counter==1)[1]]==0))
+          length(which(check_result$check_counter[1:which(check_result$check_counter==1)[1]]==0))
       } else{
         MissData$n_0_reject[s] <- MissData$n_0_reject[s] + MissData$n_batch_imp[s]
       }
     }
 
-    X_house <- X_house_s_prop[which(check_counter==1)[1],]
-    X_indiv <- matrix(comb_to_check[which(check_counter==1)[1],-c(1:length(MissData$individual_variable_index))],
+    X_house <- X_house_s_prop[which(check_result$check_counter==1)[1],]
+    X_indiv <- matrix(check_result$comb_to_check[which(check_result$check_counter==1)[1],-c(1:length(MissData$individual_variable_index))],
                       byrow=TRUE,nrow=length(another_index)) #remove household head
     X_indiv[,relate_index] <- X_indiv[,relate_index] - 1 #recode relate back
+
     MissData$household[another_index,MissData$household_variable_index] <- rep(X_house,each=length(another_index))
     MissData$household[another_index,MissData$individual_variable_index] <- X_indiv
 

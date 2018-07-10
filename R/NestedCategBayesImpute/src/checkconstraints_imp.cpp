@@ -1,4 +1,6 @@
 #include <cmath>
+#include <Rcpp.h>
+using namespace Rcpp;
 #include "checkconstraints.h"
 
 //1 = head, 2 = spouse, 3 = biological child,
@@ -207,7 +209,7 @@ inline bool IsValidSibling(double *record, int hhsize, int head) {
 inline bool IsValidGrandChild(double *record, int hhsize, int spouse, int head) {
     for (int i = 1; i <= hhsize; i++) {
         if (record[2*hhsize+i]== GRANDCHILD) {
-            if (record[hhsize + head] < 33) {return false;} //too young to be grand parent for the HEAD
+            if (record[hhsize + head] < 31) {return false;} //too young to be grand parent for the HEAD
             if (spouse > 0) { //make sure the spouse(if any) is not too young
                 if (record[hhsize + spouse] < 17) {return false;}
             }
@@ -238,9 +240,6 @@ int isValid(double *datah, int hh_size) {
     int oldestStepChild = GetOldestStepChild(datah,hh_size);
     if (!IsValidStepChild(datah,hh_size,oldestStepChild,head)) {return 0;}
 
-    //int oldestChildInLaw = GetOldestChildInLaw(datah,hh_size);
-    //if (!IsValidChildInLaw(datah,hh_size,oldestChildInLaw,head)) {return 0;}
-
     int youngestParent = GetYoungestParent(datah,hh_size);
     if (!IsValidParent(datah,hh_size,youngestParent,head)) {return 0;}
 
@@ -258,7 +257,7 @@ int isValid(double *datah, int hh_size) {
 int checkconstraints_imp(double *data, double *isPossible,int hh_size, int DIM, int nHouseholds) {
 
     int totalpossible = 0;
-    double *datah = new double[hh_size * 3 + 1];
+    double *datah = new double[hh_size * COL + 1];
     //column 3, 6, 7 = sex, age and relte
     int column[COL]; column[0] = 3; column[1] = 6; column[2] = 7;
 
@@ -279,14 +278,14 @@ int checkconstraints_imp(double *data, double *isPossible,int hh_size, int DIM, 
 int checkconstraints_imp_HHhead_at_group_level(double *data, double *isPossible,int hh_size, int DIM, int nHouseholds) {
   int realsize = hh_size + 1;
   int totalpossible = 0;
-  double *datah = new double[realsize * 3 + 1];
+  double *datah = new double[realsize * COL + 1];
   //column 2, 5, 6 = sex, age and relte //zero-based here
   int column[COL]; column[0] = 0; column[1] = 3; column[2] = 4;
 
   for (int m = 1; m <= nHouseholds; m++){
     //for each household member
     for (int j = 1; j < realsize; j++) {
-      for (int k = 0; k < COL; k++) {
+      for (int k = 0; k < COL; k++) { //0 sex, sex,sex,...age,age,age,...relte,relte,relate...
         datah[k * realsize + j] = data[((j-1) * DIM + column[k]+2) * nHouseholds + (m-1)];
         if (k+1 == COL) { //relate column
           datah[k * realsize + j] = datah[k * realsize + j] + 1; //addjust by adding 1
@@ -303,4 +302,24 @@ int checkconstraints_imp_HHhead_at_group_level(double *data, double *isPossible,
 
   delete [] datah;
   return totalpossible;
+}
+
+// [[Rcpp::export]]
+NumericVector checkSZ2(NumericMatrix Data_to_check, int h){
+  int n0 = Data_to_check.nrow();
+  int p = Data_to_check.ncol()/h;
+
+  NumericVector Data_checked(n0);
+  double *datah = new double[h * COL + 1];
+  for (int i = 0; i < n0; i++) {
+    for(int j = 0; j < h; j++) { //0 sex, sex,sex,...age,age,age,...relte,relte,relate...
+      int base = p * j;
+      datah[j+1] = Data_to_check(i, base + GENDER);
+      datah[j+1 + h] = Data_to_check(i, base + AGE);
+      datah[j+1 + 2*h] = Data_to_check(i, base + RELATE);
+    }
+    Data_checked[i] = isValid(datah,h);
+  }
+  delete [] datah;
+  return Data_checked;
 }

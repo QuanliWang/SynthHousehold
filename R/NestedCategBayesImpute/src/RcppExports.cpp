@@ -5,6 +5,18 @@
 
 using namespace Rcpp;
 
+// checkSZ2
+NumericVector checkSZ2(NumericMatrix Data_to_check, int h);
+RcppExport SEXP _NestedCategBayesImpute_checkSZ2(SEXP Data_to_checkSEXP, SEXP hSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type Data_to_check(Data_to_checkSEXP);
+    Rcpp::traits::input_parameter< int >::type h(hSEXP);
+    rcpp_result_gen = Rcpp::wrap(checkSZ2(Data_to_check, h));
+    return rcpp_result_gen;
+END_RCPP
+}
 // checkconstraints
 List checkconstraints(NumericMatrix data, int neededpossiblehh, int hh_size);
 RcppExport SEXP _NestedCategBayesImpute_checkconstraints(SEXP dataSEXP, SEXP neededpossiblehhSEXP, SEXP hh_sizeSEXP) {
@@ -223,6 +235,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_NestedCategBayesImpute_checkSZ2", (DL_FUNC) &_NestedCategBayesImpute_checkSZ2, 2},
     {"_NestedCategBayesImpute_checkconstraints", (DL_FUNC) &_NestedCategBayesImpute_checkconstraints, 3},
     {"_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level", (DL_FUNC) &_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level, 3},
     {"_NestedCategBayesImpute_households2individuals", (DL_FUNC) &_NestedCategBayesImpute_households2individuals, 2},
