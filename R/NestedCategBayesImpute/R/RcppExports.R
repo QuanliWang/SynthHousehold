@@ -49,6 +49,14 @@ SampleMatrixByRowC <- function(data, r) {
     .Call('_NestedCategBayesImpute_SampleMatrixByRowC', PACKAGE = 'NestedCategBayesImpute', data, r)
 }
 
+SampleNonStructureZerosHouseC <- function(household, NA_house_missing_status, house_non_szv_index_raw, house_non_szv_index, para_lambda, G_household_G, orig_n_i) {
+    .Call('_NestedCategBayesImpute_SampleNonStructureZerosHouseC', PACKAGE = 'NestedCategBayesImpute', household, NA_house_missing_status, house_non_szv_index_raw, house_non_szv_index, para_lambda, G_household_G, orig_n_i)
+}
+
+SampleNonStructureZerosIndivC <- function(household, NA_indiv_missing_status, indiv_non_szv_index_raw, phi_m_g_index, indiv_non_szv_index, para_phi, orig_d, orig_maxd) {
+    .Call('_NestedCategBayesImpute_SampleNonStructureZerosIndivC', PACKAGE = 'NestedCategBayesImpute', household, NA_indiv_missing_status, indiv_non_szv_index_raw, phi_m_g_index, indiv_non_szv_index, para_phi, orig_d, orig_maxd)
+}
+
 sampleW_multi <- function(p, d) {
     .Call('_NestedCategBayesImpute_sampleW_multi', PACKAGE = 'NestedCategBayesImpute', p, d)
 }

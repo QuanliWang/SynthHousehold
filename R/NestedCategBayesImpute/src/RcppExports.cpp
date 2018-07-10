@@ -174,6 +174,41 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// SampleNonStructureZerosHouseC
+NumericMatrix SampleNonStructureZerosHouseC(NumericMatrix household, NumericMatrix NA_house_missing_status, NumericVector house_non_szv_index_raw, NumericVector house_non_szv_index, List para_lambda, NumericVector G_household_G, NumericVector orig_n_i);
+RcppExport SEXP _NestedCategBayesImpute_SampleNonStructureZerosHouseC(SEXP householdSEXP, SEXP NA_house_missing_statusSEXP, SEXP house_non_szv_index_rawSEXP, SEXP house_non_szv_indexSEXP, SEXP para_lambdaSEXP, SEXP G_household_GSEXP, SEXP orig_n_iSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type household(householdSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type NA_house_missing_status(NA_house_missing_statusSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type house_non_szv_index_raw(house_non_szv_index_rawSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type house_non_szv_index(house_non_szv_indexSEXP);
+    Rcpp::traits::input_parameter< List >::type para_lambda(para_lambdaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type G_household_G(G_household_GSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type orig_n_i(orig_n_iSEXP);
+    rcpp_result_gen = Rcpp::wrap(SampleNonStructureZerosHouseC(household, NA_house_missing_status, house_non_szv_index_raw, house_non_szv_index, para_lambda, G_household_G, orig_n_i));
+    return rcpp_result_gen;
+END_RCPP
+}
+// SampleNonStructureZerosIndivC
+NumericMatrix SampleNonStructureZerosIndivC(NumericMatrix household, NumericMatrix NA_indiv_missing_status, NumericVector indiv_non_szv_index_raw, NumericVector phi_m_g_index, NumericVector indiv_non_szv_index, NumericMatrix para_phi, NumericVector orig_d, NumericVector orig_maxd);
+RcppExport SEXP _NestedCategBayesImpute_SampleNonStructureZerosIndivC(SEXP householdSEXP, SEXP NA_indiv_missing_statusSEXP, SEXP indiv_non_szv_index_rawSEXP, SEXP phi_m_g_indexSEXP, SEXP indiv_non_szv_indexSEXP, SEXP para_phiSEXP, SEXP orig_dSEXP, SEXP orig_maxdSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type household(householdSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type NA_indiv_missing_status(NA_indiv_missing_statusSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type indiv_non_szv_index_raw(indiv_non_szv_index_rawSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type phi_m_g_index(phi_m_g_indexSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type indiv_non_szv_index(indiv_non_szv_indexSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type para_phi(para_phiSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type orig_d(orig_dSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type orig_maxd(orig_maxdSEXP);
+    rcpp_result_gen = Rcpp::wrap(SampleNonStructureZerosIndivC(household, NA_indiv_missing_status, indiv_non_szv_index_raw, phi_m_g_index, indiv_non_szv_index, para_phi, orig_d, orig_maxd));
+    return rcpp_result_gen;
+END_RCPP
+}
 // sampleW_multi
 NumericVector sampleW_multi(NumericVector p, NumericVector d);
 RcppExport SEXP _NestedCategBayesImpute_sampleW_multi(SEXP pSEXP, SEXP dSEXP) {
@@ -200,6 +235,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_sampleM", (DL_FUNC) &_NestedCategBayesImpute_sampleM, 5},
     {"_NestedCategBayesImpute_SampleMatrixByColumnC", (DL_FUNC) &_NestedCategBayesImpute_SampleMatrixByColumnC, 3},
     {"_NestedCategBayesImpute_SampleMatrixByRowC", (DL_FUNC) &_NestedCategBayesImpute_SampleMatrixByRowC, 2},
+    {"_NestedCategBayesImpute_SampleNonStructureZerosHouseC", (DL_FUNC) &_NestedCategBayesImpute_SampleNonStructureZerosHouseC, 7},
+    {"_NestedCategBayesImpute_SampleNonStructureZerosIndivC", (DL_FUNC) &_NestedCategBayesImpute_SampleNonStructureZerosIndivC, 8},
     {"_NestedCategBayesImpute_sampleW_multi", (DL_FUNC) &_NestedCategBayesImpute_sampleW_multi, 2},
     {NULL, NULL, 0}
 };
