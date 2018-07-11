@@ -5,6 +5,18 @@
 
 using namespace Rcpp;
 
+// checkSZ
+NumericVector checkSZ(NumericMatrix Data_to_check, int h);
+RcppExport SEXP _NestedCategBayesImpute_checkSZ(SEXP Data_to_checkSEXP, SEXP hSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type Data_to_check(Data_to_checkSEXP);
+    Rcpp::traits::input_parameter< int >::type h(hSEXP);
+    rcpp_result_gen = Rcpp::wrap(checkSZ(Data_to_check, h));
+    return rcpp_result_gen;
+END_RCPP
+}
 // checkSZ2
 NumericVector checkSZ2(NumericMatrix Data_to_check, int h);
 RcppExport SEXP _NestedCategBayesImpute_checkSZ2(SEXP Data_to_checkSEXP, SEXP hSEXP) {
@@ -52,18 +64,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericMatrix >::type data(dataSEXP);
     Rcpp::traits::input_parameter< int >::type hh_size(hh_sizeSEXP);
     rcpp_result_gen = Rcpp::wrap(households2individuals(data, hh_size));
-    return rcpp_result_gen;
-END_RCPP
-}
-// checkSZ
-NumericVector checkSZ(NumericMatrix Data_to_check, int h);
-RcppExport SEXP _NestedCategBayesImpute_checkSZ(SEXP Data_to_checkSEXP, SEXP hSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type Data_to_check(Data_to_checkSEXP);
-    Rcpp::traits::input_parameter< int >::type h(hSEXP);
-    rcpp_result_gen = Rcpp::wrap(checkSZ(Data_to_check, h));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -186,6 +186,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// CheckSZ_batch
+NumericVector CheckSZ_batch(NumericMatrix X_house, NumericMatrix X_indiv);
+RcppExport SEXP _NestedCategBayesImpute_CheckSZ_batch(SEXP X_houseSEXP, SEXP X_indivSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type X_house(X_houseSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type X_indiv(X_indivSEXP);
+    rcpp_result_gen = Rcpp::wrap(CheckSZ_batch(X_house, X_indiv));
+    return rcpp_result_gen;
+END_RCPP
+}
 // SampleNonStructureZerosHouseC
 NumericMatrix SampleNonStructureZerosHouseC(NumericMatrix household, NumericMatrix NA_house_missing_status, NumericVector house_non_szv_index_raw, NumericVector house_non_szv_index, List para_lambda, NumericVector G_household_G, NumericVector orig_n_i);
 RcppExport SEXP _NestedCategBayesImpute_SampleNonStructureZerosHouseC(SEXP householdSEXP, SEXP NA_house_missing_statusSEXP, SEXP house_non_szv_index_rawSEXP, SEXP house_non_szv_indexSEXP, SEXP para_lambdaSEXP, SEXP G_household_GSEXP, SEXP orig_n_iSEXP) {
@@ -235,11 +247,11 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_NestedCategBayesImpute_checkSZ", (DL_FUNC) &_NestedCategBayesImpute_checkSZ, 2},
     {"_NestedCategBayesImpute_checkSZ2", (DL_FUNC) &_NestedCategBayesImpute_checkSZ2, 2},
     {"_NestedCategBayesImpute_checkconstraints", (DL_FUNC) &_NestedCategBayesImpute_checkconstraints, 3},
     {"_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level", (DL_FUNC) &_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level, 3},
     {"_NestedCategBayesImpute_households2individuals", (DL_FUNC) &_NestedCategBayesImpute_households2individuals, 2},
-    {"_NestedCategBayesImpute_checkSZ", (DL_FUNC) &_NestedCategBayesImpute_checkSZ, 2},
     {"_NestedCategBayesImpute_groupcount", (DL_FUNC) &_NestedCategBayesImpute_groupcount, 4},
     {"_NestedCategBayesImpute_groupcount1D", (DL_FUNC) &_NestedCategBayesImpute_groupcount1D, 2},
     {"_NestedCategBayesImpute_sampleG", (DL_FUNC) &_NestedCategBayesImpute_sampleG, 7},
@@ -248,6 +260,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_sampleM", (DL_FUNC) &_NestedCategBayesImpute_sampleM, 5},
     {"_NestedCategBayesImpute_SampleMatrixByColumnC", (DL_FUNC) &_NestedCategBayesImpute_SampleMatrixByColumnC, 3},
     {"_NestedCategBayesImpute_SampleMatrixByRowC", (DL_FUNC) &_NestedCategBayesImpute_SampleMatrixByRowC, 2},
+    {"_NestedCategBayesImpute_CheckSZ_batch", (DL_FUNC) &_NestedCategBayesImpute_CheckSZ_batch, 2},
     {"_NestedCategBayesImpute_SampleNonStructureZerosHouseC", (DL_FUNC) &_NestedCategBayesImpute_SampleNonStructureZerosHouseC, 7},
     {"_NestedCategBayesImpute_SampleNonStructureZerosIndivC", (DL_FUNC) &_NestedCategBayesImpute_SampleNonStructureZerosIndivC, 8},
     {"_NestedCategBayesImpute_sampleW_multi", (DL_FUNC) &_NestedCategBayesImpute_sampleW_multi, 2},

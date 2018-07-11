@@ -305,7 +305,7 @@ int checkconstraints_imp_HHhead_at_group_level(double *data, double *isPossible,
 }
 
 // [[Rcpp::export]]
-NumericVector checkSZ2(NumericMatrix Data_to_check, int h){
+NumericVector checkSZ(NumericMatrix Data_to_check, int h){
   int n0 = Data_to_check.nrow();
   int p = Data_to_check.ncol()/h;
 
@@ -322,4 +322,29 @@ NumericVector checkSZ2(NumericMatrix Data_to_check, int h){
   }
   delete [] datah;
   return Data_checked;
+}
+
+//only return the index (one-based of the first valid data point)
+// [[Rcpp::export]]
+NumericVector checkSZ2(NumericMatrix Data_to_check, int h){
+  int n0 = Data_to_check.nrow();
+  int p = Data_to_check.ncol()/h;
+
+  NumericVector First_Valid(1);
+  First_Valid[0] = 0;
+  double *datah = new double[h * COL + 1];
+  for (int i = 0; i < n0; i++) {
+    for(int j = 0; j < h; j++) { //0 sex, sex,sex,...age,age,age,...relte,relte,relate...
+      int base = p * j;
+      datah[j+1] = Data_to_check(i, base + GENDER);
+      datah[j+1 + h] = Data_to_check(i, base + AGE);
+      datah[j+1 + 2*h] = Data_to_check(i, base + RELATE);
+    }
+    if (isValid(datah,h)) {
+      First_Valid[0] = i+1;
+      break;
+    }
+  }
+  delete [] datah;
+  return First_Valid;
 }

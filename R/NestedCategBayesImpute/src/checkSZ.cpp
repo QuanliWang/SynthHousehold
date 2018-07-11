@@ -1,3 +1,4 @@
+/*
 #include <cmath>
 #include <Rcpp.h>
 using namespace Rcpp;
@@ -229,7 +230,7 @@ inline int isValid(NumericMatrix hh_to_check, int h) {
 }
 
 // [[Rcpp::export]]
-NumericVector checkSZ(NumericMatrix Data_to_check, int h){
+NumericVector checkSZ_notused(NumericMatrix Data_to_check, int h){
   int n0 = Data_to_check.nrow();
   int p = Data_to_check.ncol()/h;
 
@@ -246,3 +247,4 @@ NumericVector checkSZ(NumericMatrix Data_to_check, int h){
   }
   return Data_checked;
 }
+*/
