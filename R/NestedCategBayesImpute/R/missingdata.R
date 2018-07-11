@@ -1,4 +1,4 @@
-SampleMissingForOneHousehold <- function(another_index,X_house_s_prop, X_indiv_s_prop,
+SampleMissingForOneHousehold_batch <- function(another_index,X_house_s_prop, X_indiv_s_prop,
                                          house_szv_index, NA_house_missing_status,
                                          indiv_szv_index, NA_indiv_missing_status,
                                          lambda,phi,G_household_G_s, index,
@@ -63,43 +63,12 @@ SampleMissing_imp <- function(MissData,para,orig,G_household,M,hyper){
     X_indiv_s_prop <- MissData$household[rep(another_index,   MissData$n_batch_imp[s]), MissData$individual_variable_index]
 
     index <- M[another_index] + (G_household$G[s]-1)*hyper$SS
-    OneHousehold <- SampleMissingForOneHousehold(another_index,X_house_s_prop, X_indiv_s_prop,
+    OneHousehold <- SampleMissingForOneHousehold_batch(another_index,X_house_s_prop, X_indiv_s_prop,
                                                  MissData$house_szv_index, MissData$NA_house_missing_status,
                                                  MissData$indiv_szv_index, MissData$NA_indiv_missing_status,
                                                  para$lambda,para$phi,G_household$G[s], index,
                                                  orig$d,orig$maxd,
                                                  MissData$n_batch_imp[s])
-    #first_valid <- 0
-    #while(first_valid == 0){
-    #  for(real_k in MissData$house_szv_index){
-    #    if(MissData$NA_house_missing_status[another_index[1],real_k]) {
-    #      X_house_s_prop[,real_k] <- sampleW_multi(para$lambda[[real_k]][G_household$G[s],],
-    #                                                 runif(MissData$n_batch_imp[s]))
-    #    }
-    #  }
-    #  for(real_k in MissData$indiv_szv_index){
-    #    NA_current_indiv <- MissData$NA_indiv_missing_status[another_index,real_k]
-    #    if (any(NA_current_indiv)) {
-    #      pr_X_indiv_k <- para$phi[((1:orig$d[real_k]) + (real_k-1)*orig$maxd), index[NA_current_indiv]]
-    #      if (is.matrix(pr_X_indiv_k)) {
-    #        temp <- SampleMatrixByColumnC(pr_X_indiv_k,
-    #                                      runif(MissData$n_batch_imp[s] * ncol(pr_X_indiv_k)),MissData$n_batch_imp[s])
-    #      } else {
-    #        temp <- sampleW_multi(pr_X_indiv_k,runif(MissData$n_batch_imp[s]))
-    #      }
-    #      X_indiv_s_prop[rep(NA_current_indiv,MissData$n_batch_imp[s]),real_k] <- temp
-    #    }
-    #  }
-
-    #  #Check edit rules; Need to make this part more general, very specific for this data and assumes head is
-    #  #at the household level
-    #  first_valid <- CheckSZ_batch(X_house_s_prop, X_indiv_s_prop)
-    #  if (first_valid > 0) {
-    #    MissData$n_0_reject[s] <- MissData$n_0_reject[s] + first_valid - 1
-    #  } else {
-    #    MissData$n_0_reject[s] <- MissData$n_0_reject[s] + MissData$n_batch_imp[s]
-    #  }
-    #}
     MissData$n_0_reject[s] <- MissData$n_0_reject[s] + OneHousehold$n_0_reject
     MissData$household[another_index,MissData$household_variable_index] <-
       rep(OneHousehold$X_house_s_prop[OneHousehold$first_valid,],each=n_indiv)
