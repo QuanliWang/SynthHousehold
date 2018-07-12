@@ -3,7 +3,7 @@
 using namespace Rcpp;
 
 // [[Rcpp::export]]
-NumericVector SampleMatrixByColumnC(NumericMatrix data, NumericVector r, NumericVector dup) {
+IntegerVector SampleMatrixByColumnC(NumericMatrix data, NumericVector r, IntegerVector dup) {
   int howmany = dup[0];
   int n = data.nrow();
   int nIndividuals = data.ncol();
@@ -11,8 +11,8 @@ NumericVector SampleMatrixByColumnC(NumericMatrix data, NumericVector r, Numeric
     Rprintf("The length of random number vector does not match the number of columns.");
     return 0;
   }
-  NumericVector samples(nIndividuals * howmany);
-  NumericVector duplicate(howmany);
+  IntegerVector samples(nIndividuals * howmany);
+  IntegerVector duplicate(howmany);
   for (int i = 0; i < nIndividuals; i++) {
     samplew_multi2(data.begin() + i * n, n, r.begin() + i * howmany, duplicate.begin(),howmany);
     for (int j = 0; j < howmany; j++) {
