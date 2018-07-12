@@ -3,9 +3,9 @@ using namespace Rcpp;
 #include "sampleW.h"
 
 // [[Rcpp::export]]
-List sampleG(NumericMatrix phi, NumericMatrix data,
-                          NumericMatrix omega, NumericVector pi, NumericVector ni,
-                          NumericMatrix HHdata, List lambda) {
+List sampleG(NumericMatrix phi, IntegerMatrix data,
+                          NumericMatrix omega, NumericVector pi, IntegerVector ni,
+                          IntegerMatrix HHdata, List lambda) {
   int p = data.nrow();
   int nIndividuals = data.ncol();
   int FF = omega.nrow();
@@ -31,7 +31,7 @@ List sampleG(NumericMatrix phi, NumericMatrix data,
   int *cum_ni = new int[n];
   cum_ni[0] = 0;
   for (int i = 1; i < n; i++) {
-    cum_ni[i] = cum_ni[i-1] + (int)ni[i-1];
+    cum_ni[i] = cum_ni[i-1] + ni[i-1];
   }
   int maxDDtP = maxdd*p;
   for (int h = 0; h < n; h++) {
@@ -45,7 +45,7 @@ List sampleG(NumericMatrix phi, NumericMatrix data,
             double phiprod = 1.0;
             int phi_base = (int)(maxDDtP*(k*SS+l));
             for (int j=0; j < p; j++) {
-              int u = (int)data[base+j]-1;
+              int u = data[base+j]-1;
               phiprod *= phi[phi_base+j*maxdd+u];
             }
             add += omega[FF*l+k]*phiprod;

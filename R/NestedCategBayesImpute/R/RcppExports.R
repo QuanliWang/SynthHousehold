@@ -57,6 +57,10 @@ CheckSZ_batch <- function(X_house, X_indiv) {
     .Call('_NestedCategBayesImpute_CheckSZ_batch', PACKAGE = 'NestedCategBayesImpute', X_house, X_indiv)
 }
 
+SampleMissingForOneHousehold_batch <- function(another_index, X_house_s_prop, X_indiv_s_prop, house_szv_index, NA_house_missing_status, indiv_szv_index, NA_indiv_missing_status, lambda, phi, G_household_G_s, index, orig_d, orig_maxd, batch) {
+    .Call('_NestedCategBayesImpute_SampleMissingForOneHousehold_batch', PACKAGE = 'NestedCategBayesImpute', another_index, X_house_s_prop, X_indiv_s_prop, house_szv_index, NA_house_missing_status, indiv_szv_index, NA_indiv_missing_status, lambda, phi, G_household_G_s, index, orig_d, orig_maxd, batch)
+}
+
 SampleNonStructureZerosHouseC <- function(household, NA_house_missing_status, house_non_szv_index_raw, house_non_szv_index, para_lambda, G_household_G, orig_n_i) {
     .Call('_NestedCategBayesImpute_SampleNonStructureZerosHouseC', PACKAGE = 'NestedCategBayesImpute', household, NA_house_missing_status, house_non_szv_index_raw, house_non_szv_index, para_lambda, G_household_G, orig_n_i)
 }

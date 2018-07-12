@@ -4,7 +4,7 @@ using namespace Rcpp;
 #include "checkconstraints.h"
 
 // [[Rcpp::export]]
-List checkconstraints(NumericMatrix data,int neededpossiblehh, int hh_size) {
+List checkconstraints(IntegerMatrix data,int neededpossiblehh, int hh_size) {
   int nHouseholds = data.nrow(); //data item in rows. !!
 
   //use the raw data instead, which has hh_size * DIM + 1 + hh_size
@@ -12,15 +12,15 @@ List checkconstraints(NumericMatrix data,int neededpossiblehh, int hh_size) {
   int DIM = (columns -1) / hh_size -1;
   //int hh_size = (columns -1) / (DIM+1);
 
-  NumericVector isPossible(nHouseholds);
+  IntegerVector isPossible(nHouseholds);
   int totalpossible = checkconstraints_imp(data.begin(), isPossible.begin(), hh_size, DIM, nHouseholds);
 
   int rows = nHouseholds-totalpossible;
-  NumericMatrix newdata(columns,rows);
-  NumericMatrix syndata(columns,totalpossible);
-  NumericVector impossible_counts(totalpossible);
-  NumericMatrix newdata0(columns, 0);
-  NumericMatrix syndata0(columns, 0);
+  IntegerMatrix newdata(columns,rows);
+  IntegerMatrix syndata(columns,totalpossible);
+  IntegerVector impossible_counts(totalpossible);
+  IntegerMatrix newdata0(columns, 0);
+  IntegerMatrix syndata0(columns, 0);
 
   int count1 = 0;
   int count2 = 0;
@@ -66,7 +66,7 @@ List checkconstraints(NumericMatrix data,int neededpossiblehh, int hh_size) {
 
 
 // [[Rcpp::export]]
-List checkconstraints_HHhead_at_group_level(NumericMatrix data,int neededpossiblehh, int hh_size) {
+List checkconstraints_HHhead_at_group_level(IntegerMatrix data,int neededpossiblehh, int hh_size) {
   int nHouseholds = data.nrow(); //data item in rows. !!
 
   //use the raw data instead, which has hh_size * DIM + 1 + hh_size
@@ -74,15 +74,15 @@ List checkconstraints_HHhead_at_group_level(NumericMatrix data,int neededpossibl
   int DIM = (columns -1) / hh_size -1;
   //int hh_size = (columns -1) / (DIM+1);
 
-  NumericVector isPossible(nHouseholds);
+  IntegerVector isPossible(nHouseholds);
   int totalpossible = checkconstraints_imp_HHhead_at_group_level(data.begin(), isPossible.begin(), hh_size, DIM, nHouseholds);
 
   int rows = nHouseholds-totalpossible;
-  NumericMatrix newdata(columns,rows);
-  NumericMatrix syndata(columns,totalpossible);
-  NumericVector impossible_counts(totalpossible);
-  NumericMatrix newdata0(columns, 0);
-  NumericMatrix syndata0(columns, 0);
+  IntegerMatrix newdata(columns,rows);
+  IntegerMatrix syndata(columns,totalpossible);
+  IntegerVector impossible_counts(totalpossible);
+  IntegerMatrix newdata0(columns, 0);
+  IntegerMatrix syndata0(columns, 0);
 
   int count1 = 0;
   int count2 = 0;
@@ -127,7 +127,7 @@ List checkconstraints_HHhead_at_group_level(NumericMatrix data,int neededpossibl
 }
 
 // [[Rcpp::export]]
-NumericMatrix households2individuals(NumericMatrix data, int hh_size){
+IntegerMatrix households2individuals(IntegerMatrix data, int hh_size){
 
   int nHouseholds = data.ncol();
 
@@ -135,7 +135,7 @@ NumericMatrix households2individuals(NumericMatrix data, int hh_size){
   int columns = data.nrow();
   //int hh_size = (columns - 1) / (DIM+1);
   int DIM = (columns -1) / hh_size -1;
-  NumericMatrix Individuals(DIM + 2, nHouseholds*hh_size);
+  IntegerMatrix Individuals(DIM + 2, nHouseholds*hh_size);
 
   int c9 = hh_size * DIM;
   int count = 0;
