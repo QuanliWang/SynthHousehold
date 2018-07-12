@@ -3,8 +3,8 @@ using namespace Rcpp;
 #include "sampleW.h"
 
 // [[Rcpp::export]]
-NumericVector sampleM(NumericMatrix phi, NumericMatrix data,
-               NumericMatrix omega, NumericVector G, NumericVector serial) {
+NumericVector sampleM(NumericMatrix phi, IntegerMatrix data,
+               NumericMatrix omega, IntegerVector G, IntegerVector serial) {
 
   //printf("in sampleM\n");
   int p = data.nrow();
@@ -26,7 +26,7 @@ NumericVector sampleM(NumericMatrix phi, NumericMatrix data,
       try {
         double phiprod = 1.0;
         for (int j = 0; j < p; j++) {
-          int u = (int)data[base+j]-1;
+          int u = data[base+j]-1;
           phiprod *= phi[maxDDtp*((G_asg-1)*SS+l)+j*maxdd+u];
         }
         Gupdateprob2[l] = omega[FF*l+G_asg-1]*phiprod;
