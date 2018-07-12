@@ -51,7 +51,7 @@ void samplew_multi(double *p, int n, double *d,int howmany) {
 }
 
 //this version put results into a different place
-void samplew_multi2(double *p, int n, double *d, double* result,int howmany) {
+void samplew_multi2(double *p, int n, double *d, int* result,int howmany) {
     double dsum;
     int i,k;
     dsum = 0;
@@ -75,9 +75,9 @@ void samplew_multi2(double *p, int n, double *d, double* result,int howmany) {
 }
 
 // [[Rcpp::export]]
-NumericVector sampleW_multi(NumericVector p, NumericVector d) {
+IntegerVector sampleW_multi(NumericVector p, NumericVector d) {
   int howmany = d.length();
-  NumericVector samples(howmany);
+  IntegerVector samples(howmany);
   int n = p.length();
   samplew_multi2(p.begin(), n, d.begin(), samples.begin(), howmany);
   return samples;
