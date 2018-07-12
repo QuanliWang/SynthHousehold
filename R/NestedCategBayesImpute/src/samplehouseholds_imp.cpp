@@ -2,7 +2,7 @@
 #include "samplehouseholds.h"
 #include <cstdio>
 
-void sampleHouseholds_imp_HHhead_at_group_level(double* data, double* rand,  double** lambda, int* lambda_columns, double* omega, double* phi,
+void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,  double** lambda, int* lambda_columns, double* omega, double* phi,
                           double *pi, double* d,int nHouseholds, int householdsize, int FF,int SS,
                           int maxdd, int p, int currrentbatch,int n_lambdas) {
 
@@ -15,7 +15,7 @@ void sampleHouseholds_imp_HHhead_at_group_level(double* data, double* rand,  dou
     int DIM = 2 + p + n_lambdas - 1;
     //sampling hhindexh, column: householdsize * DIM + 1
     column = (householdsize * DIM + 1) - 1; //zero-based column
-    double* hhindexh = data + column * nHouseholds;
+    int* hhindexh = data + column * nHouseholds;
 
     double* pi_lambda_last = new double[FF];
     double* currentlambdacolumn = lambda[n_lambdas-1] + (householdsize - 1) * FF; //column hh_size-1, addjusted to zero based
@@ -47,13 +47,13 @@ void sampleHouseholds_imp_HHhead_at_group_level(double* data, double* rand,  dou
     //now sampling from each group for each individual
     //memberindexhh
     //do random samples for the same probs at the same time
-    double** columns = new double*[householdsize];
+    int** columns = new int*[householdsize];
     for (int i = 0; i < householdsize; i++) {
         columns[i] = data + ((householdsize * DIM + 1) + i) * nHouseholds; //zero-based column
     }
     for (int j = 0; j < householdsize; j++) {
         for (int i = 0; i < nHouseholds; i++) {
-            int group = (int)hhindexh[i]-1;
+            int group = hhindexh[i]-1;
             double* currentp = omegat + group * SS;
             double rn = *nextrand++;
             int k;
@@ -89,7 +89,7 @@ void sampleHouseholds_imp_HHhead_at_group_level(double* data, double* rand,  dou
       }
 
       for (int i = 0; i < nHouseholds; i++) {
-          int group = (int)hhindexh[i]-1;
+          int group = hhindexh[i]-1;
           double* currentp = lambda_t + group * lambda_columns[g];
           double rn = *nextrand++;
           int k;
@@ -126,7 +126,7 @@ void sampleHouseholds_imp_HHhead_at_group_level(double* data, double* rand,  dou
         }
     }
 
-    double** datacolumns = new double*[2+p]; // 2+p variables to genetate data
+    int** datacolumns = new int*[2+p]; // 2+p variables to genetate data
     int* groupindex = new int[nHouseholds];
     //now generate individual data (column 2 through 2+p-1, zero-based )
     for (int hh =0; hh < householdsize; hh++) {
@@ -135,7 +135,7 @@ void sampleHouseholds_imp_HHhead_at_group_level(double* data, double* rand,  dou
             datacolumns[i] = data + (hh * DIM + i) * nHouseholds; //zero-based column
         }
         //set groupindex
-        double* hh_column = data + ((householdsize * DIM + 1) + hh) * nHouseholds;
+        int* hh_column = data + ((householdsize * DIM + 1) + hh) * nHouseholds;
         for (int i = 0; i < nHouseholds; i++) {
             groupindex[i] = (hhindexh[i]-1)*SS + hh_column[i];
         }
@@ -172,7 +172,7 @@ void sampleHouseholds_imp_HHhead_at_group_level(double* data, double* rand,  dou
 
 }
 
-void sampleHouseholds_imp(double* data, double* rand,  double** lambda, int* lambda_columns, double* omega, double* phi,
+void sampleHouseholds_imp(int* data, double* rand,  double** lambda, int* lambda_columns, double* omega, double* phi,
                           double *pi, double* d,int nHouseholds, int householdsize, int FF,int SS,
                           int maxdd, int p, int currrentbatch,int n_lambdas) {
 
@@ -185,7 +185,7 @@ void sampleHouseholds_imp(double* data, double* rand,  double** lambda, int* lam
   int DIM = 2 + p + n_lambdas - 1;
   //sampling hhindexh, column: householdsize * DIM + 1
   column = (householdsize * DIM + 1) - 1; //zero-based column
-  double* hhindexh = data + column * nHouseholds;
+  int* hhindexh = data + column * nHouseholds;
 
   double* pi_lambda_last = new double[FF];
   double* currentlambdacolumn = lambda[n_lambdas-1] + (householdsize - 1 -1) * FF; //column hh_size-1, addjusted to zero based
@@ -217,7 +217,7 @@ void sampleHouseholds_imp(double* data, double* rand,  double** lambda, int* lam
   //now sampling from each group for each individual
   //memberindexhh
   //do random samples for the same probs at the same time
-  double** columns = new double*[householdsize];
+  int** columns = new int*[householdsize];
   for (int i = 0; i < householdsize; i++) {
     columns[i] = data + ((householdsize * DIM + 1) + i) * nHouseholds; //zero-based column
   }
@@ -296,7 +296,7 @@ void sampleHouseholds_imp(double* data, double* rand,  double** lambda, int* lam
     }
   }
 
-  double** datacolumns = new double*[2+p]; // 2+p variables to genetate data
+  int** datacolumns = new int*[2+p]; // 2+p variables to genetate data
   int* groupindex = new int[nHouseholds];
   //now generate individual data (column 2 through 2+p-1, zero-based )
   for (int hh =0; hh < householdsize; hh++) {
@@ -305,7 +305,7 @@ void sampleHouseholds_imp(double* data, double* rand,  double** lambda, int* lam
       datacolumns[i] = data + (hh * DIM + i) * nHouseholds; //zero-based column
     }
     //set groupindex
-    double* hh_column = data + ((householdsize * DIM + 1) + hh) * nHouseholds;
+    int* hh_column = data + ((householdsize * DIM + 1) + hh) * nHouseholds;
     for (int i = 0; i < nHouseholds; i++) {
       groupindex[i] = (hhindexh[i]-1)*SS + hh_column[i];
     }

@@ -3,7 +3,7 @@ using namespace Rcpp;
 #include "samplehouseholds.h"
 
 // [[Rcpp::export]]
-NumericMatrix samplehouseholds(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
+IntegerMatrix samplehouseholds(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
                NumericVector d, List lambda,
                int currrentbatch, int nHouseholds,  int householdsize) {
 
@@ -26,7 +26,7 @@ NumericMatrix samplehouseholds(NumericMatrix phi, NumericMatrix omega, NumericVe
   //column last hh_size: individual group indicator
   int DIM = 2 + p + n_lambdas - 1; //not output the household size
   int ncol = DIM * householdsize + householdsize  + 1;
-  NumericMatrix data(nHouseholds, ncol);
+  IntegerMatrix data(nHouseholds, ncol);
 
   //copy data from list of matrices to C++
   for (int i = 0; i < n_lambdas; i++) {
@@ -52,7 +52,7 @@ NumericMatrix samplehouseholds(NumericMatrix phi, NumericMatrix omega, NumericVe
 }
 
 // [[Rcpp::export]]
-NumericMatrix samplehouseholds_HHhead_at_group_level(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
+IntegerMatrix samplehouseholds_HHhead_at_group_level(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
                                NumericVector d, List lambda,
                                int currrentbatch, int nHouseholds,  int householdsize) {
 
@@ -75,7 +75,7 @@ NumericMatrix samplehouseholds_HHhead_at_group_level(NumericMatrix phi, NumericM
   //column last hh_size: individual group indicator
   int DIM = 2 + p + n_lambdas - 1; //not output the household size
   int ncol = DIM * householdsize + householdsize  + 1;
-  NumericMatrix data(nHouseholds, ncol);
+  IntegerMatrix data(nHouseholds, ncol);
 
   //copy data from list of matrices to C++
   for (int i = 0; i < n_lambdas; i++) {
