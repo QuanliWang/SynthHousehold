@@ -1,20 +1,16 @@
 SampleMissing_imp <- function(MissData,para,orig,G_household,M,hyper){
   MissData$household <- as.matrix(MissData$household)
-
   #sample non structural zeros variables for everyone at once
+  storage.mode(MissData$household) <- "integer" #very important if used to do in place update
+
   MissData$household <- SampleNonStructureZerosIndivC(MissData$household, MissData$NA_indiv_missing_status,
-                                                    MissData$indiv_non_szv_index_raw,
-                                                    (M + (G_household$G_Individuals-1)*hyper$SS),
-                                                    MissData$indiv_non_szv_index,para$phi,orig$d,orig$maxd)
-
+                                                      MissData$indiv_non_szv_index_raw,
+                                                      (M + (G_household$G_Individuals-1)*hyper$SS),
+                                                      MissData$indiv_non_szv_index,para$phi,orig$d,orig$maxd)
   MissData$household <- SampleNonStructureZerosHouseC(MissData$household, MissData$NA_house_missing_status,
-                                                    MissData$house_non_szv_index_raw,
-                                                    MissData$house_non_szv_index,para$lambda, G_household$G,
-                                                    orig$n_i)
-
-
-  relate_index <- which(colnames(MissData$household)[MissData$individual_variable_index] == "relate")
-  stopifnot(relate_index == 5) #relate_index should always be 5
+                                                     MissData$house_non_szv_index_raw,
+                                                     MissData$house_non_szv_index,para$lambda, G_household$G,
+                                                     orig$n_i)
 
   for(s in MissData$miss_Hhindex){
     another_index <- MissData$miss_Hh_invidual_index[[s]] #the row index for all family members
@@ -29,6 +25,7 @@ SampleMissing_imp <- function(MissData,para,orig,G_household,M,hyper){
                                                  para$lambda,para$phi,G_household$G[s], index,
                                                  orig$d,orig$maxd,
                                                  MissData$n_batch_imp[s])
+
     MissData$n_0_reject[s] <- MissData$n_0_reject[s] + OneHousehold$n_0_reject
     MissData$household[another_index,MissData$household_variable_index] <-
       rep(OneHousehold$X_house_s_prop[OneHousehold$first_valid,],each=n_indiv)
@@ -36,7 +33,10 @@ SampleMissing_imp <- function(MissData,para,orig,G_household,M,hyper){
       OneHousehold$X_indiv_s_prop[((OneHousehold$first_valid-1)*n_indiv+1) : (OneHousehold$first_valid*n_indiv),]
   }
 
+
   MissData$household <- as.data.frame(MissData$household)
+
+
   return(MissData)
 }
 
@@ -117,3 +117,36 @@ SampleMissing <- function(MissData,para,orig,G_household,M,hyper) {
   return(MissData)
 }
 
+SampleNonStructureZerosHouse <- function(household, NA_house_missing_status,
+                                         house_non_szv_index_raw, house_non_szv_index,
+                                         para_lambda, G_household_G,hwm_index,orig_n_i) {
+  for (count in 1: length(house_non_szv_index_raw)) {
+    k <- house_non_szv_index_raw[count]
+    real_k <- house_non_szv_index[count]
+    if (any(NA_house_missing_status[,real_k])){
+
+      is_na_hwm_k <- NA_house_missing_status[hwm_index,real_k]
+      pr_X_miss_p <- para_lambda[[real_k]][G_household_G[is_na_hwm_k],]
+
+      sampled_values <- SampleMatrixByRowC(pr_X_miss_p,runif(nrow(pr_X_miss_p)))
+      household[NA_house_missing_status[,real_k],k] <- rep(sampled_values,orig_n_i[is_na_hwm_k])
+    }
+  }
+  return(household)
+}
+
+SampleNonStructureZerosIndiv <- function(household, NA_indiv_missing_status,
+                                         indiv_non_szv_index_raw, phi_m_g_index,
+                                         indiv_non_szv_index,para_phi,
+                                         orig_d, orig_maxd) {
+  for (count in 1: length(indiv_non_szv_index_raw)) {
+    k <- indiv_non_szv_index_raw[count] #index into raw data
+    real_k <- indiv_non_szv_index[count] #index into invividual level variables
+    is_na_hwm_k <- NA_indiv_missing_status[,real_k]
+    if(any(is_na_hwm_k)){
+      pr_X_miss_p <- para_phi[((1:orig_d[real_k]) + (real_k-1)* orig_maxd), phi_m_g_index[is_na_hwm_k]]
+      household[is_na_hwm_k,k] <- SampleMatrixByColumnC(pr_X_miss_p,runif(ncol(pr_X_miss_p)),1)
+    }
+  }
+  return(household)
+}
