@@ -1,11 +1,12 @@
 
 UpdatePhi <- function(IndividualData_all, M_all, FF, SS, p, d, maxd,individual_variable_index) {
+  #save(IndividualData_all, M_all, FF, SS, p, d, maxd,individual_variable_index, file = "samplePhi.RData")
   phi <- array(0,dim = c(maxd,p, FF*SS))
   data = IndividualData_all[individual_variable_index,]
   groupIndex <- SS*(M_all[1,]-1)+M_all[2,]
   for (j in 1:p) {
     phicount <- groupcount(groupIndex, data[j,], FF*SS, d[j])
-    phi_j <- apply(phicount, c(1,2), function(x) rgamma(1,x+1,1))
+    phi_j <- samplePhi(phicount);
     phi[1:d[j], j,] <- apply(phi_j, 1, function(x) x / sum(x))
   }
   dim(phi) <- c(maxd*p,FF * SS) #reshape to a 2D matrix
