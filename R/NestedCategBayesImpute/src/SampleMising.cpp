@@ -123,7 +123,7 @@ IntegerMatrix SampleNonStructureZerosHouseC(IntegerMatrix household,
 IntegerMatrix SampleNonStructureZerosIndivC(IntegerMatrix household,
                                            LogicalMatrix NA_indiv_missing_status,
                                            IntegerVector indiv_non_szv_index_raw,
-                                           NumericVector phi_m_g_index,
+                                           IntegerVector phi_m_g_index,
                                            IntegerVector indiv_non_szv_index,
                                            NumericMatrix para_phi,
                                            IntegerVector orig_d,
@@ -143,6 +143,135 @@ IntegerMatrix SampleNonStructureZerosIndivC(IntegerMatrix household,
 
   return(household);
 }
+
+// [[Rcpp::export]]
+List SampleMissing_impC(List MissData, List para, List orig,List G_household, IntegerVector M, List hyper) {
+  IntegerVector G_Individuals =  G_household["G_Individuals"];
+  IntegerVector G = G_household["G"];
+  int hyper_SS = hyper["SS"];
+  List lambda = para["lambda"];
+  NumericMatrix phi = para["phi"];
+  IntegerVector d = orig["d"];
+  IntegerVector maxd = orig["maxd"];
+  IntegerMatrix household = MissData["household"];
+  LogicalMatrix NA_house_missing_status = MissData["NA_house_missing_status"];
+  LogicalMatrix NA_indiv_missing_status = MissData["NA_indiv_missing_status"];
+  IntegerVector phi_m_g_index(M.length());
+  for (int i = 0; i < M.length(); i++) {
+    phi_m_g_index[i] = M[i] + (G_Individuals[i] -1) * hyper_SS;
+  }
+
+  household = SampleNonStructureZerosIndivC(household,
+                                            NA_indiv_missing_status,
+                                            as<IntegerVector>(MissData["indiv_non_szv_index_raw"]),
+                                            phi_m_g_index,
+                                            as<IntegerVector>(MissData["indiv_non_szv_index"]),
+                                            phi,d,maxd);
+  household = SampleNonStructureZerosHouseC(household,
+                                            NA_house_missing_status,
+                                            as<IntegerVector>(MissData["house_non_szv_index_raw"]),
+                                            as<IntegerVector>(MissData["house_non_szv_index"]),
+                                            lambda,G,
+                                            as<IntegerVector>(orig["n_i"]));
+
+  IntegerVector miss_Hhindex = MissData["miss_Hhindex"];
+  List miss_Hh_invidual_index = MissData["miss_Hh_invidual_index"];
+  IntegerVector batches = MissData["n_batch_imp"];
+  IntegerVector household_variable_index = MissData["household_variable_index"];
+  IntegerVector individual_variable_index = MissData["individual_variable_index"];
+  IntegerVector house_szv_index = MissData["house_szv_index"];
+  IntegerVector indiv_szv_index = MissData["indiv_szv_index"];
+
+  IntegerVector n_0_reject = MissData["n_0_reject"];
+
+  for (int i = 0; i < miss_Hhindex.length(); i++) {
+    int s = miss_Hhindex[i] - 1;
+    IntegerVector another_index = miss_Hh_invidual_index[s]; //the row index for all other family members
+    int n_indiv = another_index.length();
+    IntegerMatrix X_house(batches[s], household_variable_index.length());
+    for (int b = 0; b < batches[s]; b++) {
+        int house_row =  another_index[0] -1;
+        for (int v = 0; v < household_variable_index.length();v++) {
+          X_house(b,v) = household(house_row,household_variable_index[v] - 1);
+        }
+    }
+    IntegerMatrix X_indiv(batches[s] * n_indiv, individual_variable_index.length());
+    for (int b = 0; b < batches[s]; b++) {
+      for (int ind = 0; ind < another_index.length(); ind++ ) {
+        int indiv_row =  another_index[ind] -1;
+        for (int v = 0; v < individual_variable_index.length();v++) {
+          X_indiv( b*n_indiv + ind,v) = household(indiv_row,individual_variable_index[v] - 1);
+        }
+      }
+    }
+
+    IntegerVector index(another_index.length());
+    for (int j = 0; j < index.length(); j++) {
+      index[j] = M[another_index[j] - 1] + (G[s] -1) * hyper_SS;
+    }
+
+    List OneHousehold = SampleMissingForOneHousehold_batch(another_index, X_house, X_indiv,house_szv_index,
+                                                           NA_house_missing_status,
+                                                           indiv_szv_index, NA_indiv_missing_status,
+                                                           lambda,phi, G[s], index,
+                                                           d,maxd[0],batches[s]);
+
+    n_0_reject[s] = n_0_reject[s] + as<int>(OneHousehold["n_0_reject"]);
+    int first_valid = as<int>(OneHousehold["first_valid"]) - 1;
+    IntegerMatrix House = OneHousehold["X_house_s_prop"];
+    IntegerMatrix Indivs = OneHousehold["X_indiv_s_prop"];
+
+    for (int ind = 0; ind < n_indiv; ind++) {
+      int indiv_row =  another_index[ind] -1;
+      for (int v = 0; v < household_variable_index.length();v++) {
+        household(indiv_row,household_variable_index[v] - 1) = House(first_valid,v);
+      }
+
+      for (int v = 0; v < individual_variable_index.length();v++) {
+        household(indiv_row,individual_variable_index[v] - 1) = Indivs( first_valid*n_indiv + ind,v);
+      }
+    }
+  }
+  MissData["household"] = household; //maybe not need as R/C++ all IntegerMatrix
+  MissData["n_0_reject"] = n_0_reject; //numeric vector in R, integer vectort in Rcpp
+  return(MissData);
+}
+
+/*
+ * SampleMissing_imp <- function(MissData,para,orig,G_household,M,hyper){
+
+ MissData$household <- SampleNonStructureZerosIndivC(MissData$household, MissData$NA_indiv_missing_status,
+                                                     MissData$indiv_non_szv_index_raw,
+(M + (G_household$G_Individuals-1)*hyper$SS),
+MissData$indiv_non_szv_index,para$phi,orig$d,orig$maxd)
+MissData$household <- SampleNonStructureZerosHouseC(MissData$household, MissData$NA_house_missing_status,
+                                                    MissData$house_non_szv_index_raw,
+MissData$house_non_szv_index,para$lambda, G_household$G,
+orig$n_i)
+
+for(s in MissData$miss_Hhindex){
+another_index <- MissData$miss_Hh_invidual_index[[s]] #the row index for all family members
+n_indiv <- length(another_index)
+X_house_s_prop <- MissData$household[rep(another_index[1],MissData$n_batch_imp[s]), MissData$household_variable_index]
+X_indiv_s_prop <- MissData$household[rep(another_index,   MissData$n_batch_imp[s]), MissData$individual_variable_index]
+
+index <- M[another_index] + (G_household$G[s]-1)*hyper$SS
+OneHousehold <- SampleMissingForOneHousehold_batch(another_index,X_house_s_prop, X_indiv_s_prop,
+                                                   MissData$house_szv_index, MissData$NA_house_missing_status,
+MissData$indiv_szv_index, MissData$NA_indiv_missing_status,
+para$lambda,para$phi,G_household$G[s], index,
+orig$d,orig$maxd,
+MissData$n_batch_imp[s])
+
+MissData$n_0_reject[s] <- MissData$n_0_reject[s] + OneHousehold$n_0_reject
+MissData$household[another_index,MissData$household_variable_index] <-
+rep(OneHousehold$X_house_s_prop[OneHousehold$first_valid,],each=n_indiv)
+MissData$household[another_index,MissData$individual_variable_index] <-
+OneHousehold$X_indiv_s_prop[((OneHousehold$first_valid-1)*n_indiv+1) : (OneHousehold$first_valid*n_indiv),]
+}
+return(MissData)
+}
+ */
 /*
 SampleNonStructureZerosIndiv <- function(household, NA_indiv_missing_status,
                                          indiv_non_szv_index_raw, phi_m_g_index,
