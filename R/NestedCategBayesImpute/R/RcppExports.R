@@ -69,6 +69,10 @@ SampleNonStructureZerosIndivC <- function(household, NA_indiv_missing_status, in
     .Call('_NestedCategBayesImpute_SampleNonStructureZerosIndivC', PACKAGE = 'NestedCategBayesImpute', household, NA_indiv_missing_status, indiv_non_szv_index_raw, phi_m_g_index, indiv_non_szv_index, para_phi, orig_d, orig_maxd)
 }
 
+SampleMissing_impC <- function(MissData, para, orig, G_household, M, hyper) {
+    .Call('_NestedCategBayesImpute_SampleMissing_impC', PACKAGE = 'NestedCategBayesImpute', MissData, para, orig, G_household, M, hyper)
+}
+
 sampleW_multi <- function(p, d) {
     .Call('_NestedCategBayesImpute_sampleW_multi', PACKAGE = 'NestedCategBayesImpute', p, d)
 }
