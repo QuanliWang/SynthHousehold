@@ -1,6 +1,8 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 #include "sampleW.h"
+#include "MersenneTwister.h"
+#include "SpecialFunctions.h"
 
 //  sampleW.cpp
 //  Created by Quanli Wang on 2/20/16.
@@ -81,4 +83,26 @@ IntegerVector sampleW_multi(NumericVector p, NumericVector d) {
   int n = p.length();
   samplew_multi2(p.begin(), n, d.begin(), samples.begin(), howmany);
   return samples;
+}
+
+// [[Rcpp::export]]
+NumericVector gammarand(int n, double shape, double rate) {
+  MTRand mt;
+  mt.seed();
+  vector<double> result;
+  SpecialFunctions::gammarand(shape,1.0 /rate,n,mt,result);
+  NumericVector r(result.begin(),result.end());
+  return r;
+}
+
+// [[Rcpp::export]]
+NumericMatrix samplePhi(IntegerMatrix counts) {
+  NumericMatrix result(counts.rows(),counts.cols());
+  MTRand mt;
+  mt.seed();
+  for (int i = 0; i < counts.length(); i++) {
+    result[i] = SpecialFunctions::gammarand(1 + counts[i], 1, mt);
+  }
+
+  return result;
 }

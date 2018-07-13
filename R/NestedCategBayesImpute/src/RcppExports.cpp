@@ -285,6 +285,30 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// gammarand
+NumericVector gammarand(int n, double shape, double rate);
+RcppExport SEXP _NestedCategBayesImpute_gammarand(SEXP nSEXP, SEXP shapeSEXP, SEXP rateSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< double >::type shape(shapeSEXP);
+    Rcpp::traits::input_parameter< double >::type rate(rateSEXP);
+    rcpp_result_gen = Rcpp::wrap(gammarand(n, shape, rate));
+    return rcpp_result_gen;
+END_RCPP
+}
+// samplePhi
+NumericMatrix samplePhi(IntegerMatrix counts);
+RcppExport SEXP _NestedCategBayesImpute_samplePhi(SEXP countsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerMatrix >::type counts(countsSEXP);
+    rcpp_result_gen = Rcpp::wrap(samplePhi(counts));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_checkSZ", (DL_FUNC) &_NestedCategBayesImpute_checkSZ, 2},
@@ -306,6 +330,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_SampleNonStructureZerosIndivC", (DL_FUNC) &_NestedCategBayesImpute_SampleNonStructureZerosIndivC, 8},
     {"_NestedCategBayesImpute_SampleMissing_impC", (DL_FUNC) &_NestedCategBayesImpute_SampleMissing_impC, 6},
     {"_NestedCategBayesImpute_sampleW_multi", (DL_FUNC) &_NestedCategBayesImpute_sampleW_multi, 2},
+    {"_NestedCategBayesImpute_gammarand", (DL_FUNC) &_NestedCategBayesImpute_gammarand, 3},
+    {"_NestedCategBayesImpute_samplePhi", (DL_FUNC) &_NestedCategBayesImpute_samplePhi, 1},
     {NULL, NULL, 0}
 };
 

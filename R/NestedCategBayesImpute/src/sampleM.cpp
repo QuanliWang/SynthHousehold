@@ -2,6 +2,7 @@
 using namespace Rcpp;
 #include "sampleW.h"
 
+
 // [[Rcpp::export]]
 NumericVector sampleM(NumericMatrix phi, IntegerMatrix data,
                NumericMatrix omega, IntegerVector G, IntegerVector serial) {
