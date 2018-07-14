@@ -17,6 +17,10 @@ checkconstraints_HHhead_at_group_level <- function(data, neededpossiblehh, hh_si
     .Call('_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level', PACKAGE = 'NestedCategBayesImpute', data, neededpossiblehh, hh_size)
 }
 
+GenerateData <- function(hh_size, lambda, omega, phi, pi, d, batches_done, valid_hh_needed, blocksize, synindex, HHhead_at_group_level) {
+    .Call('_NestedCategBayesImpute_GenerateData', PACKAGE = 'NestedCategBayesImpute', hh_size, lambda, omega, phi, pi, d, batches_done, valid_hh_needed, blocksize, synindex, HHhead_at_group_level)
+}
+
 groupcount <- function(g1, g2, n1, n2) {
     .Call('_NestedCategBayesImpute_groupcount', PACKAGE = 'NestedCategBayesImpute', g1, g2, n1, n2)
 }

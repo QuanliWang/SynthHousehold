@@ -5,7 +5,7 @@
 void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,
                                                 double** lambda, int* lambda_columns,
                                                 double* omega, double* phi,
-                                                double *pi, double* d,int nHouseholds,
+                                                double *pi, int* d,int nHouseholds,
                                                 int householdsize, int FF,int SS,
                                                 int maxdd, int p,
                                                 int currrentbatch,int n_lambdas) {
@@ -111,7 +111,7 @@ void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,
     //extract p values for each variable
     double** ps = new double*[p];
     for (int i = 0; i < p; i++) {
-        int currentd = (int)d[i];
+        int currentd = d[i];
         ps[i] = new double[currentd*groups];
 
         double* currentp = ps[i];
@@ -151,7 +151,7 @@ void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,
         }
 
         for (int i = 0; i < p; i++) {
-            int n = (int)d[i];
+            int n = d[i];
             for (int j = 0; j < nHouseholds; j++) {
                 int group = int(groupindex[j])-1;
                 double* cum_curentphi_j = ps[i] + group * n;
@@ -177,7 +177,7 @@ void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,
 }
 
 void sampleHouseholds_imp(int* data, double* rand,  double** lambda, int* lambda_columns, double* omega, double* phi,
-                          double *pi, double* d,int nHouseholds, int householdsize, int FF,int SS,
+                          double *pi, int* d,int nHouseholds, int householdsize, int FF,int SS,
                           int maxdd, int p, int currrentbatch,int n_lambdas) {
 
   //number of columns in the final output
@@ -281,7 +281,7 @@ void sampleHouseholds_imp(int* data, double* rand,  double** lambda, int* lambda
   //extract p values for each variable
   double** ps = new double*[p];
   for (int i = 0; i < p; i++) {
-    int currentd = (int)d[i];
+    int currentd = d[i];
     ps[i] = new double[currentd*groups];
 
     double* currentp = ps[i];
@@ -321,7 +321,7 @@ void sampleHouseholds_imp(int* data, double* rand,  double** lambda, int* lambda
     }
 
     for (int i = 0; i < p; i++) {
-      int n = (int)d[i];
+      int n = d[i];
       for (int j = 0; j < nHouseholds; j++) {
         int group = int(groupindex[j])-1;
         double* cum_curentphi_j = ps[i] + group * n;
