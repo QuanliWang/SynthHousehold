@@ -343,3 +343,19 @@ return(list(n_0_reject = n_0_reject, first_valid = first_valid,
             X_house_s_prop = X_house_s_prop, X_indiv_s_prop = X_indiv_s_prop))
 }
 */
+/*
+ * SampleMatrixByRowR1 <- function(pmat, r) {
+ return(rowSums(r>t(apply(pmat,1,cumsum))) + 1L)
+}
+
+SampleMatrixByColumnR1 <- function(pmat, r) {
+return(colSums(sweep(apply(pmat,2,cumsum),2, r, "<") ) + 1L );
+}
+
+SampleMatrixByRowR <- function(pmat) {
+return(rowSums(runif(nrow(pmat))>t(apply(pmat,1,cumsum))) + 1L)
+}
+SampleMatrixByColumnR <- function(pmat) {
+return(colSums(sweep(apply(pmat,2,cumsum),2, runif(ncol(pmat)), "<") ) + 1L );
+}*/
+

@@ -273,18 +273,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// sampleW_multi
-IntegerVector sampleW_multi(NumericVector p, NumericVector d);
-RcppExport SEXP _NestedCategBayesImpute_sampleW_multi(SEXP pSEXP, SEXP dSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type p(pSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
-    rcpp_result_gen = Rcpp::wrap(sampleW_multi(p, d));
-    return rcpp_result_gen;
-END_RCPP
-}
 // gammarand
 NumericVector gammarand(int n, double shape, double rate);
 RcppExport SEXP _NestedCategBayesImpute_gammarand(SEXP nSEXP, SEXP shapeSEXP, SEXP rateSEXP) {
@@ -298,14 +286,31 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// samplePhi
-NumericMatrix samplePhi(IntegerMatrix counts);
-RcppExport SEXP _NestedCategBayesImpute_samplePhi(SEXP countsSEXP) {
+// UpdatePhi
+NumericMatrix UpdatePhi(IntegerMatrix data, IntegerMatrix M_all, int FF, int SS, IntegerVector d, int maxd);
+RcppExport SEXP _NestedCategBayesImpute_UpdatePhi(SEXP dataSEXP, SEXP M_allSEXP, SEXP FFSEXP, SEXP SSSEXP, SEXP dSEXP, SEXP maxdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerMatrix >::type counts(countsSEXP);
-    rcpp_result_gen = Rcpp::wrap(samplePhi(counts));
+    Rcpp::traits::input_parameter< IntegerMatrix >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type M_all(M_allSEXP);
+    Rcpp::traits::input_parameter< int >::type FF(FFSEXP);
+    Rcpp::traits::input_parameter< int >::type SS(SSSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< int >::type maxd(maxdSEXP);
+    rcpp_result_gen = Rcpp::wrap(UpdatePhi(data, M_all, FF, SS, d, maxd));
+    return rcpp_result_gen;
+END_RCPP
+}
+// sampleW_multi
+IntegerVector sampleW_multi(NumericVector p, NumericVector d);
+RcppExport SEXP _NestedCategBayesImpute_sampleW_multi(SEXP pSEXP, SEXP dSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericVector >::type p(pSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
+    rcpp_result_gen = Rcpp::wrap(sampleW_multi(p, d));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -329,9 +334,9 @@ static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_SampleNonStructureZerosHouseC", (DL_FUNC) &_NestedCategBayesImpute_SampleNonStructureZerosHouseC, 7},
     {"_NestedCategBayesImpute_SampleNonStructureZerosIndivC", (DL_FUNC) &_NestedCategBayesImpute_SampleNonStructureZerosIndivC, 8},
     {"_NestedCategBayesImpute_SampleMissing_impC", (DL_FUNC) &_NestedCategBayesImpute_SampleMissing_impC, 6},
-    {"_NestedCategBayesImpute_sampleW_multi", (DL_FUNC) &_NestedCategBayesImpute_sampleW_multi, 2},
     {"_NestedCategBayesImpute_gammarand", (DL_FUNC) &_NestedCategBayesImpute_gammarand, 3},
-    {"_NestedCategBayesImpute_samplePhi", (DL_FUNC) &_NestedCategBayesImpute_samplePhi, 1},
+    {"_NestedCategBayesImpute_UpdatePhi", (DL_FUNC) &_NestedCategBayesImpute_UpdatePhi, 6},
+    {"_NestedCategBayesImpute_sampleW_multi", (DL_FUNC) &_NestedCategBayesImpute_sampleW_multi, 2},
     {NULL, NULL, 0}
 };
 

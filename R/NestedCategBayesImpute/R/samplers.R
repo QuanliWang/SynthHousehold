@@ -1,16 +1,12 @@
-
-UpdatePhi <- function(IndividualData_all, M_all, FF, SS, p, d, maxd,individual_variable_index) {
-  #save(IndividualData_all, M_all, FF, SS, p, d, maxd,individual_variable_index, file = "samplePhi.RData")
-  phi <- array(0,dim = c(maxd,p, FF*SS))
-  data = IndividualData_all[individual_variable_index,]
-  groupIndex <- SS*(M_all[1,]-1)+M_all[2,]
-  for (j in 1:p) {
-    phicount <- groupcount(groupIndex, data[j,], FF*SS, d[j])
-    phi_j <- samplePhi(phicount);
-    phi[1:d[j], j,] <- apply(phi_j, 1, function(x) x / sum(x))
+UpdateLambda <- function(dHH,FF,G_all,HHdata_all) {
+  lambda <- list()
+  for (i in 1:length(dHH)) {
+    lambdacount <- groupcount(G_all,HHdata_all[i,],FF, dHH[i])
+    lam <- apply(lambdacount, c(1,2), function(x) rgamma(1,x+1,1))
+    lam <- t(apply(lam, 1, function(x) x / sum(x)))
+    lambda[[i]] = lam;
   }
-  dim(phi) <- c(maxd*p,FF * SS) #reshape to a 2D matrix
-  return(phi)
+  return(lambda)
 }
 
 UpdatePhiWeighted <- function(IndividualData_all, M_all, FF, SS, p, d, maxd,individual_variable_index, struc_weight) {
@@ -60,17 +56,6 @@ UpdateOmegaWeighted <- function(beta,M_all, FF, SS, struc_weight) {
   return(list(omega = omega, v = v))
 }
 
-UpdateLambda <- function(dHH,FF,G_all,HHdata_all) {
-  lambda <- list()
-  for (i in 1:length(dHH)) {
-    lambdacount <- groupcount(G_all,HHdata_all[i,],FF, dHH[i])
-    lam <- apply(lambdacount, c(1,2), function(x) rgamma(1,x+1,1))
-    lam <- t(apply(lam, 1, function(x) x / sum(x)))
-    lambda[[i]] = lam;
-  }
-
-  return(lambda)
-}
 
 UpdateLambdaWeighted <- function(dHH,FF,G_all,HHdata_all,struc_weight) {
   lambda <- list()
@@ -132,20 +117,6 @@ UpdateBeta <- function(ba,bb,v) {
   return(beta)
 }
 
-SampleMatrixByRowR1 <- function(pmat, r) {
-  return(rowSums(r>t(apply(pmat,1,cumsum))) + 1L)
-}
-
-SampleMatrixByColumnR1 <- function(pmat, r) {
-  return(colSums(sweep(apply(pmat,2,cumsum),2, r, "<") ) + 1L );
-}
-
-SampleMatrixByRowR <- function(pmat) {
-  return(rowSums(runif(nrow(pmat))>t(apply(pmat,1,cumsum))) + 1L)
-}
-SampleMatrixByColumnR <- function(pmat) {
-  return(colSums(sweep(apply(pmat,2,cumsum),2, runif(ncol(pmat)), "<") ) + 1L );
-}
 
 
 

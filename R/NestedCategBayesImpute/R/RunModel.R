@@ -101,8 +101,8 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
       para$M_all  <- cbind(temp,data.extra$G_Individuals_and_M_extra)
 
       # update phi
-      para$phi <- UpdatePhi(para$IndividualData_all,para$M_all,
-                            hyper$FF,hyper$SS,orig$p,orig$d,orig$maxd,individual_variable_index)
+      Individual_data = para$IndividualData_all[individual_variable_index,]
+      para$phi <- UpdatePhi(Individual_data, para$M_all,hyper$FF,hyper$SS,orig$d,orig$maxd)
 
       #update Omega
       Omega <- UpdateOmega(para$beta,para$M_all, hyper$FF, hyper$SS)
@@ -148,12 +148,13 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
       rep_G_all <- t(para$M_all[1,])
       M_all <- t(para$M_all[2,])
     }
-    S_occup <- NULL
-    for(occ in sort(unique(G_all))){
-      S_occup <- rbind(S_occup,dim(table(rep_G_all[which(rep_G_all==occ)],M_all[which(rep_G_all==occ)]))[2])
-    }
-    cat(paste("number of occupied household classes is ", length(unique(G_all)), "\n", sep = ''))
-    cat(paste("max number of occupied individual classes is ", max(S_occup), "\n", sep = ''))
+
+    counts <- groupcount(rep_G_all,M_all,hyper$FF, hyper$SS) >0
+    F_occup <- max(colSums(counts))
+    S_occup <- max(rowSums(counts))
+
+    cat(paste("number of occupied household classes is ", F_occup, "\n", sep = ''))
+    cat(paste("max number of occupied individual classes is ", S_occup, "\n", sep = ''))
 
     total_household <- sum(c(orig$n,para$hh_size_new))
     if(weight_option){
@@ -178,8 +179,8 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
       for (i in 1:length(hyper$dHH)) {
         output$lambdaout[[i]][index,,] = para$lambda[[i]]
       }
-      output$F_occupied[index] <- length(unique(G_all))
-      output$S_occupied_max[index] <- max(S_occup)
+      output$F_occupied[index] <- F_occup
+      output$S_occupied_max[index] <- S_occup
       output$alphaout[index] <- para$alpha
       output$betaout[index] <- para$beta
     }
