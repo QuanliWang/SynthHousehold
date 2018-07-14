@@ -55,18 +55,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// households2individuals
-IntegerMatrix households2individuals(IntegerMatrix data, int hh_size);
-RcppExport SEXP _NestedCategBayesImpute_households2individuals(SEXP dataSEXP, SEXP hh_sizeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerMatrix >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< int >::type hh_size(hh_sizeSEXP);
-    rcpp_result_gen = Rcpp::wrap(households2individuals(data, hh_size));
-    return rcpp_result_gen;
-END_RCPP
-}
 // groupcount
 IntegerMatrix groupcount(IntegerVector g1, IntegerVector g2, int n1, int n2);
 RcppExport SEXP _NestedCategBayesImpute_groupcount(SEXP g1SEXP, SEXP g2SEXP, SEXP n1SEXP, SEXP n2SEXP) {
@@ -143,6 +131,32 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type nHouseholds(nHouseholdsSEXP);
     Rcpp::traits::input_parameter< int >::type householdsize(householdsizeSEXP);
     rcpp_result_gen = Rcpp::wrap(samplehouseholds_HHhead_at_group_level(phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize));
+    return rcpp_result_gen;
+END_RCPP
+}
+// households2individuals
+IntegerMatrix households2individuals(IntegerMatrix data, int hh_size);
+RcppExport SEXP _NestedCategBayesImpute_households2individuals(SEXP dataSEXP, SEXP hh_sizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerMatrix >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< int >::type hh_size(hh_sizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(households2individuals(data, hh_size));
+    return rcpp_result_gen;
+END_RCPP
+}
+// UpdateLambda
+List UpdateLambda(IntegerMatrix HHdata_all, IntegerVector G_all, IntegerVector dHH, int FF);
+RcppExport SEXP _NestedCategBayesImpute_UpdateLambda(SEXP HHdata_allSEXP, SEXP G_allSEXP, SEXP dHHSEXP, SEXP FFSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerMatrix >::type HHdata_all(HHdata_allSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type G_all(G_allSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type dHH(dHHSEXP);
+    Rcpp::traits::input_parameter< int >::type FF(FFSEXP);
+    rcpp_result_gen = Rcpp::wrap(UpdateLambda(HHdata_all, G_all, dHH, FF));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -320,12 +334,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_checkSZ2", (DL_FUNC) &_NestedCategBayesImpute_checkSZ2, 2},
     {"_NestedCategBayesImpute_checkconstraints", (DL_FUNC) &_NestedCategBayesImpute_checkconstraints, 3},
     {"_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level", (DL_FUNC) &_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level, 3},
-    {"_NestedCategBayesImpute_households2individuals", (DL_FUNC) &_NestedCategBayesImpute_households2individuals, 2},
     {"_NestedCategBayesImpute_groupcount", (DL_FUNC) &_NestedCategBayesImpute_groupcount, 4},
     {"_NestedCategBayesImpute_groupcount1D", (DL_FUNC) &_NestedCategBayesImpute_groupcount1D, 2},
     {"_NestedCategBayesImpute_sampleG", (DL_FUNC) &_NestedCategBayesImpute_sampleG, 7},
     {"_NestedCategBayesImpute_samplehouseholds", (DL_FUNC) &_NestedCategBayesImpute_samplehouseholds, 8},
     {"_NestedCategBayesImpute_samplehouseholds_HHhead_at_group_level", (DL_FUNC) &_NestedCategBayesImpute_samplehouseholds_HHhead_at_group_level, 8},
+    {"_NestedCategBayesImpute_households2individuals", (DL_FUNC) &_NestedCategBayesImpute_households2individuals, 2},
+    {"_NestedCategBayesImpute_UpdateLambda", (DL_FUNC) &_NestedCategBayesImpute_UpdateLambda, 4},
     {"_NestedCategBayesImpute_sampleM", (DL_FUNC) &_NestedCategBayesImpute_sampleM, 5},
     {"_NestedCategBayesImpute_SampleMatrixByColumnC", (DL_FUNC) &_NestedCategBayesImpute_SampleMatrixByColumnC, 3},
     {"_NestedCategBayesImpute_SampleMatrixByRowC", (DL_FUNC) &_NestedCategBayesImpute_SampleMatrixByRowC, 2},

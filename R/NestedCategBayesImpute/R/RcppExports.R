@@ -17,10 +17,6 @@ checkconstraints_HHhead_at_group_level <- function(data, neededpossiblehh, hh_si
     .Call('_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level', PACKAGE = 'NestedCategBayesImpute', data, neededpossiblehh, hh_size)
 }
 
-households2individuals <- function(data, hh_size) {
-    .Call('_NestedCategBayesImpute_households2individuals', PACKAGE = 'NestedCategBayesImpute', data, hh_size)
-}
-
 groupcount <- function(g1, g2, n1, n2) {
     .Call('_NestedCategBayesImpute_groupcount', PACKAGE = 'NestedCategBayesImpute', g1, g2, n1, n2)
 }
@@ -39,6 +35,14 @@ samplehouseholds <- function(phi, omega, pi, d, lambda, currrentbatch, nHousehol
 
 samplehouseholds_HHhead_at_group_level <- function(phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize) {
     .Call('_NestedCategBayesImpute_samplehouseholds_HHhead_at_group_level', PACKAGE = 'NestedCategBayesImpute', phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize)
+}
+
+households2individuals <- function(data, hh_size) {
+    .Call('_NestedCategBayesImpute_households2individuals', PACKAGE = 'NestedCategBayesImpute', data, hh_size)
+}
+
+UpdateLambda <- function(HHdata_all, G_all, dHH, FF) {
+    .Call('_NestedCategBayesImpute_UpdateLambda', PACKAGE = 'NestedCategBayesImpute', HHdata_all, G_all, dHH, FF)
 }
 
 sampleM <- function(phi, data, omega, G, serial) {
@@ -71,6 +75,14 @@ SampleNonStructureZerosIndivC <- function(household, NA_indiv_missing_status, in
 
 SampleMissing_impC <- function(MissData, para, orig, G_household, M, hyper) {
     .Call('_NestedCategBayesImpute_SampleMissing_impC', PACKAGE = 'NestedCategBayesImpute', MissData, para, orig, G_household, M, hyper)
+}
+
+gammarand <- function(n, shape, rate) {
+    .Call('_NestedCategBayesImpute_gammarand', PACKAGE = 'NestedCategBayesImpute', n, shape, rate)
+}
+
+UpdatePhi <- function(data, M_all, FF, SS, d, maxd) {
+    .Call('_NestedCategBayesImpute_UpdatePhi', PACKAGE = 'NestedCategBayesImpute', data, M_all, FF, SS, d, maxd)
 }
 
 sampleW_multi <- function(p, d) {

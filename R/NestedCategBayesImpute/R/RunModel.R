@@ -16,17 +16,16 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
     cat(paste("iteration ", i,"\n", sep = ""))
     t <- proc.time()
 
-    G_household <- sampleG(para$phi,orig$dataT,para$omega,para$pi,orig$n_i,t(para$HHdata_all[,1:orig$n]),para$lambda)
-
-    M <- sampleM(para$phi,orig$dataT,para$omega,G_household$G,orig$HHserial)
+    G_household <- sampleG(para$phi,orig$IndivDataInCol,para$omega,para$pi,orig$n_i,t(para$HHdata_all[,1:orig$n]),para$lambda)
+    M <- sampleM(para$phi,orig$IndivDataInCol,para$omega,G_household$G,orig$HHserial)
 
     if(weight_option){
-      data.extra <- GetImpossibleHouseholds(orig$d,ceiling(orig$n_star_h*struc_weight[-1]),para$lambda,para$omega,para$phi,
+      data.extra <- GetImpossibleHouseholds(orig$d,ceiling(orig$n_star_h*struc_weight[-1]), para$lambda,para$omega,para$phi,
                                             para$pi,hyper$blocksize,orig$n,is.element(i,synindex),HHhead_at_group_level)
       para$hh_size_new <- as.vector(data.extra$hh_size_new)
       DIM <- dim(data.extra$IndividualData_extra)[1]
       if (is.element(i,synindex)) {
-        forsynData <- GetImpossibleHouseholds(orig$d,orig$n_star_h,para$lambda,para$omega,para$phi,
+        forsynData <- GetImpossibleHouseholds(orig$d,orig$n_star_h, para$lambda,para$omega,para$phi,
                                               para$pi,hyper$blocksize,orig$n,is.element(i,synindex),HHhead_at_group_level) #synthetic data
         synData[[which(synindex ==i)]] <- t(forsynData$synIndividuals_all[1:DIM,])
         colnames(synData[[which(synindex ==i)]]) <- colnames(orig$origdata)[-ncol(orig$origdata)]
@@ -94,15 +93,14 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
         para$HHdata_all[2,] <- para$HHdata_all[2,] -1
       }
       para$HHdata_all <- cbind(para$HHdata_all,data.extra$HHdata_extra)
-      para$IndividualData_all <- cbind(t(orig$origdata[,1:DIM]),data.extra$IndividualData_extra)
 
       #row 1 for FF groups and row 2 for SS groups
       temp <- rbind(G_household$G_Individuals,M)
       para$M_all  <- cbind(temp,data.extra$G_Individuals_and_M_extra)
 
       # update phi
-      Individual_data = para$IndividualData_all[individual_variable_index,]
-      para$phi <- UpdatePhi(Individual_data, para$M_all,hyper$FF,hyper$SS,orig$d,orig$maxd)
+      Individual_data_all =cbind(orig$IndivDataInCol,data.extra$IndividualData_extra[individual_variable_index,])
+      para$phi <- UpdatePhi(Individual_data_all, para$M_all,hyper$FF,hyper$SS,orig$d,orig$maxd)
 
       #update Omega
       Omega <- UpdateOmega(para$beta,para$M_all, hyper$FF, hyper$SS)
@@ -110,7 +108,7 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
       para$v <- Omega$v
 
       # update lambda
-      para$lambda <- UpdateLambda(hyper$dHH,hyper$FF,para$G_all,para$HHdata_all)
+      para$lambda <- UpdateLambda(para$HHdata_all, para$G_all,hyper$dHH,hyper$FF)
 
       # update pi
       Pi <- UpdatePi(para$alpha,para$G_all,hyper$FF)
@@ -125,13 +123,13 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
     para$beta <- UpdateBeta(hyper$ba,hyper$bb,para$v)
 
     #update missing data
-    if (!is.null(MissData)) {
+    if (MissData$hasMissingData) {
       #save(MissData,para,orig,G_household,M,hyper, file = "pre_sampleMissing.RData")
       MissData <- SampleMissing(MissData,para,orig,G_household,M,hyper)
       orig$origdata <- MissData$household
       HHrowIndex <- c(1, cumsum(orig$n_i)+1)
       orig$HHdataorigT <- t(MissData$household[HHrowIndex[1:orig$n],household_variable_index])
-      orig$dataT <- t(MissData$household[,individual_variable_index])
+      orig$IndivDataInCol <- t(MissData$household[,individual_variable_index])
       para$HHdata_all <- orig$HHdataorigT
       if (is.element(i,MissData$miss_index)){
         impData[[which(MissData$miss_index ==i)]] <- MissData$household

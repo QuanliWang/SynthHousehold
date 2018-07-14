@@ -60,6 +60,7 @@ NumericMatrix UpdatePhi(IntegerMatrix data, IntegerMatrix M_all, int FF, int SS,
   }
   return phi;
 }
+
 /*
 UpdatePhi <- function(data, M_all, FF, SS, d, maxd) {
   p <- length(d)
@@ -74,4 +75,5 @@ UpdatePhi <- function(data, M_all, FF, SS, d, maxd) {
     return(phi)
 }
  */
+
 

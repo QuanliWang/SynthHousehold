@@ -99,3 +99,29 @@ IntegerMatrix samplehouseholds_HHhead_at_group_level(NumericMatrix phi, NumericM
   //printf("done samplehouseholds\n");
   return data;
 }
+// [[Rcpp::export]]
+IntegerMatrix households2individuals(IntegerMatrix data, int hh_size){
+
+  int nHouseholds = data.ncol();
+
+  //use the raw data instead, which has hh_size * DIM + 1 + hh_size columns (in C)
+  int columns = data.nrow();
+  //int hh_size = (columns - 1) / (DIM+1);
+  int DIM = (columns -1) / hh_size -1;
+  IntegerMatrix Individuals(DIM + 2, nHouseholds*hh_size);
+
+  int c9 = hh_size * DIM;
+  int count = 0;
+  for (int i = 0; i < nHouseholds; i++) {
+    int base = i * columns;
+    for (int j = 0; j < hh_size; j++) {
+      for (int k = 0; k < DIM;k++) {
+        Individuals[count++] = data[base + j*DIM+k];
+      }
+      Individuals[count++] = data[base + c9];
+
+      Individuals[count++] = data[base + c9 + 1 + j];
+    }
+  }
+  return(Individuals);
+}

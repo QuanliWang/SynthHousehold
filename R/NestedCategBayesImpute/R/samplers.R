@@ -1,12 +1,41 @@
-UpdateLambda <- function(dHH,FF,G_all,HHdata_all) {
-  lambda <- list()
-  for (i in 1:length(dHH)) {
-    lambdacount <- groupcount(G_all,HHdata_all[i,],FF, dHH[i])
-    lam <- apply(lambdacount, c(1,2), function(x) rgamma(1,x+1,1))
-    lam <- t(apply(lam, 1, function(x) x / sum(x)))
-    lambda[[i]] = lam;
-  }
-  return(lambda)
+UpdateOmega <- function(beta,M_all, FF, SS) {
+  phicountcluster <- groupcount(M_all[1,],M_all[2,],FF,SS)
+
+  cum <- t(apply(phicountcluster[,seq(SS,1)],1, cumsum))[,seq(SS,1)]
+  v <- mapply(function(x,y) rbeta(1,x,y), 1 + phicountcluster[,1:(SS-1)], beta + cum[,2:SS])
+  dim(v) <- c(FF, SS-1)
+  v[v>1-1e-5] <- 1-1e-5
+  v = cbind(v,1)
+  omega <- v * t(apply(cbind(1, 1-v[,1:(SS-1)]), 1, cumprod))
+  return(list(omega = omega, v = v))
+}
+
+UpdatePi <- function(alpha,G_all,FF) {
+  kcount <- groupcount1D(G_all, FF)
+  s <- seq(FF,1)
+  cum <- cumsum(kcount[s])[s]
+  u <- mapply(function(x,y) rbeta(1,x,y), 1 + kcount[1:FF-1], alpha + cum[2:FF])
+  u[u > 1-1e-5] <- 1-1e-5
+  u <- c(u,1)
+  u[FF] <- 1
+
+  pi  <- u* cumprod(c(1,1-u[1:FF-1]))
+
+  return(list(pi = pi, u = u))
+}
+
+
+UpdateAlpha <- function(aa,ab,u) {
+  FF <- length(u)
+  alpha <- rgamma(1,aa + FF - 1,scale = 1/(ab - sum(log(1-u[1:FF-1]))))
+  return(alpha)
+}
+
+UpdateBeta <- function(ba,bb,v) {
+  FF <- dim(v)[1]
+  SS <- dim(v)[2]
+  beta <- rgamma(1,ba + FF*(SS-1), scale = 1/(bb - sum(log(1-v[,1:SS-1])) ))
+  return(beta)
 }
 
 UpdatePhiWeighted <- function(IndividualData_all, M_all, FF, SS, p, d, maxd,individual_variable_index, struc_weight) {
@@ -24,19 +53,6 @@ UpdatePhiWeighted <- function(IndividualData_all, M_all, FF, SS, p, d, maxd,indi
   }
   dim(phi) <- c(maxd*p,FF * SS) #reshape to a 2D matrix
   return(phi)
-}
-
-UpdateOmega <- function(beta,M_all, FF, SS) {
-  phicountcluster <- groupcount(M_all[1,],M_all[2,],FF,SS)
-
-  cum <- t(apply(phicountcluster[,seq(SS,1)],1, cumsum))[,seq(SS,1)]
-  v <- mapply(function(x,y) rbeta(1,x,y), 1 + phicountcluster[,1:(SS-1)], beta + cum[,2:SS])
-  dim(v) <- c(FF, SS-1)
-  v[v>1-1e-5] <- 1-1e-5
-  v = cbind(v,1)
-  omega <- v * t(apply(cbind(1, 1-v[,1:(SS-1)]), 1, cumprod))
-
-  return(list(omega = omega, v = v))
 }
 
 UpdateOmegaWeighted <- function(beta,M_all, FF, SS, struc_weight) {
@@ -73,20 +89,6 @@ UpdateLambdaWeighted <- function(dHH,FF,G_all,HHdata_all,struc_weight) {
   return(lambda)
 }
 
-UpdatePi <- function(alpha,G_all,FF) {
-  kcount <- groupcount1D(G_all, FF)
-  s <- seq(FF,1)
-  cum <- cumsum(kcount[s])[s]
-  u <- mapply(function(x,y) rbeta(1,x,y), 1 + kcount[1:FF-1], alpha + cum[2:FF])
-  u[u > 1-1e-5] <- 1-1e-5
-  u <- c(u,1)
-  u[FF] <- 1
-
-  pi  <- u* cumprod(c(1,1-u[1:FF-1]))
-
-  return(list(pi = pi, u = u))
-}
-
 UpdatePiWeighted <- function(alpha,G_all,FF,struc_weight) {
   kcount <- 0
   for(w_i in 1:length(struc_weight)){
@@ -103,20 +105,4 @@ UpdatePiWeighted <- function(alpha,G_all,FF,struc_weight) {
 
   return(list(pi = pi, u = u))
 }
-
-UpdateAlpha <- function(aa,ab,u) {
-  FF <- length(u)
-  alpha <- rgamma(1,aa + FF - 1,scale = 1/(ab - sum(log(1-u[1:FF-1]))))
-  return(alpha)
-}
-
-UpdateBeta <- function(ba,bb,v) {
-  FF <- dim(v)[1]
-  SS <- dim(v)[2]
-  beta <- rgamma(1,ba + FF*(SS-1), scale = 1/(bb - sum(log(1-v[,1:SS-1])) ))
-  return(beta)
-}
-
-
-
 

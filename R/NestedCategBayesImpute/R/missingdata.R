@@ -51,28 +51,30 @@ initMissing <- function(data,struc_zero_variables,miss_batch){
   }
   md$n_miss <- length(md$miss_Hhindex)
 
-  if (sum(is.na(data$household)) == 0) {
-    stop("No missing entries in data or missing data isn't coded as 'NA'")
-  }
   if (sum(is.na(data$household[,c("Hhindex","pernum")])) > 0) {
     stop("Hhindex and pernum cannot contain missing entries")
   }
-  for(j in md$individual_variable_index){
-    levels_j <- sort(unique(data$household[,j]),na.last = NA)
-    data$household[is.na(data$household[,j]),j] <-
-      sample(levels_j,sum(is.na(data$household[,j])),replace=T,prob=summary(as.factor(na.omit(data$household[,j]))))
-  }
-  for(jj in md$household_variable_index){
-    levels_j <- sort(unique(data$household[,jj]),na.last = NA)
-    for(i in 1:n){
-      which_indiv <- which(data$household$Hhindex==i)
-      if(is.na(data$household[which_indiv[1],jj])==TRUE){
-        data$household[which_indiv,jj] <-
-          sample(levels_j,1,replace=T,prob=summary(as.factor(na.omit(data$household[,jj]))))
+
+  if (sum(is.na(data$household)) > 0) {
+    md$hasMissingData = TRUE
+    for(j in md$individual_variable_index){
+      levels_j <- sort(unique(data$household[,j]),na.last = NA)
+      data$household[is.na(data$household[,j]),j] <-
+        sample(levels_j,sum(is.na(data$household[,j])),replace=T,prob=summary(as.factor(na.omit(data$household[,j]))))
+    }
+    for(jj in md$household_variable_index){
+      levels_j <- sort(unique(data$household[,jj]),na.last = NA)
+      for(i in 1:n){
+        which_indiv <- which(data$household$Hhindex==i)
+        if(is.na(data$household[which_indiv[1],jj])==TRUE){
+          data$household[which_indiv,jj] <-
+            sample(levels_j,1,replace=T,prob=summary(as.factor(na.omit(data$household[,jj]))))
+        }
       }
     }
+  } else {
+    md$hasMissingData = FALSE
   }
-
   md$household <- data$household
 
   print("missing data must be coded as 'NA'")

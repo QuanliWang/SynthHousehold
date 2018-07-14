@@ -24,11 +24,12 @@ initData <- function(md) {
   for (i in 1:length(orig$d)) {
     orig$d[i] <- max(md$household[,md$individual_variable_index[i]])
   }
-  orig$dataT <- t(md$household[,md$individual_variable_index])
+  orig$IndivDataInCol <- t(md$household[,md$individual_variable_index])
   orig$maxd <- max(orig$d)
 
-  counts <- as.data.frame(table(orig$n_i))
-  orig$n_star_h <- counts[order(counts[,1]),2]
+  orig$n_star_h <- groupcount1D(orig$n_i,max(orig$n_i)) #number of households for each household size
+  orig$n_star_h <- orig$n_star_h[which(orig$n_star_h>0)]
+
   return(orig)
 }
 
@@ -43,7 +44,7 @@ initParameters <- function(data,hyper,HHhead_at_group_level) {
   phi_1 <- matrix(0, nrow = data$maxd, ncol = data$p)
   for (i in 1:data$p) {
     for (j in 1:data$d[i]) {
-      phi_1[j,i] <-sum(data$dataT[i,]==j)/data$n_individuals
+      phi_1[j,i] <-sum(data$IndivDataInCol[i,]==j)/data$n_individuals
     }
   }
   phi_1 <- as.vector(phi_1)

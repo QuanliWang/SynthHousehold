@@ -17,11 +17,13 @@ ExampleData <- PrepareData(options)
 MissData <- initMissing(ExampleData,
                         struc_zero_variables=c("sex","age","relate","headsex","headage"),
                         miss_batch=10)
-MissData$prop_batch <- 1.2
 
+MissData$prop_batch <- 1.2
 
 ### Initialize the input data structure
 orig <- initData(MissData)
+
+
 
 
 ### Supply weights; one for each household size

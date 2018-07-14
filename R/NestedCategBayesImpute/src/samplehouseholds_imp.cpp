@@ -2,9 +2,13 @@
 #include "samplehouseholds.h"
 #include <cstdio>
 
-void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,  double** lambda, int* lambda_columns, double* omega, double* phi,
-                          double *pi, double* d,int nHouseholds, int householdsize, int FF,int SS,
-                          int maxdd, int p, int currrentbatch,int n_lambdas) {
+void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,
+                                                double** lambda, int* lambda_columns,
+                                                double* omega, double* phi,
+                                                double *pi, double* d,int nHouseholds,
+                                                int householdsize, int FF,int SS,
+                                                int maxdd, int p,
+                                                int currrentbatch,int n_lambdas) {
 
     //number of columns in the final output
     int groups = FF * SS;
@@ -12,7 +16,7 @@ void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,  double
     double* nextrand = rand; //traverse through random numbers
 
     int column;
-    int DIM = 2 + p + n_lambdas - 1;
+    int DIM = 2 + p + n_lambdas - 1;  //total number of variables
     //sampling hhindexh, column: householdsize * DIM + 1
     column = (householdsize * DIM + 1) - 1; //zero-based column
     int* hhindexh = data + column * nHouseholds;

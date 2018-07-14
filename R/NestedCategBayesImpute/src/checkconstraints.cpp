@@ -19,8 +19,6 @@ List checkconstraints(IntegerMatrix data,int neededpossiblehh, int hh_size) {
   IntegerMatrix newdata(columns,rows);
   IntegerMatrix syndata(columns,totalpossible);
   IntegerVector impossible_counts(totalpossible);
-  IntegerMatrix newdata0(columns, 0);
-  IntegerMatrix syndata0(columns, 0);
 
   int count1 = 0;
   int count2 = 0;
@@ -44,7 +42,7 @@ List checkconstraints(IntegerMatrix data,int neededpossiblehh, int hh_size) {
     if (count1 >= 1) {
       newdata = newdata(Range(0,columns-1), Range(0,count1-1));
     } else {
-      newdata = newdata0;
+      newdata = R_NilValue;
     }
   }
 
@@ -53,7 +51,7 @@ List checkconstraints(IntegerMatrix data,int neededpossiblehh, int hh_size) {
     if (count2 >= 1) {
       syndata = syndata(Range(0,columns-1), Range(0,count2-1));
     } else {
-      syndata = syndata0;
+      syndata = R_NilValue;
     }
   }
 
@@ -72,7 +70,6 @@ List checkconstraints_HHhead_at_group_level(IntegerMatrix data,int neededpossibl
   //use the raw data instead, which has hh_size * DIM + 1 + hh_size
   int columns = data.ncol();
   int DIM = (columns -1) / hh_size -1;
-  //int hh_size = (columns -1) / (DIM+1);
 
   IntegerVector isPossible(nHouseholds);
   int totalpossible = checkconstraints_imp_HHhead_at_group_level(data.begin(), isPossible.begin(), hh_size, DIM, nHouseholds);
@@ -81,8 +78,6 @@ List checkconstraints_HHhead_at_group_level(IntegerMatrix data,int neededpossibl
   IntegerMatrix newdata(columns,rows);
   IntegerMatrix syndata(columns,totalpossible);
   IntegerVector impossible_counts(totalpossible);
-  IntegerMatrix newdata0(columns, 0);
-  IntegerMatrix syndata0(columns, 0);
 
   int count1 = 0;
   int count2 = 0;
@@ -106,7 +101,7 @@ List checkconstraints_HHhead_at_group_level(IntegerMatrix data,int neededpossibl
     if (count1 >= 1) {
       newdata = newdata(Range(0,columns-1), Range(0,count1-1));
     } else {
-      newdata = newdata0;
+      newdata = R_NilValue;
     }
   }
 
@@ -115,7 +110,7 @@ List checkconstraints_HHhead_at_group_level(IntegerMatrix data,int neededpossibl
     if (count2 >= 1) {
       syndata = syndata(Range(0,columns-1), Range(0,count2-1));
     } else {
-      syndata = syndata0;
+      syndata = R_NilValue;
     }
   }
 
@@ -126,29 +121,3 @@ List checkconstraints_HHhead_at_group_level(IntegerMatrix data,int neededpossibl
                       Named("possible", count2));
 }
 
-// [[Rcpp::export]]
-IntegerMatrix households2individuals(IntegerMatrix data, int hh_size){
-
-  int nHouseholds = data.ncol();
-
-  //use the raw data instead, which has hh_size * DIM + 1 + hh_size columns (in C)
-  int columns = data.nrow();
-  //int hh_size = (columns - 1) / (DIM+1);
-  int DIM = (columns -1) / hh_size -1;
-  IntegerMatrix Individuals(DIM + 2, nHouseholds*hh_size);
-
-  int c9 = hh_size * DIM;
-  int count = 0;
-  for (int i = 0; i < nHouseholds; i++) {
-    int base = i * columns;
-    for (int j = 0; j < hh_size; j++) {
-      for (int k = 0; k < DIM;k++) {
-        Individuals[count++] = data[base + j*DIM+k];
-      }
-      Individuals[count++] = data[base + c9];
-
-      Individuals[count++] = data[base + c9 + 1 + j];
-    }
-  }
-  return(Individuals);
-}
