@@ -41,3 +41,7 @@ R/testing/test1.R
 R/testing/testRowColumn.R
 
 *.out
+
+*.Rprofvis
+
+R/NestedCategBayesImpute/afterCountingGroups_20180713.Rprofvis
