@@ -23,16 +23,12 @@ MissData$prop_batch <- 1.2
 ### Initialize the input data structure
 orig <- initData(MissData)
 
-
-
-
 ### Supply weights; one for each household size
 if(options$weight_option){
-  struc_weight <- c(1/2,1/2,1/3,1/3,1/3) #must be ordered & no household size must be excluded
+  struc_weight <- c(1/2,1/2,1/3) #must be ordered & no household size must be excluded
 } else {
   struc_weight <- rep(1,length(orig$n_star_h)) #just a dummy column of ones if struc_weight=FALSE
 }
-
 
 ### Set mcmc parameters
 
@@ -65,7 +61,7 @@ output <- initOutput(orig,hyper,mc)
 
 ### Set number of synthetic data and the mcmc indexes for them
 mm <- 50
-synindex <- NULL
+synindex <- 50
 MissData$miss_index <- sort(sample(seq((mc$burn +1),mc$nrun,by=mc$thin),mm,replace=F))
 #round(seq((mc$burn +1),mc$burn$nrun,length.out=mm))
 
@@ -85,11 +81,7 @@ ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
 #Rprof(NULL)
 total_time <- (proc.time() - proc_t)[["elapsed"]]
 
-
-
-
-
-
+#summaryRprof()
 
 
 

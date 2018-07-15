@@ -76,6 +76,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// GetImpossibleHouseholds
+List GetImpossibleHouseholds(IntegerVector d, IntegerVector n_star_h, List lambda, NumericMatrix omega, NumericMatrix phi, NumericVector pi, int blocksize, int n, int synindex, bool HHhead_at_group_level);
+RcppExport SEXP _NestedCategBayesImpute_GetImpossibleHouseholds(SEXP dSEXP, SEXP n_star_hSEXP, SEXP lambdaSEXP, SEXP omegaSEXP, SEXP phiSEXP, SEXP piSEXP, SEXP blocksizeSEXP, SEXP nSEXP, SEXP synindexSEXP, SEXP HHhead_at_group_levelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type n_star_h(n_star_hSEXP);
+    Rcpp::traits::input_parameter< List >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type omega(omegaSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type phi(phiSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type pi(piSEXP);
+    Rcpp::traits::input_parameter< int >::type blocksize(blocksizeSEXP);
+    Rcpp::traits::input_parameter< int >::type n(nSEXP);
+    Rcpp::traits::input_parameter< int >::type synindex(synindexSEXP);
+    Rcpp::traits::input_parameter< bool >::type HHhead_at_group_level(HHhead_at_group_levelSEXP);
+    rcpp_result_gen = Rcpp::wrap(GetImpossibleHouseholds(d, n_star_h, lambda, omega, phi, pi, blocksize, n, synindex, HHhead_at_group_level));
+    return rcpp_result_gen;
+END_RCPP
+}
 // groupcount
 IntegerMatrix groupcount(IntegerVector g1, IntegerVector g2, int n1, int n2);
 RcppExport SEXP _NestedCategBayesImpute_groupcount(SEXP g1SEXP, SEXP g2SEXP, SEXP n1SEXP, SEXP n2SEXP) {
@@ -99,6 +119,32 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type g(gSEXP);
     Rcpp::traits::input_parameter< int >::type n(nSEXP);
     rcpp_result_gen = Rcpp::wrap(groupcount1D(g, n));
+    return rcpp_result_gen;
+END_RCPP
+}
+// UpdateBeta
+double UpdateBeta(double ba, double bb, NumericMatrix v);
+RcppExport SEXP _NestedCategBayesImpute_UpdateBeta(SEXP baSEXP, SEXP bbSEXP, SEXP vSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type ba(baSEXP);
+    Rcpp::traits::input_parameter< double >::type bb(bbSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type v(vSEXP);
+    rcpp_result_gen = Rcpp::wrap(UpdateBeta(ba, bb, v));
+    return rcpp_result_gen;
+END_RCPP
+}
+// UpdateAlpha
+double UpdateAlpha(double aa, double ab, NumericVector u);
+RcppExport SEXP _NestedCategBayesImpute_UpdateAlpha(SEXP aaSEXP, SEXP abSEXP, SEXP uSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type aa(aaSEXP);
+    Rcpp::traits::input_parameter< double >::type ab(abSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type u(uSEXP);
+    rcpp_result_gen = Rcpp::wrap(UpdateAlpha(aa, ab, u));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -178,6 +224,21 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type dHH(dHHSEXP);
     Rcpp::traits::input_parameter< int >::type FF(FFSEXP);
     rcpp_result_gen = Rcpp::wrap(UpdateLambda(HHdata_all, G_all, dHH, FF));
+    return rcpp_result_gen;
+END_RCPP
+}
+// UpdateLambdaWeighted
+List UpdateLambdaWeighted(List HHdata_all, List G_all, IntegerVector dHH, int FF, NumericVector struc_weight);
+RcppExport SEXP _NestedCategBayesImpute_UpdateLambdaWeighted(SEXP HHdata_allSEXP, SEXP G_allSEXP, SEXP dHHSEXP, SEXP FFSEXP, SEXP struc_weightSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type HHdata_all(HHdata_allSEXP);
+    Rcpp::traits::input_parameter< List >::type G_all(G_allSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type dHH(dHHSEXP);
+    Rcpp::traits::input_parameter< int >::type FF(FFSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type struc_weight(struc_weightSEXP);
+    rcpp_result_gen = Rcpp::wrap(UpdateLambdaWeighted(HHdata_all, G_all, dHH, FF, struc_weight));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -308,6 +369,35 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// UpdateOmega
+List UpdateOmega(double beta, IntegerMatrix M_all, int FF, int SS);
+RcppExport SEXP _NestedCategBayesImpute_UpdateOmega(SEXP betaSEXP, SEXP M_allSEXP, SEXP FFSEXP, SEXP SSSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type M_all(M_allSEXP);
+    Rcpp::traits::input_parameter< int >::type FF(FFSEXP);
+    Rcpp::traits::input_parameter< int >::type SS(SSSEXP);
+    rcpp_result_gen = Rcpp::wrap(UpdateOmega(beta, M_all, FF, SS));
+    return rcpp_result_gen;
+END_RCPP
+}
+// UpdateOmegaWeighted
+List UpdateOmegaWeighted(double beta, List M_all, int FF, int SS, NumericVector struc_weight);
+RcppExport SEXP _NestedCategBayesImpute_UpdateOmegaWeighted(SEXP betaSEXP, SEXP M_allSEXP, SEXP FFSEXP, SEXP SSSEXP, SEXP struc_weightSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type beta(betaSEXP);
+    Rcpp::traits::input_parameter< List >::type M_all(M_allSEXP);
+    Rcpp::traits::input_parameter< int >::type FF(FFSEXP);
+    Rcpp::traits::input_parameter< int >::type SS(SSSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type struc_weight(struc_weightSEXP);
+    rcpp_result_gen = Rcpp::wrap(UpdateOmegaWeighted(beta, M_all, FF, SS, struc_weight));
+    return rcpp_result_gen;
+END_RCPP
+}
 // gammarand
 NumericVector gammarand(int n, double shape, double rate);
 RcppExport SEXP _NestedCategBayesImpute_gammarand(SEXP nSEXP, SEXP shapeSEXP, SEXP rateSEXP) {
@@ -337,6 +427,50 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// UpdatePhiWeighted
+NumericMatrix UpdatePhiWeighted(List data, List M_all, int FF, int SS, IntegerVector d, int maxd, NumericVector struc_weight);
+RcppExport SEXP _NestedCategBayesImpute_UpdatePhiWeighted(SEXP dataSEXP, SEXP M_allSEXP, SEXP FFSEXP, SEXP SSSEXP, SEXP dSEXP, SEXP maxdSEXP, SEXP struc_weightSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< List >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< List >::type M_all(M_allSEXP);
+    Rcpp::traits::input_parameter< int >::type FF(FFSEXP);
+    Rcpp::traits::input_parameter< int >::type SS(SSSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< int >::type maxd(maxdSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type struc_weight(struc_weightSEXP);
+    rcpp_result_gen = Rcpp::wrap(UpdatePhiWeighted(data, M_all, FF, SS, d, maxd, struc_weight));
+    return rcpp_result_gen;
+END_RCPP
+}
+// UpdatePi
+List UpdatePi(double alpha, IntegerVector G_all, int FF);
+RcppExport SEXP _NestedCategBayesImpute_UpdatePi(SEXP alphaSEXP, SEXP G_allSEXP, SEXP FFSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type G_all(G_allSEXP);
+    Rcpp::traits::input_parameter< int >::type FF(FFSEXP);
+    rcpp_result_gen = Rcpp::wrap(UpdatePi(alpha, G_all, FF));
+    return rcpp_result_gen;
+END_RCPP
+}
+// UpdatePiWeighted
+List UpdatePiWeighted(double alpha, List G_all, int FF, NumericVector struc_weight);
+RcppExport SEXP _NestedCategBayesImpute_UpdatePiWeighted(SEXP alphaSEXP, SEXP G_allSEXP, SEXP FFSEXP, SEXP struc_weightSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type alpha(alphaSEXP);
+    Rcpp::traits::input_parameter< List >::type G_all(G_allSEXP);
+    Rcpp::traits::input_parameter< int >::type FF(FFSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type struc_weight(struc_weightSEXP);
+    rcpp_result_gen = Rcpp::wrap(UpdatePiWeighted(alpha, G_all, FF, struc_weight));
+    return rcpp_result_gen;
+END_RCPP
+}
 // sampleW_multi
 IntegerVector sampleW_multi(NumericVector p, NumericVector d);
 RcppExport SEXP _NestedCategBayesImpute_sampleW_multi(SEXP pSEXP, SEXP dSEXP) {
@@ -356,13 +490,17 @@ static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_checkconstraints", (DL_FUNC) &_NestedCategBayesImpute_checkconstraints, 3},
     {"_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level", (DL_FUNC) &_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level, 3},
     {"_NestedCategBayesImpute_GenerateData", (DL_FUNC) &_NestedCategBayesImpute_GenerateData, 11},
+    {"_NestedCategBayesImpute_GetImpossibleHouseholds", (DL_FUNC) &_NestedCategBayesImpute_GetImpossibleHouseholds, 10},
     {"_NestedCategBayesImpute_groupcount", (DL_FUNC) &_NestedCategBayesImpute_groupcount, 4},
     {"_NestedCategBayesImpute_groupcount1D", (DL_FUNC) &_NestedCategBayesImpute_groupcount1D, 2},
+    {"_NestedCategBayesImpute_UpdateBeta", (DL_FUNC) &_NestedCategBayesImpute_UpdateBeta, 3},
+    {"_NestedCategBayesImpute_UpdateAlpha", (DL_FUNC) &_NestedCategBayesImpute_UpdateAlpha, 3},
     {"_NestedCategBayesImpute_sampleG", (DL_FUNC) &_NestedCategBayesImpute_sampleG, 7},
     {"_NestedCategBayesImpute_samplehouseholds", (DL_FUNC) &_NestedCategBayesImpute_samplehouseholds, 8},
     {"_NestedCategBayesImpute_samplehouseholds_HHhead_at_group_level", (DL_FUNC) &_NestedCategBayesImpute_samplehouseholds_HHhead_at_group_level, 8},
     {"_NestedCategBayesImpute_households2individuals", (DL_FUNC) &_NestedCategBayesImpute_households2individuals, 2},
     {"_NestedCategBayesImpute_UpdateLambda", (DL_FUNC) &_NestedCategBayesImpute_UpdateLambda, 4},
+    {"_NestedCategBayesImpute_UpdateLambdaWeighted", (DL_FUNC) &_NestedCategBayesImpute_UpdateLambdaWeighted, 5},
     {"_NestedCategBayesImpute_sampleM", (DL_FUNC) &_NestedCategBayesImpute_sampleM, 5},
     {"_NestedCategBayesImpute_SampleMatrixByColumnC", (DL_FUNC) &_NestedCategBayesImpute_SampleMatrixByColumnC, 3},
     {"_NestedCategBayesImpute_SampleMatrixByRowC", (DL_FUNC) &_NestedCategBayesImpute_SampleMatrixByRowC, 2},
@@ -371,8 +509,13 @@ static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_SampleNonStructureZerosHouseC", (DL_FUNC) &_NestedCategBayesImpute_SampleNonStructureZerosHouseC, 7},
     {"_NestedCategBayesImpute_SampleNonStructureZerosIndivC", (DL_FUNC) &_NestedCategBayesImpute_SampleNonStructureZerosIndivC, 8},
     {"_NestedCategBayesImpute_SampleMissing_impC", (DL_FUNC) &_NestedCategBayesImpute_SampleMissing_impC, 6},
+    {"_NestedCategBayesImpute_UpdateOmega", (DL_FUNC) &_NestedCategBayesImpute_UpdateOmega, 4},
+    {"_NestedCategBayesImpute_UpdateOmegaWeighted", (DL_FUNC) &_NestedCategBayesImpute_UpdateOmegaWeighted, 5},
     {"_NestedCategBayesImpute_gammarand", (DL_FUNC) &_NestedCategBayesImpute_gammarand, 3},
     {"_NestedCategBayesImpute_UpdatePhi", (DL_FUNC) &_NestedCategBayesImpute_UpdatePhi, 6},
+    {"_NestedCategBayesImpute_UpdatePhiWeighted", (DL_FUNC) &_NestedCategBayesImpute_UpdatePhiWeighted, 7},
+    {"_NestedCategBayesImpute_UpdatePi", (DL_FUNC) &_NestedCategBayesImpute_UpdatePi, 3},
+    {"_NestedCategBayesImpute_UpdatePiWeighted", (DL_FUNC) &_NestedCategBayesImpute_UpdatePiWeighted, 4},
     {"_NestedCategBayesImpute_sampleW_multi", (DL_FUNC) &_NestedCategBayesImpute_sampleW_multi, 2},
     {NULL, NULL, 0}
 };
