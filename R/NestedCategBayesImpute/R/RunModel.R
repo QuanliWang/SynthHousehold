@@ -119,8 +119,16 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
 
     #update missing data
     if (MissData$hasMissingData) {
-      #save(MissData,para,orig,G_household,M,hyper, file = "pre_sampleMissing.RData")
-      MissData <- SampleMissing(MissData,para,orig,G_household,M,hyper)
+      MissData$n_batch_imp_sum <- MissData$n_batch_imp_sum + ceiling(MissData$n_0_reject*MissData$prop_batch)
+      MissData$n_batch_imp <- ceiling(MissData$n_batch_imp_sum/i) + 1 #no. of batches of imputations to sample
+      MissData$n_0_reject[] <- 0
+      MissData$household <- as.matrix(MissData$household)
+      #sample non structural zeros variables for everyone at once
+      storage.mode(MissData$household) <- "integer" #very important if used to do in place update
+      MissData <- SampleMissing_impC(MissData,para,orig,G_household,M,hyper)
+      MissData$household <- as.data.frame(MissData$household)
+
+      #MissData <- SampleMissing(MissData,para,orig,G_household,M,hyper)
       orig$origdata <- MissData$household
       HHrowIndex <- c(1, cumsum(orig$n_i)+1)
       orig$HHdataorigT <- t(MissData$household[HHrowIndex[1:orig$n],household_variable_index])
