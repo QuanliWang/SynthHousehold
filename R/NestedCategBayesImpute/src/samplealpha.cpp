@@ -1,6 +1,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
-#include <cmath>
+#include <math.h>
 #include "groupcount.h"
 
 // [[Rcpp::export]]
@@ -13,7 +13,7 @@ double UpdateBeta(double ba, double bb, NumericMatrix v) {
       sum += log( 1.0 - v(i,j));
     }
   }
-  double beta = rgamma(1,ba + FF*(SS-1),bb - sum)[0];
+  double beta = rgamma(1,ba + FF*(SS-1),1.0 / (bb - sum))[0];
   return beta;
 }
 
@@ -24,7 +24,7 @@ double UpdateAlpha( double aa, double ab, NumericVector u) {
     for (int i = 0; i < FF -1; i++) {
       sum += log( 1.0 - u[i]);
     }
-    double alpha = rgamma(1,aa + FF -1, ab - sum)[0];
+    double alpha = rgamma(1,aa + FF -1, 1.0/ (ab - sum))[0];
     return alpha;
 }
 /*
