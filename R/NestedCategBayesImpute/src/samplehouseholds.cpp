@@ -4,7 +4,7 @@ using namespace Rcpp;
 
 // [[Rcpp::export]]
 IntegerMatrix samplehouseholds(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
-               NumericVector d, List lambda,
+               IntegerVector d, List lambda,
                int currrentbatch, int nHouseholds,  int householdsize) {
 
   int FF = omega.nrow();
@@ -53,7 +53,7 @@ IntegerMatrix samplehouseholds(NumericMatrix phi, NumericMatrix omega, NumericVe
 
 // [[Rcpp::export]]
 IntegerMatrix samplehouseholds_HHhead_at_group_level(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
-                               NumericVector d, List lambda,
+                               IntegerVector d, List lambda,
                                int currrentbatch, int nHouseholds,  int householdsize) {
 
   int FF = omega.nrow();

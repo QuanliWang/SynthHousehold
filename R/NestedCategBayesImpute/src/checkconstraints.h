@@ -1,4 +1,6 @@
 //  checkconstraints.h
+#include <Rcpp.h>
+using namespace Rcpp;
 #define HEAD 1
 #define SPOUSE 2
 #define BIOLOGICALCHILD 3
@@ -18,3 +20,5 @@
 
 int checkconstraints_imp(int *data, int *isPossible,int hh_size, int DIM, int nHouseholds);
 int checkconstraints_imp_HHhead_at_group_level(int *data, int *isPossible,int hh_size, int DIM, int nHouseholds);
+List checkconstraints_HHhead_at_group_level(IntegerMatrix data,int neededpossiblehh, int hh_size);
+List checkconstraints(IntegerMatrix data,int neededpossiblehh, int hh_size);

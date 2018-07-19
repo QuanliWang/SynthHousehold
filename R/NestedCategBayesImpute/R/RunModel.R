@@ -32,45 +32,40 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
       }
 
       #combine data and indicators -- use lists for weighting
-      n_i_extra <- as.data.frame(table(data.extra$IndividualData_extra[1,]))$Freq
+      n_i_extra <- data.extra$HHdata_extra[dim(data.extra$HHdata_extra)[1],]
       n_i_extra_index <- rep(n_i_extra,n_i_extra)
+
       G_all_weighted[[1]] <- G_household$G
-      temp_temp <- orig$HHdataorigT
+      HHdata_all_weighted[[1]] <- orig$HHdataorigT
       if (!HHhead_at_group_level) {
-        temp_temp[2,] <- temp_temp[2,] -1
+        HHdata_all_weighted[[1]][2,] <- HHdata_all_weighted[[1]][2,] - 1
       }
-      HHdata_all_weighted[[1]] <- temp_temp
-      IndividualData_all_weighted[[1]] <- t(orig$origdata[,1:DIM])
+
+      #IndividualData_all_weighted[[1]] <-orig$allT
+      IndividualData_all_weighted[[1]] <-orig$IndivDataInCol
       M_all_weighted[[1]] <- rbind(G_household$G_Individuals,M)
       M_all_vector <- cbind(M_all_weighted[[1]],data.extra$G_Individuals_and_M_extra)
 
-      if (!HHhead_at_group_level){
-        for(w_i in 2:length(struc_weight)){
-          G_all_weighted[[w_i]] <- data.extra$G_extra[(n_i_extra == w_i)]
-          HHdata_all_weighted[[w_i]] <- data.extra$HHdata_extra[,(n_i_extra == w_i)]
-          IndividualData_all_weighted[[w_i]] <- data.extra$IndividualData_extra[,(n_i_extra_index == w_i)]
-          M_all_weighted[[w_i]] <- data.extra$G_Individuals_and_M_extra[,(n_i_extra_index == w_i)]
-        }
-      } else{
-        for(w_i in 2:length(struc_weight)){
-          G_all_weighted[[w_i]] <- data.extra$G_extra[(n_i_extra == (w_i-1))]
-          HHdata_all_weighted[[w_i]] <- data.extra$HHdata_extra[,(n_i_extra == (w_i-1))]
-          IndividualData_all_weighted[[w_i]] <- data.extra$IndividualData_extra[,(n_i_extra_index == (w_i-1))]
-          M_all_weighted[[w_i]] <- data.extra$G_Individuals_and_M_extra[,(n_i_extra_index == (w_i-1))]
-        }
+      hhsize_addjust <- 0
+      if (HHhead_at_group_level) {hhsize_addjust = -1}
+
+      for(w_i in 2:length(struc_weight)){
+        G_all_weighted[[w_i]] <- data.extra$G_extra[(n_i_extra == w_i + hhsize_addjust)]
+        HHdata_all_weighted[[w_i]] <- data.extra$HHdata_extra[,(n_i_extra == w_i+hhsize_addjust)]
+        IndividualData_all_weighted[[w_i]] <- data.extra$IndividualData_extra[individual_variable_index,
+                                                                              (n_i_extra_index == w_i+hhsize_addjust)]
+        M_all_weighted[[w_i]] <- data.extra$G_Individuals_and_M_extra[,(n_i_extra_index == w_i+hhsize_addjust)]
       }
 
-
       # update phi
-      para$phi <- UpdatePhiWeighted(IndividualData_all_weighted,M_all_weighted,
-                                    hyper$FF,hyper$SS,orig$p,orig$d,orig$maxd,individual_variable_index,struc_weight)
+      para$phi <- UpdatePhiWeighted(IndividualData_all_weighted,M_all_weighted,hyper$FF,hyper$SS,orig$d,orig$maxd,struc_weight)
       #update omega
       Omega <- UpdateOmegaWeighted(para$beta,M_all_weighted, hyper$FF, hyper$SS,struc_weight)
       para$omega <- Omega$omega
       para$v <- Omega$v
 
       # update lambda
-      para$lambda <- UpdateLambdaWeighted(hyper$dHH,hyper$FF,G_all_weighted,HHdata_all_weighted,struc_weight)
+      para$lambda <- UpdateLambdaWeighted(HHdata_all_weighted,G_all_weighted,hyper$dHH,hyper$FF,struc_weight)
 
       # update pi
       Pi <- UpdatePiWeighted(para$alpha,G_all_weighted,hyper$FF,struc_weight)
@@ -124,8 +119,16 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
 
     #update missing data
     if (MissData$hasMissingData) {
-      #save(MissData,para,orig,G_household,M,hyper, file = "pre_sampleMissing.RData")
-      MissData <- SampleMissing(MissData,para,orig,G_household,M,hyper)
+      MissData$n_batch_imp_sum <- MissData$n_batch_imp_sum + ceiling(MissData$n_0_reject*MissData$prop_batch)
+      MissData$n_batch_imp <- ceiling(MissData$n_batch_imp_sum/i) + 1 #no. of batches of imputations to sample
+      MissData$n_0_reject[] <- 0
+      MissData$household <- as.matrix(MissData$household)
+      #sample non structural zeros variables for everyone at once
+      storage.mode(MissData$household) <- "integer" #very important if used to do in place update
+      MissData <- SampleMissing_impC(MissData,para,orig,G_household,M,hyper)
+      MissData$household <- as.data.frame(MissData$household)
+
+      #MissData <- SampleMissing(MissData,para,orig,G_household,M,hyper)
       orig$origdata <- MissData$household
       HHrowIndex <- c(1, cumsum(orig$n_i)+1)
       orig$HHdataorigT <- t(MissData$household[HHrowIndex[1:orig$n],household_variable_index])
