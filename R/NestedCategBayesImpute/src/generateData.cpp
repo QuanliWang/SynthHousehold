@@ -105,9 +105,19 @@ List GetImpossibleHouseholds(IntegerVector d,IntegerVector n_star_h, List lambda
     } else {
       hh_size_real = hh_size + 1;
     }
-    List batch = GenerateData(hh_size_real,lambda, omega, phi,pi, d, batches_done,
+    List batch = NULL;
+    while (true) { // in rare locations no valid imposible household it found, rerun it
+      try {
+        batch = GenerateData(hh_size_real,lambda, omega, phi,pi, d, batches_done,
                           n_star_h[hh_size - 1],blocksize,synindex,HHhead_at_group_level);
-
+        IntegerMatrix G_test = batch["G_extra"];
+        if (G_test != R_NilValue) {
+          break;
+        }
+      } catch (...) {
+        // do nothing, just rerun generateData
+      }
+    }
     IntegerMatrix G_extra_1 = batch["G_extra"];
     IntegerMatrix Individuals_extra = batch["Individuals_extra"];
     IntegerMatrix HHData_extra_1 = batch["HHData_extra"];
@@ -115,13 +125,6 @@ List GetImpossibleHouseholds(IntegerVector d,IntegerVector n_star_h, List lambda
       hh_size_new[hh_size - 1] = G_extra_1.length();
     } else {
       hh_size_new[hh_size - 1] = 0;
-    }
-    IntegerMatrix hh_temp(hh_size_new[hh_size-1] * hh_size_real,1);
-    int count = 0;
-    for (int j = 0; j < hh_size_new[hh_size-1]; j++) {
-      for (int k = 0; k < hh_size_real; k++) {
-        hh_temp[count++] = cumsize + 1 + j;
-      }
     }
     cumsize += hh_size_new[hh_size-1];
     ImpossibleIndividuals.push_back(Individuals_extra);
