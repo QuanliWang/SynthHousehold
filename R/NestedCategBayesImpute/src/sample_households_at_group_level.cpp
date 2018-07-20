@@ -5,6 +5,17 @@ using namespace Rcpp;
 #include "samplehouseholds.h"
 #include <cstdio>
 
+void sampleHHindex(double** lambda, int n_lambdas, int householdsize, double* pi, int FF, double* nextrand, int* hhindexh, int nHouseholds) {
+  double* currentlambdacolumn = lambda[n_lambdas-1] + (householdsize - 1) * FF; //column hh_size-1, addjusted to zero based
+  double* pi_lambda_last = new double[FF];
+  //note that now household size start from 1, instead of 2
+  for (int i = 0; i < FF; i++) {
+    pi_lambda_last[i] = pi[i] * currentlambdacolumn[i];
+  }
+  samplew_multi2(pi_lambda_last, FF, nextrand,hhindexh,nHouseholds);
+  delete [] pi_lambda_last;
+}
+
 void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,
                                                 double** lambda, int* lambda_columns,
                                                 double* omegat, double* phi,
@@ -16,29 +27,17 @@ void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,
   //number of columns in the final output
   int groups = FF * SS;
   int maxDDtp = maxdd * p;
+  int DIM = 2 + p + n_lambdas - 1;  //total number of variables
 
   double* nextrand = rand; //traverse through random numbers
 
-  int column;
-  int DIM = 2 + p + n_lambdas - 1;  //total number of variables
-  //sampling hhindexh, column: householdsize * DIM + 1
-  column = (householdsize * DIM + 1) - 1; //zero-based column
+  //sampling hhindexh, column: householdsize * DIM + 1 (one-based)
+  int column = (householdsize * DIM + 1) - 1; //zero-based column
   int* hhindexh = data + column * nHouseholds;
-
-  double* pi_lambda_last = new double[FF];
-  double* currentlambdacolumn = lambda[n_lambdas-1] + (householdsize - 1) * FF; //column hh_size-1, addjusted to zero based
-  //note that now household size start from 1, instead of 2
-  for (int i = 0; i < FF; i++) {
-    pi_lambda_last[i] = pi[i] * currentlambdacolumn[i];
-  }
-  samplew_multi2(pi_lambda_last, FF, nextrand,hhindexh,nHouseholds);
-  delete [] pi_lambda_last;
-
+  sampleHHindex(lambda, n_lambdas, householdsize, pi, FF, nextrand, hhindexh, nHouseholds);
   nextrand += nHouseholds; //advance nHouseholds random numbers
 
-
-  //now sampling from each group for each individual
-  //memberindexhh
+  //now sampling from each group for each individual memberindexhh
   //do random samples for the same probs at the same time
   int** columns = new int*[householdsize];
   int base = (householdsize * DIM + 1);

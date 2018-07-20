@@ -73,7 +73,6 @@ IntegerMatrix households2individuals(IntegerMatrix data, int hh_size){
         Individuals[count++] = data[base + j*DIM+k];
       }
       Individuals[count++] = data[base + c9];
-
       Individuals[count++] = data[base + c9 + 1 + j];
     }
   }

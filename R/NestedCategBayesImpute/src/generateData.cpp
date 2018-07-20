@@ -3,14 +3,17 @@ using namespace Rcpp;
 #include "samplehouseholds.h"
 #include "checkconstraints.h"
 
+//input index is for debugging only, can be taken out later on
 IntegerMatrix Concatenate(List data, int index) {
   //Rcout << index << std::endl;
   int totalcolumns = 0;
   int rows;
   for (int i = 0; i < data.length(); i++) {
     IntegerMatrix current = data[i];
-    totalcolumns += current.ncol();
-    rows = current.nrow();
+    if (current != R_NilValue) {
+      totalcolumns += current.ncol();
+      rows = current.nrow();
+    }
   }
   if (rows <= 0 || totalcolumns <=0) {
     IntegerMatrix Empty(0,0);
@@ -20,7 +23,9 @@ IntegerMatrix Concatenate(List data, int index) {
   int offset = 0;
   for (int i = 0; i < data.length(); i++) {
     IntegerMatrix current = data[i];
-    std::copy(current.begin(),current.end(),result.begin() + offset);
+    if (current != R_NilValue) {
+      std::copy(current.begin(),current.end(),result.begin() + offset);
+    }
     offset += current.length();
   }
   return result;
@@ -65,7 +70,9 @@ List GenerateData(int hh_size,List lambda, NumericMatrix omega, NumericMatrix ph
 
     valid_hh_found += possible;
     if (synindex > 0) {
-      synIndividuals.push_back(households2individuals(synHouseholds,hh_size));
+      if (synHouseholds != R_NilValue) {
+        synIndividuals.push_back(households2individuals(synHouseholds,hh_size));
+      }
     }
   }
 
@@ -104,7 +111,11 @@ List GetImpossibleHouseholds(IntegerVector d,IntegerVector n_star_h, List lambda
     IntegerMatrix G_extra_1 = batch["G_extra"];
     IntegerMatrix Individuals_extra = batch["Individuals_extra"];
     IntegerMatrix HHData_extra_1 = batch["HHData_extra"];
-    hh_size_new[hh_size - 1] = G_extra_1.length();
+    if (G_extra_1 != R_NilValue) {
+      hh_size_new[hh_size - 1] = G_extra_1.length();
+    } else {
+      hh_size_new[hh_size - 1] = 0;
+    }
     IntegerMatrix hh_temp(hh_size_new[hh_size-1] * hh_size_real,1);
     int count = 0;
     for (int j = 0; j < hh_size_new[hh_size-1]; j++) {
@@ -116,14 +127,16 @@ List GetImpossibleHouseholds(IntegerVector d,IntegerVector n_star_h, List lambda
     ImpossibleIndividuals.push_back(Individuals_extra);
     G_extra.push_back(G_extra_1);
 
-    IntegerMatrix HHData_extra_wth_size(HHData_extra_1.nrow() + 1, HHData_extra_1.ncol());
-    for (int i = 0; i < HHData_extra_1.ncol(); i++) {
-      for (int j = 0; j < HHData_extra_1.nrow(); j++) {
-        HHData_extra_wth_size(j,i) = HHData_extra_1(j,i);
+    if (HHData_extra_1 != R_NilValue) {
+      IntegerMatrix HHData_extra_wth_size(HHData_extra_1.nrow() + 1, HHData_extra_1.ncol());
+      for (int i = 0; i < HHData_extra_1.ncol(); i++) {
+        for (int j = 0; j < HHData_extra_1.nrow(); j++) {
+          HHData_extra_wth_size(j,i) = HHData_extra_1(j,i);
+        }
+        HHData_extra_wth_size(HHData_extra_1.nrow(),i) = hh_size;
       }
-      HHData_extra_wth_size(HHData_extra_1.nrow(),i) = hh_size;
+      HHdata_extra.push_back(HHData_extra_wth_size);
     }
-    HHdata_extra.push_back(HHData_extra_wth_size);
     if (synindex > 0) {
       IntegerMatrix synIndividuals = batch["synIndividuals"];
       synIndividuals_all.push_back(synIndividuals);
@@ -157,9 +170,6 @@ List GetImpossibleHouseholds(IntegerVector d,IntegerVector n_star_h, List lambda
                       Named("hh_size_new", hh_size_new),
                       Named("synIndividuals_all", Concatenate(synIndividuals_all,9))
                         ));
- /*
-  return R_NilValue;
-  */
 }
 
 /*
