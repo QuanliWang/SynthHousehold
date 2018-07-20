@@ -183,6 +183,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// sampleHH_HHhead_at_group_level
+IntegerMatrix sampleHH_HHhead_at_group_level(NumericMatrix phi, NumericMatrix omega, NumericVector pi, IntegerVector d, List lambda, int currrentbatch, int nHouseholds, int householdsize);
+RcppExport SEXP _NestedCategBayesImpute_sampleHH_HHhead_at_group_level(SEXP phiSEXP, SEXP omegaSEXP, SEXP piSEXP, SEXP dSEXP, SEXP lambdaSEXP, SEXP currrentbatchSEXP, SEXP nHouseholdsSEXP, SEXP householdsizeSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type phi(phiSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type omega(omegaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type pi(piSEXP);
+    Rcpp::traits::input_parameter< IntegerVector >::type d(dSEXP);
+    Rcpp::traits::input_parameter< List >::type lambda(lambdaSEXP);
+    Rcpp::traits::input_parameter< int >::type currrentbatch(currrentbatchSEXP);
+    Rcpp::traits::input_parameter< int >::type nHouseholds(nHouseholdsSEXP);
+    Rcpp::traits::input_parameter< int >::type householdsize(householdsizeSEXP);
+    rcpp_result_gen = Rcpp::wrap(sampleHH_HHhead_at_group_level(phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize));
+    return rcpp_result_gen;
+END_RCPP
+}
 // samplehouseholds_HHhead_at_group_level
 IntegerMatrix samplehouseholds_HHhead_at_group_level(NumericMatrix phi, NumericMatrix omega, NumericVector pi, IntegerVector d, List lambda, int currrentbatch, int nHouseholds, int householdsize);
 RcppExport SEXP _NestedCategBayesImpute_samplehouseholds_HHhead_at_group_level(SEXP phiSEXP, SEXP omegaSEXP, SEXP piSEXP, SEXP dSEXP, SEXP lambdaSEXP, SEXP currrentbatchSEXP, SEXP nHouseholdsSEXP, SEXP householdsizeSEXP) {
@@ -483,6 +501,17 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// parallelMatrixSqrt
+NumericMatrix parallelMatrixSqrt(NumericMatrix x);
+RcppExport SEXP _NestedCategBayesImpute_parallelMatrixSqrt(SEXP xSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
+    rcpp_result_gen = Rcpp::wrap(parallelMatrixSqrt(x));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_checkSZ", (DL_FUNC) &_NestedCategBayesImpute_checkSZ, 2},
@@ -497,6 +526,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_UpdateAlpha", (DL_FUNC) &_NestedCategBayesImpute_UpdateAlpha, 3},
     {"_NestedCategBayesImpute_sampleG", (DL_FUNC) &_NestedCategBayesImpute_sampleG, 7},
     {"_NestedCategBayesImpute_samplehouseholds", (DL_FUNC) &_NestedCategBayesImpute_samplehouseholds, 8},
+    {"_NestedCategBayesImpute_sampleHH_HHhead_at_group_level", (DL_FUNC) &_NestedCategBayesImpute_sampleHH_HHhead_at_group_level, 8},
     {"_NestedCategBayesImpute_samplehouseholds_HHhead_at_group_level", (DL_FUNC) &_NestedCategBayesImpute_samplehouseholds_HHhead_at_group_level, 8},
     {"_NestedCategBayesImpute_households2individuals", (DL_FUNC) &_NestedCategBayesImpute_households2individuals, 2},
     {"_NestedCategBayesImpute_UpdateLambda", (DL_FUNC) &_NestedCategBayesImpute_UpdateLambda, 4},
@@ -517,6 +547,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_UpdatePi", (DL_FUNC) &_NestedCategBayesImpute_UpdatePi, 3},
     {"_NestedCategBayesImpute_UpdatePiWeighted", (DL_FUNC) &_NestedCategBayesImpute_UpdatePiWeighted, 4},
     {"_NestedCategBayesImpute_sampleW_multi", (DL_FUNC) &_NestedCategBayesImpute_sampleW_multi, 2},
+    {"_NestedCategBayesImpute_parallelMatrixSqrt", (DL_FUNC) &_NestedCategBayesImpute_parallelMatrixSqrt, 1},
     {NULL, NULL, 0}
 };
 

@@ -49,6 +49,10 @@ samplehouseholds <- function(phi, omega, pi, d, lambda, currrentbatch, nHousehol
     .Call('_NestedCategBayesImpute_samplehouseholds', PACKAGE = 'NestedCategBayesImpute', phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize)
 }
 
+sampleHH_HHhead_at_group_level <- function(phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize) {
+    .Call('_NestedCategBayesImpute_sampleHH_HHhead_at_group_level', PACKAGE = 'NestedCategBayesImpute', phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize)
+}
+
 samplehouseholds_HHhead_at_group_level <- function(phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize) {
     .Call('_NestedCategBayesImpute_samplehouseholds_HHhead_at_group_level', PACKAGE = 'NestedCategBayesImpute', phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize)
 }
@@ -127,5 +131,9 @@ UpdatePiWeighted <- function(alpha, G_all, FF, struc_weight) {
 
 sampleW_multi <- function(p, d) {
     .Call('_NestedCategBayesImpute_sampleW_multi', PACKAGE = 'NestedCategBayesImpute', p, d)
+}
+
+parallelMatrixSqrt <- function(x) {
+    .Call('_NestedCategBayesImpute_parallelMatrixSqrt', PACKAGE = 'NestedCategBayesImpute', x)
 }
 

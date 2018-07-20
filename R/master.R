@@ -7,7 +7,7 @@ library(dplyr)
 ### Also set indicator for the weighting/capping option
 options <- list()
 options$HHhead_at_group_level <- TRUE #set to TRUE to move household head to the group level
-options$weight_option <- FALSE #set to TRUE for weighting/capping option. If TRUE, must supply weights
+options$weight_option <- FALSE #set to FALSE for weighting/capping option. If TRUE, must supply weights
 
 source("../GetExampleData.R")
 
