@@ -14,3 +14,7 @@ IntegerMatrix samplehouseholds(NumericMatrix phi, NumericMatrix omega, NumericVe
                                IntegerVector d, List lambda,
                                int currrentbatch, int nHouseholds,  int householdsize);
 IntegerMatrix households2individuals(IntegerMatrix data, int hh_size);
+void sampleIndivMemberIndex(int* data,int* hhindexh, int nHouseholds, int base, int householdsize,
+                            double* omegat, int SS, double* nextrand, std::size_t begin, std::size_t end);
+void sampleIndivMemberIndex(int* data,int* hhindexh, int nHouseholds, int base, int householdsize,
+                            double* omegat, int SS, double* nextrand);

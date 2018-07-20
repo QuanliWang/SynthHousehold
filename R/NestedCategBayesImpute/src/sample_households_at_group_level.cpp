@@ -19,13 +19,13 @@ void sampleHHindex(double** lambda, int n_lambdas, int householdsize, double* pi
 
 //output: householdsize of data columns, starting at column base (0-based)
 void sampleIndivMemberIndex(int* data,int* hhindexh, int nHouseholds, int base, int householdsize,
-                            double* omegat, int SS, double* nextrand) {
+                            double* omegat, int SS, double* nextrand, std::size_t begin, std::size_t end) {
   int** columns = new int*[householdsize];
   double* currentrand = nextrand;
   for (int j = 0; j < householdsize; j++) {
     columns[j] = data + (base + j) * nHouseholds; //zero-based column
   }
-  for (int i = 0; i < nHouseholds; i++) {
+  for (int i = begin; i <end; i++) {
     int group = hhindexh[i]-1;
     double* currentp = omegat + group * SS;
 
@@ -153,7 +153,8 @@ void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,
   //now sampling from each group for each individual memberindexhh
   //do random samples for the same probs at the same time
   int base = (householdsize * DIM + 1);
-  sampleIndivMemberIndex(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand);
+  sampleIndivMemberIndex(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand); //parallel version
+  //sampleIndivMemberIndex(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand,0,nHouseholds); serical version
   nextrand += householdsize * nHouseholds;
 
   //generate household level data

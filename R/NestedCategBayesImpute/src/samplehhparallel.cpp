@@ -9,6 +9,33 @@ using namespace RcppParallel;
 #include "samplehouseholds.h"
 #include "utils.h"
 
+struct IndivMemberIndexSampler : public Worker {
+  int* data;
+  int* hhindexh;
+  int nHouseholds;
+  int base;
+  int householdsize;
+  double* omegat;
+  int SS;
+  double* nextrand;
+  IndivMemberIndexSampler(int* data,int* hhindexh, int nHouseholds, int base, int householdsize,
+                          double* omegat, int SS, double* nextrand)
+    :data(data), hhindexh(hhindexh),nHouseholds(nHouseholds),base(base),householdsize(householdsize),omegat(omegat),SS(SS),nextrand(nextrand) {
+  }
+  // take the square root of the range of elements requested
+  void operator()(std::size_t begin, std::size_t end) {
+    ::sampleIndivMemberIndex(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand + begin * householdsize, begin, end);
+  }
+};
+
+void sampleIndivMemberIndex(int* data,int* hhindexh, int nHouseholds, int base, int householdsize,
+                            double* omegat, int SS, double* nextrand) {
+  //Rcout << "parallel mode" << std::endl;
+  IndivMemberIndexSampler worker(data, hhindexh, nHouseholds, base, householdsize,omegat, SS, nextrand);
+  parallelFor(0, nHouseholds, worker);
+
+}
+
 struct HeadAtGroupLevelHHSampler : public Worker
 {
   // source matrix
