@@ -5,7 +5,6 @@ using namespace Rcpp;
 #include "samplehouseholds.h"
 #include <cstdio>
 
-
 void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,
                                                 double** lambda, int* lambda_columns,
                                                 double* omegat, double* phi,
@@ -42,13 +41,13 @@ void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,
   //do random samples for the same probs at the same time
   int** columns = new int*[householdsize];
   int base = (householdsize * DIM + 1);
-  for (int i = 0; i < householdsize; i++) {
-    columns[i] = data + (base + i) * nHouseholds; //zero-based column
-  }
   for (int j = 0; j < householdsize; j++) {
-    for (int i = 0; i < nHouseholds; i++) {
-      int group = hhindexh[i]-1;
-      double* currentp = omegat + group * SS;
+    columns[j] = data + (base + j) * nHouseholds; //zero-based column
+  }
+  for (int i = 0; i < nHouseholds; i++) {
+    int group = hhindexh[i]-1;
+    double* currentp = omegat + group * SS;
+    for (int j = 0; j < householdsize; j++) {
       double rn = *nextrand++;
       int k;
       for(k=0;k < SS && rn>currentp[k];k++) //see sampleW for algorithm
