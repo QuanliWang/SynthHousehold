@@ -45,10 +45,6 @@ sampleG <- function(phi, data, omega, pi, ni, HHdata, lambda) {
     .Call('_NestedCategBayesImpute_sampleG', PACKAGE = 'NestedCategBayesImpute', phi, data, omega, pi, ni, HHdata, lambda)
 }
 
-samplehouseholds <- function(phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize) {
-    .Call('_NestedCategBayesImpute_samplehouseholds', PACKAGE = 'NestedCategBayesImpute', phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize)
-}
-
 sampleHH_HHhead_at_group_level <- function(phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize) {
     .Call('_NestedCategBayesImpute_sampleHH_HHhead_at_group_level', PACKAGE = 'NestedCategBayesImpute', phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize)
 }
@@ -59,6 +55,10 @@ samplehouseholds_HHhead_at_group_level <- function(phi, omega, pi, d, lambda, cu
 
 households2individuals <- function(data, hh_size) {
     .Call('_NestedCategBayesImpute_households2individuals', PACKAGE = 'NestedCategBayesImpute', data, hh_size)
+}
+
+samplehouseholds <- function(phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize) {
+    .Call('_NestedCategBayesImpute_samplehouseholds', PACKAGE = 'NestedCategBayesImpute', phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize)
 }
 
 UpdateLambda <- function(HHdata_all, G_all, dHH, FF) {
