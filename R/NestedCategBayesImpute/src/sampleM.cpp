@@ -52,6 +52,7 @@ struct MSamlpler : public Worker
   int maxDDtp;
   int maxdd;
 
+
   // initialize with source and destination
   MSamlpler(const NumericMatrix phi, const IntegerMatrix data, const NumericMatrix omega, const IntegerVector G,
             const IntegerVector serial, NumericVector rand,  IntegerVector indi)
@@ -86,10 +87,9 @@ IntegerVector sampleM(NumericMatrix phi, IntegerMatrix data,
     int SS = omega.ncol();
     int maxDDtp = phi.nrow();
     int maxdd = maxDDtp / p;
-    NumericVector rand = runif(nIndividuals);
-    IntegerVector indi(nIndividuals);
     sampleM_imp(data.begin(), indi.begin(),  phi.begin(), omega.begin(), FF, SS,
                 G.begin(), serial.begin(), p, maxdd, rand.begin(), 0, nIndividuals);
+
   }
   return indi;
 }
