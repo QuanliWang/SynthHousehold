@@ -8,8 +8,143 @@ using namespace RcppParallel;
 
 #include "samplehouseholds.h"
 #include "utils.h"
+#include "sampleW.h"
 
-struct IndivMemberIndexSampler : public Worker {
+struct IndivDataSampler : public Worker {
+  //Input
+  int* data;
+  int* hhindexh;
+  double* nextrand;
+  int nHouseholds;
+  double** ps;
+  int* d;
+  int p;
+  int SS;
+  int householdsize;
+  int DIM;
+  int currrentbatchbase;
+
+  IndivDataSampler(int* data, int* hhindexh, double* nextrand, int nHouseholds,
+                   double** ps, int* d, int p, int SS,int householdsize, int DIM,int currrentbatchbase)
+    :data(data), hhindexh(hhindexh), nextrand(nextrand), nHouseholds(nHouseholds),
+     ps(ps), d(d), p(p), SS(SS), householdsize(householdsize), DIM(DIM), currrentbatchbase(currrentbatchbase) {
+  }
+  void operator()(std::size_t begin, std::size_t end) { //almost idential to the serical version, consider rewrite the version
+    ::sampleIndivData(data, hhindexh, nextrand, nHouseholds, ps, d, p, SS, householdsize, DIM, currrentbatchbase, begin, end);
+  }
+  ~IndivDataSampler() {
+  }
+};
+
+void sampleIndivDataParallel(int* data, int* hhindexh, double* nextrand, int nHouseholds,
+                             double** ps, int* d, int p, int SS,int householdsize, int DIM,int currrentbatchbase) {
+  IndivDataSampler worker(data, hhindexh, nextrand, nHouseholds, ps, d, p, SS, householdsize, DIM, currrentbatchbase);
+  parallelFor(0, nHouseholds, worker);
+}
+
+struct HHDataSampler : public Worker {
+  //Input
+  int* data;
+  int* hhindexh;
+  double* nextrand;
+  int nHouseholds;
+  int DIM;
+  double* lambda;
+  int n_lambda;
+  int FF;
+  int householdsize;
+  int p;
+  int g;
+
+  //Working
+  int** columns = NULL;
+  double* lambda_t  = NULL;
+
+  HHDataSampler(int* data, int* hhindexh, double* nextrand, int nHouseholds, int DIM,  double* lambda, int n_lambda,
+                int FF, int householdsize,  int p, int g)
+    :data(data), hhindexh(hhindexh), nextrand(nextrand), nHouseholds(nHouseholds), DIM(DIM), lambda(lambda), n_lambda(n_lambda),
+     FF(FF), householdsize(householdsize), p(p), g(g) {
+    columns = new int*[householdsize];
+    for (int j = 0; j < householdsize; j++) {
+      columns[j] = data + (j * DIM + 2 + p + g) * nHouseholds; //zero-based column
+    }
+    //prepare lambdas for for group sampling, first need to transpose lambda
+    //the code  here duplicate the lines above for omega
+    lambda_t = new double[FF * n_lambda];
+    ::transposeAndNormalize(lambda, FF, n_lambda,  lambda_t);
+  }
+  ~HHDataSampler() {
+    if (lambda_t != NULL) {
+      delete [] lambda_t;
+      delete [] columns;
+    }
+  }
+  void operator()(std::size_t begin, std::size_t end) {
+    for (int i = begin; i < end; i++) {
+      int group = hhindexh[i]-1;
+      double* currentp = lambda_t + group * n_lambda;
+      columns[0][i] = std::distance(currentp, std::lower_bound(currentp, currentp+n_lambda,nextrand[i])) + 1;
+      if (columns[0][i] > n_lambda) {columns[0][i] = n_lambda;}
+    }
+    for (int j = 1; j < householdsize; j++) {
+      std::copy(columns[0]+begin, columns[0] + end, columns[j]+begin);
+    }
+  }
+};
+
+void sampleHHDataParallel(int* data, int* hhindexh, double* nextrand, int nHouseholds, int DIM,  double* lambda, int n_lambda,
+                          int FF, int householdsize,  int p, int g) {
+  HHDataSampler worker(data, hhindexh, nextrand,nHouseholds, DIM,  lambda, n_lambda, FF, householdsize, p, g);
+  parallelFor(0, nHouseholds, worker);
+
+}
+
+
+struct HHIndexSampler : public Worker {
+  double** lambda;
+  int n_lambdas;
+  int householdsize;
+  double* pi;
+  int FF;
+  double* nextrand;
+  int* hhindexh;
+  int nHouseholds;
+
+  double* pi_lambda_last = NULL;
+  HHIndexSampler(double** lambda, int n_lambdas, int householdsize, double* pi, int FF,
+                 double* nextrand, int* hhindexh, int nHouseholds)
+    :lambda(lambda),n_lambdas(n_lambdas),householdsize(householdsize),pi(pi),FF(FF),
+     nextrand(nextrand),hhindexh(hhindexh),nHouseholds(nHouseholds) {
+    double* currentlambdacolumn = lambda[n_lambdas-1] + (householdsize - 1) * FF; //column hh_size-1, addjusted to zero based
+    pi_lambda_last = new double[FF];
+    //note that now household size start from 1, instead of 2
+    for (int i = 0; i < FF; i++) {
+      pi_lambda_last[i] = pi[i] * currentlambdacolumn[i];
+    }
+    //cumsum and normalize
+    cumnorm_inplace(pi_lambda_last, FF);
+  }
+  void operator()(std::size_t begin, std::size_t end) {
+    for (int i = begin; i < end; i++) {
+      hhindexh[i] = std::distance(pi_lambda_last, std::lower_bound(pi_lambda_last, pi_lambda_last+FF,nextrand[i])) + 1;
+      if(hhindexh[i]> FF) {hhindexh[i] = FF;}
+    }
+  }
+  ~HHIndexSampler() {
+    if (pi_lambda_last != NULL) {
+      delete [] pi_lambda_last;
+    }
+  }
+};
+
+void sampleHHindexParallel(double** lambda, int n_lambdas, int householdsize, double* pi,
+                           int FF, double* nextrand, int* hhindexh, int nHouseholds) {
+  HHIndexSampler worker(lambda, n_lambdas, householdsize, pi, FF, nextrand, hhindexh, nHouseholds);
+  parallelFor(0, nHouseholds, worker);
+
+}
+
+struct IndivIndexSampler : public Worker {
   int* data;
   int* hhindexh;
   int nHouseholds;
@@ -18,20 +153,20 @@ struct IndivMemberIndexSampler : public Worker {
   double* omegat;
   int SS;
   double* nextrand;
-  IndivMemberIndexSampler(int* data,int* hhindexh, int nHouseholds, int base, int householdsize,
+  IndivIndexSampler(int* data,int* hhindexh, int nHouseholds, int base, int householdsize,
                           double* omegat, int SS, double* nextrand)
     :data(data), hhindexh(hhindexh),nHouseholds(nHouseholds),base(base),householdsize(householdsize),omegat(omegat),SS(SS),nextrand(nextrand) {
   }
   // take the square root of the range of elements requested
   void operator()(std::size_t begin, std::size_t end) {
-    ::sampleIndivMemberIndex(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand + begin * householdsize, begin, end);
+    ::sampleIndivIndex(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand + begin * householdsize, begin, end);
   }
 };
 
-void sampleIndivMemberIndex(int* data,int* hhindexh, int nHouseholds, int base, int householdsize,
+void sampleIndivIndexParallel(int* data,int* hhindexh, int nHouseholds, int base, int householdsize,
                             double* omegat, int SS, double* nextrand) {
   //Rcout << "parallel mode" << std::endl;
-  IndivMemberIndexSampler worker(data, hhindexh, nHouseholds, base, householdsize,omegat, SS, nextrand);
+  IndivIndexSampler worker(data, hhindexh, nHouseholds, base, householdsize,omegat, SS, nextrand);
   parallelFor(0, nHouseholds, worker);
 
 }

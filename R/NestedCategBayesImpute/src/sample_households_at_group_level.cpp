@@ -19,7 +19,7 @@ void sampleHHindex(double** lambda, int n_lambdas, int householdsize, double* pi
 }
 
 //output: householdsize of data columns, starting at column base (0-based)
-void sampleIndivMemberIndex(int* data,int* hhindexh, int nHouseholds, int base, int householdsize,
+void sampleIndivIndex(int* data,int* hhindexh, int nHouseholds, int base, int householdsize,
                             double* omegat, int SS, double* nextrand, std::size_t begin, std::size_t end) {
   int** columns = new int*[householdsize];
   double* currentrand = nextrand;
@@ -33,11 +33,12 @@ void sampleIndivMemberIndex(int* data,int* hhindexh, int nHouseholds, int base, 
     for (int j = 0; j < householdsize; j++) {
       double rn = *currentrand++;
       columns[j][i] = std::distance(currentp, std::lower_bound(currentp, currentp+SS,rn)) + 1;
+      if (columns[j][i] >SS) {columns[j][i] = SS;}
     }
   }
 }
 
-void sampleHH_level_data(int* data, int* hhindexh, double* nextrand, int nHouseholds, int DIM,  double* lambda, int n_lambda,
+void sampleHHData(int* data, int* hhindexh, double* nextrand, int nHouseholds, int DIM,  double* lambda, int n_lambda,
                          int FF, int householdsize,  int p, int g) {
   double* currentrand = nextrand;
   int** columns = new int*[householdsize];
@@ -54,6 +55,7 @@ void sampleHH_level_data(int* data, int* hhindexh, double* nextrand, int nHouseh
     double* currentp = lambda_t + group * n_lambda;
     double rn = *currentrand++;
     columns[0][i] = std::distance(currentp, std::lower_bound(currentp, currentp+n_lambda,rn)) + 1;
+    if (columns[0][i] > n_lambda) {columns[0][i] = n_lambda;}
   }
   for (int j = 1; j < householdsize; j++) {
     std::copy(columns[0], columns[0] + nHouseholds, columns[j]);
@@ -85,12 +87,13 @@ void preparePhis(double** ps, double* phi, int* d, int maxdd, int p, int FF, int
     }
   }
 }
-void sampleIndiv_level_data(int* data, int* hhindexh, double* nextrand, int nHouseholds,
+
+void sampleIndivData(int* data, int* hhindexh, double* nextrand, int nHouseholds,
                             double** ps, int* d, int p, int SS,int householdsize, int DIM,
-                            int currrentbatchbase) {
-  double* currentrand = nextrand;
+                            int currrentbatchbase, int begin, int end) {
+  double* currentrand = nextrand + householdsize* p * begin;
   int** datacolumns = new int*[2+p]; // 2+p variables to genetate data
-  int* groupindex = new int[nHouseholds];
+  int* groupindex = new int[end - begin];
   //now generate individual data (column 2 through 2+p-1, zero-based )
   for (int hh =0; hh < householdsize; hh++) {
     //set columns
@@ -98,31 +101,37 @@ void sampleIndiv_level_data(int* data, int* hhindexh, double* nextrand, int nHou
       datacolumns[i] = data + (hh * DIM + i) * nHouseholds; //zero-based column
     }
     int houseIndex = currrentbatchbase + 1; //one based houseIndex
-    for (int j = 0; j < nHouseholds; j++) {
+    for (int j = begin; j < end; j++) {
       datacolumns[0][j] = houseIndex + j;
     }
-    std::fill(datacolumns[1], datacolumns[1] + nHouseholds, hh + 1);
+    std::fill(datacolumns[1] + begin, datacolumns[1] + end, hh + 1);
 
     //set groupindex
     int* hh_column = data + ((householdsize * DIM + 1) + hh) * nHouseholds;
-    for (int i = 0; i < nHouseholds; i++) {
-      groupindex[i] = (hhindexh[i]-1)*SS + hh_column[i];
+    for (int i = begin; i < end; i++) {
+      groupindex[i-begin] = (hhindexh[i]-1)*SS + hh_column[i];
     }
 
     for (int i = 0; i < p; i++) {
       int n = d[i];
-      for (int j = 0; j < nHouseholds; j++) {
-        int group = int(groupindex[j])-1;
+      for (int j = begin; j < end; j++) {
+        int group = int(groupindex[j-begin])-1;
         double* cum_curentphi_j = ps[i] + group * n;
         double rn = *currentrand++;
         //start at column 2, zero-based
         datacolumns[i+2][j] =  std::distance(cum_curentphi_j, std::lower_bound(cum_curentphi_j, cum_curentphi_j+n,rn)) + 1;
+        if (datacolumns[i+2][j] > n) {datacolumns[i+2][j] = n;}
       }
     }
-
   }
   delete [] datacolumns;
   delete [] groupindex;
+}
+
+void sampleIndivData(int* data, int* hhindexh, double* nextrand, int nHouseholds,
+                     double** ps, int* d, int p, int SS,int householdsize, int DIM,
+                     int currrentbatchbase) {
+  sampleIndivData(data, hhindexh, nextrand, nHouseholds, ps, d, p, SS, householdsize, DIM, currrentbatchbase, 0, nHouseholds);
 }
 
 void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,
@@ -140,27 +149,31 @@ void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,
   //sampling hhindexh, column: householdsize * DIM + 1 (one-based)
   int column = (householdsize * DIM + 1) - 1; //zero-based column
   int* hhindexh = data + column * nHouseholds;
+
+  //sampleHHindexParallel(lambda, n_lambdas, householdsize, pi, FF, nextrand, hhindexh, nHouseholds);
   sampleHHindex(lambda, n_lambdas, householdsize, pi, FF, nextrand, hhindexh, nHouseholds);
   nextrand += nHouseholds; //advance nHouseholds random numbers
 
   //now sampling from each group for each individual memberindexhh
   //do random samples for the same probs at the same time
   int base = (householdsize * DIM + 1);
-  //sampleIndivMemberIndex(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand); //parallel version
-  sampleIndivMemberIndex(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand,0,nHouseholds); //serical version
+  //sampleIndivIndexParallel(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand); //parallel version
+  sampleIndivIndex(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand,0,nHouseholds); //serical version
   nextrand += householdsize * nHouseholds;
 
   //generate household level data
   for (int g = 0; g < n_lambdas-1; g++) {
-    sampleHH_level_data(data, hhindexh, nextrand, nHouseholds, DIM, lambda[g], lambda_columns[g], FF, householdsize, p, g);
+    //sampleHHDataParallel(data, hhindexh, nextrand, nHouseholds, DIM, lambda[g], lambda_columns[g], FF, householdsize, p, g);
+    sampleHHData(data, hhindexh, nextrand, nHouseholds, DIM, lambda[g], lambda_columns[g], FF, householdsize, p, g);
     nextrand += nHouseholds;
   }
 
   //extract p values for each individual variable
   double** ps = new double*[p];
   preparePhis(ps, phi, d, maxdd, p, FF, SS);
-  sampleIndiv_level_data(data, hhindexh, nextrand, nHouseholds, ps, d, p, SS, householdsize, DIM, currrentbatchbase);
-  nextrand += p * nHouseholds; //for record keeping only
+  //sampleIndivDataParallel(data, hhindexh, nextrand, nHouseholds, ps, d, p, SS, householdsize, DIM, currrentbatchbase);
+  sampleIndivData(data, hhindexh, nextrand, nHouseholds, ps, d, p, SS, householdsize, DIM, currrentbatchbase);
+  nextrand += householdsize* p * nHouseholds; //for record keeping only
 
   //clearn up the memory
   for (int i = 0; i < p; i++) {
