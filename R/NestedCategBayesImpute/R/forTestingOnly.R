@@ -1,5 +1,5 @@
 GenerateDataR <- function(hh_size,lambda, omega, phi,pi, d, batches_done,
-                         valid_hh_needed,blocksize,synindex,HHhead_at_group_level) {
+                         valid_hh_needed,blocksize,synindex,HHhead_at_group_level, Parallel) {
   Individuals_extra <- list()
   G_extra <- list()
   HHData_extra <- list()
@@ -9,17 +9,21 @@ GenerateDataR <- function(hh_size,lambda, omega, phi,pi, d, batches_done,
   synIndividuals <- list()
 
   while (valid_hh_found< valid_hh_needed) {
+
+    parallel = 0
+    if (Parallel) {parallel = 1;}
+
     batch.index <- batch.index + 1
     #generate a batch of 10K household
     if (HHhead_at_group_level) {
       data_to_check <- samplehouseholds(phi,omega, pi, d, lambda,
-                                                             batch.index+batches_done, blocksize,hh_size, 1)
+                                                             batch.index+batches_done, blocksize,hh_size, 1, parallel)
       data_to_check1 <- sampleHH(phi,omega, pi, d, lambda,
                                                        batch.index+batches_done, blocksize,hh_size,1)
 
       checked_households <- checkconstraints_HHhead_at_group_level(data_to_check,valid_hh_needed-valid_hh_found, hh_size)
     } else {
-      data_to_check <- samplehouseholds(phi,omega, pi, d, lambda,batch.index+batches_done, blocksize,hh_size, 0)
+      data_to_check <- samplehouseholds(phi,omega, pi, d, lambda,batch.index+batches_done, blocksize,hh_size, 0, parallel)
       checked_households <- checkconstraints(data_to_check,valid_hh_needed-valid_hh_found, hh_size)
     }
     if (length(checked_households$Households) > 0) {

@@ -33,7 +33,7 @@ IntegerMatrix households2individuals(IntegerMatrix data, int hh_size){
 // [[Rcpp::export]]
 IntegerMatrix samplehouseholds(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
                                IntegerVector d, List lambda,
-                               int currrentbatch, int nHouseholds,  int householdsize, int HeadAtGroupLevel) {
+                               int currrentbatch, int nHouseholds,  int householdsize, int HeadAtGroupLevel, int Parallel) {
 
   int FF = omega.nrow();
   int SS = omega.ncol();
@@ -67,7 +67,7 @@ IntegerMatrix samplehouseholds(NumericMatrix phi, NumericMatrix omega, NumericVe
   NumericVector rand = runif(nHouseholds * ncol); //at most this many
   sampleHouseholds_imp(data.begin(), rand.begin(), lambdas, lambda_columns, omega.begin(),
                        phi.begin(), pi.begin(),d.begin(),
-                       nHouseholds, householdsize, FF, SS,maxdd,p, currrentbatch,n_lambdas, HeadAtGroupLevel);
+                       nHouseholds, householdsize, FF, SS,maxdd,p, currrentbatch,n_lambdas, HeadAtGroupLevel, Parallel);
 
 
   //clean up

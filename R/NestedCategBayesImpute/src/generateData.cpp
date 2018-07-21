@@ -34,7 +34,7 @@ IntegerMatrix Concatenate(List data, int index) {
 // [[Rcpp::export]]
 List GenerateData(int hh_size,List lambda, NumericMatrix omega, NumericMatrix phi,
                   NumericVector pi, IntegerVector d, int batches_done,
-                         int valid_hh_needed, int blocksize, int synindex, bool HHhead_at_group_level) {
+                         int valid_hh_needed, int blocksize, int synindex, bool HHhead_at_group_level, int Parallel) {
   List Individuals_extra;
   List G_extra;
   List HHData_extra;
@@ -48,10 +48,10 @@ List GenerateData(int hh_size,List lambda, NumericMatrix omega, NumericMatrix ph
     //generate a batch of 10K household
     List checked_households;
     if (HHhead_at_group_level) {
-      IntegerMatrix data_to_check = samplehouseholds(phi,omega, pi, d, lambda, batch_index+batches_done, blocksize,hh_size, 1);
+      IntegerMatrix data_to_check = samplehouseholds(phi,omega, pi, d, lambda, batch_index+batches_done, blocksize,hh_size, 1, Parallel);
       checked_households = checkconstraints_HHhead_at_group_level(data_to_check,valid_hh_needed-valid_hh_found, hh_size);
     } else {
-      IntegerMatrix data_to_check = samplehouseholds(phi,omega, pi, d, lambda,batch_index+batches_done, blocksize,hh_size, 0);
+      IntegerMatrix data_to_check = samplehouseholds(phi,omega, pi, d, lambda,batch_index+batches_done, blocksize,hh_size, 0, Parallel);
       checked_households = checkconstraints(data_to_check,valid_hh_needed-valid_hh_found, hh_size);
     }
 
@@ -86,7 +86,7 @@ List GenerateData(int hh_size,List lambda, NumericMatrix omega, NumericMatrix ph
 // [[Rcpp::export]]
 List GetImpossibleHouseholds(IntegerVector d,IntegerVector n_star_h, List lambda,
                              NumericMatrix omega, NumericMatrix phi, NumericVector pi,
-                             int blocksize,  int n, int synindex, bool HHhead_at_group_level) {
+                             int blocksize,  int n, int synindex, bool HHhead_at_group_level, bool Parallel) {
   int cumsize = 0;
   NumericMatrix hh_size_new(n_star_h.length(),1);
   List hh_index;
@@ -106,8 +106,9 @@ List GetImpossibleHouseholds(IntegerVector d,IntegerVector n_star_h, List lambda
     List batch = NULL;
     while (true) { // in rare locations no valid imposible household it found, rerun it
       try {
+        int parallel = Parallel ? 1: 0;
         batch = GenerateData(hh_size_real,lambda, omega, phi,pi, d, batches_done,
-                          n_star_h[hh_size - 1],blocksize,synindex,HHhead_at_group_level);
+                          n_star_h[hh_size - 1],blocksize,synindex,HHhead_at_group_level, parallel);
         IntegerMatrix G_test = batch["G_extra"];
         if (G_test != R_NilValue) {
           break;

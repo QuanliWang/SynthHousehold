@@ -60,7 +60,7 @@ output <- initOutput(orig,hyper,mc)
 
 ### Set number of synthetic data and the mcmc indexes for them
 mm <- 50
-synindex <- 50
+synindex <- NULL
 MissData$miss_index <- sort(sample(seq((mc$burn +1),mc$nrun,by=mc$thin),mm,replace=F))
 #round(seq((mc$burn +1),mc$burn$nrun,length.out=mm))
 
@@ -82,6 +82,12 @@ total_time <- (proc.time() - proc_t)[["elapsed"]]
 
 #summaryRprof()
 
+profvis({
+  ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
+                           ExampleData$individual_variable_index,
+                           ExampleData$household_variable_index,
+                           options$HHhead_at_group_level,options$weight_option,struc_weight,MissData,Parallel = TRUE)
+})
 
 
 ### View first few lines of the first synthetic data.

@@ -1,6 +1,6 @@
 
 RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_index,household_variable_index,
-                     HHhead_at_group_level,weight_option,struc_weight,MissData = NULL){
+                     HHhead_at_group_level,weight_option,struc_weight,MissData = NULL, Parallel = FALSE){
   synData <- list()
   impData <- list()
 
@@ -21,12 +21,12 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
 
     if(weight_option){
       data.extra <- GetImpossibleHouseholds(orig$d,ceiling(orig$n_star_h*struc_weight[-1]), para$lambda,para$omega,para$phi,
-                                            para$pi,hyper$blocksize,orig$n,is.element(i,synindex),HHhead_at_group_level)
+                                            para$pi,hyper$blocksize,orig$n,is.element(i,synindex),HHhead_at_group_level, Parallel)
       para$hh_size_new <- as.vector(data.extra$hh_size_new)
       DIM <- dim(data.extra$IndividualData_extra)[1]
       if (is.element(i,synindex)) {
         forsynData <- GetImpossibleHouseholds(orig$d,orig$n_star_h, para$lambda,para$omega,para$phi,
-                                              para$pi,hyper$blocksize,orig$n,is.element(i,synindex),HHhead_at_group_level) #synthetic data
+                                              para$pi,hyper$blocksize,orig$n,is.element(i,synindex),HHhead_at_group_level, Parallel) #synthetic data
         synData[[which(synindex ==i)]] <- t(forsynData$synIndividuals_all[1:DIM,])
         colnames(synData[[which(synindex ==i)]]) <- colnames(orig$origdata)[-ncol(orig$origdata)]
       }
@@ -74,7 +74,7 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
 
     } else {
       data.extra <- GetImpossibleHouseholds(orig$d,orig$n_star_h,para$lambda,para$omega,para$phi,
-                                            para$pi,hyper$blocksize,orig$n,is.element(i,synindex),HHhead_at_group_level)
+                                            para$pi,hyper$blocksize,orig$n,is.element(i,synindex),HHhead_at_group_level, Parallel)
       para$hh_size_new <- as.vector(data.extra$hh_size_new)
       DIM <- dim(data.extra$IndividualData_extra)[1]
       if (is.element(i,synindex)) {

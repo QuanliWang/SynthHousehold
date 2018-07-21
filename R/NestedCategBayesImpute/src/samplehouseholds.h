@@ -4,10 +4,10 @@ using namespace Rcpp;
 void sampleHHindex(double** lambda, int n_lambdas, int householdsize, double* pi, int FF, double* nextrand, int* hhindexh, int nHouseholds);
 void sampleHouseholds_imp(int* data, double* rand,  double** lambda, int* lambda_columns, double* omega, double* phi,
                       double *pi, int* d,int nHouseholds, int householdsize, int FF,int SS,
-                      int maxdd, int p, int currrentbatch, int n_lambdas, int HeadAtGroupLevel);
+                      int maxdd, int p, int currrentbatch, int n_lambdas, int HeadAtGroupLevel, int Parallel);
 IntegerMatrix samplehouseholds(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
                                                      IntegerVector d, List lambda,
-                                                     int currrentbatch, int nHouseholds,  int householdsize,int HeadAtGroupLevel);
+                                                     int currrentbatch, int nHouseholds,  int householdsize,int HeadAtGroupLevel, int Parallel);
 IntegerMatrix samplehouseholds(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
                                IntegerVector d, List lambda,
                                int currrentbatch, int nHouseholds,  int householdsize);

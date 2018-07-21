@@ -141,7 +141,7 @@ void sampleHouseholds_imp(int* data, double* rand,
                                                 double *pi, int* d,int nHouseholds,
                                                 int householdsize, int FF,int SS,
                                                 int maxdd, int p,
-                                                int currrentbatchbase,int n_lambdas, int HeadAtGroupLevel) {
+                                                int currrentbatchbase,int n_lambdas, int HeadAtGroupLevel, int Parallel) {
 
   //number of columns in the final output
   int DIM = 2 + p + n_lambdas - 1;  //total number of variables
@@ -151,29 +151,41 @@ void sampleHouseholds_imp(int* data, double* rand,
   int column = (householdsize * DIM + 1) - 1; //zero-based column
   int* hhindexh = data + column * nHouseholds;
 
-  //sampleHHindexParallel(lambda, n_lambdas, householdsize, pi, FF, nextrand, hhindexh, nHouseholds, HeadAtGroupLevel);
-  sampleHHindex(lambda, n_lambdas, householdsize, pi, FF, nextrand, hhindexh, nHouseholds, HeadAtGroupLevel);
+  if (Parallel) {
+    sampleHHindexParallel(lambda, n_lambdas, householdsize, pi, FF, nextrand, hhindexh, nHouseholds, HeadAtGroupLevel);
+  } else {
+    sampleHHindex(lambda, n_lambdas, householdsize, pi, FF, nextrand, hhindexh, nHouseholds, HeadAtGroupLevel);
+  }
   nextrand += nHouseholds; //advance nHouseholds random numbers
 
   //now sampling from each group for each individual memberindexhh
   //do random samples for the same probs at the same time
   int base = (householdsize * DIM + 1);
-  //sampleIndivIndexParallel(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand);
-  sampleIndivIndex(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand,0,nHouseholds);
+  if (Parallel) {
+    sampleIndivIndexParallel(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand);
+  } else {
+    sampleIndivIndex(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand,0,nHouseholds);
+  }
   nextrand += householdsize * nHouseholds;
 
   //generate household level data
   for (int g = 0; g < n_lambdas-1; g++) {
-    //sampleHHDataParallel(data, hhindexh, nextrand, nHouseholds, DIM, lambda[g], lambda_columns[g], FF, householdsize, p, g);
-    sampleHHData(data, hhindexh, nextrand, nHouseholds, DIM, lambda[g], lambda_columns[g], FF, householdsize, p, g);
+    if (Parallel) {
+      sampleHHDataParallel(data, hhindexh, nextrand, nHouseholds, DIM, lambda[g], lambda_columns[g], FF, householdsize, p, g);
+    } else {
+      sampleHHData(data, hhindexh, nextrand, nHouseholds, DIM, lambda[g], lambda_columns[g], FF, householdsize, p, g);
+    }
     nextrand += nHouseholds;
   }
 
   //extract p values for each individual variable
   double** ps = new double*[p];
   preparePhis(ps, phi, d, maxdd, p, FF, SS);
-  //sampleIndivDataParallel(data, hhindexh, nextrand, nHouseholds, ps, d, p, SS, householdsize, DIM, currrentbatchbase);
-  sampleIndivData(data, hhindexh, nextrand, nHouseholds, ps, d, p, SS, householdsize, DIM, currrentbatchbase);
+  if (Parallel) {
+    sampleIndivDataParallel(data, hhindexh, nextrand, nHouseholds, ps, d, p, SS, householdsize, DIM, currrentbatchbase);
+  } else {
+    sampleIndivData(data, hhindexh, nextrand, nHouseholds, ps, d, p, SS, householdsize, DIM, currrentbatchbase);
+  }
   nextrand += householdsize* p * nHouseholds; //for record keeping only
 
   //clearn up the memory

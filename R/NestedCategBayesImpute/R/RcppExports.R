@@ -17,12 +17,12 @@ checkconstraints_HHhead_at_group_level <- function(data, neededpossiblehh, hh_si
     .Call('_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level', PACKAGE = 'NestedCategBayesImpute', data, neededpossiblehh, hh_size)
 }
 
-GenerateData <- function(hh_size, lambda, omega, phi, pi, d, batches_done, valid_hh_needed, blocksize, synindex, HHhead_at_group_level) {
-    .Call('_NestedCategBayesImpute_GenerateData', PACKAGE = 'NestedCategBayesImpute', hh_size, lambda, omega, phi, pi, d, batches_done, valid_hh_needed, blocksize, synindex, HHhead_at_group_level)
+GenerateData <- function(hh_size, lambda, omega, phi, pi, d, batches_done, valid_hh_needed, blocksize, synindex, HHhead_at_group_level, Parallel) {
+    .Call('_NestedCategBayesImpute_GenerateData', PACKAGE = 'NestedCategBayesImpute', hh_size, lambda, omega, phi, pi, d, batches_done, valid_hh_needed, blocksize, synindex, HHhead_at_group_level, Parallel)
 }
 
-GetImpossibleHouseholds <- function(d, n_star_h, lambda, omega, phi, pi, blocksize, n, synindex, HHhead_at_group_level) {
-    .Call('_NestedCategBayesImpute_GetImpossibleHouseholds', PACKAGE = 'NestedCategBayesImpute', d, n_star_h, lambda, omega, phi, pi, blocksize, n, synindex, HHhead_at_group_level)
+GetImpossibleHouseholds <- function(d, n_star_h, lambda, omega, phi, pi, blocksize, n, synindex, HHhead_at_group_level, Parallel) {
+    .Call('_NestedCategBayesImpute_GetImpossibleHouseholds', PACKAGE = 'NestedCategBayesImpute', d, n_star_h, lambda, omega, phi, pi, blocksize, n, synindex, HHhead_at_group_level, Parallel)
 }
 
 groupcount <- function(g1, g2, n1, n2) {
@@ -53,8 +53,8 @@ households2individuals <- function(data, hh_size) {
     .Call('_NestedCategBayesImpute_households2individuals', PACKAGE = 'NestedCategBayesImpute', data, hh_size)
 }
 
-samplehouseholds <- function(phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize, HeadAtGroupLevel) {
-    .Call('_NestedCategBayesImpute_samplehouseholds', PACKAGE = 'NestedCategBayesImpute', phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize, HeadAtGroupLevel)
+samplehouseholds <- function(phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize, HeadAtGroupLevel, Parallel) {
+    .Call('_NestedCategBayesImpute_samplehouseholds', PACKAGE = 'NestedCategBayesImpute', phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize, HeadAtGroupLevel, Parallel)
 }
 
 UpdateLambda <- function(HHdata_all, G_all, dHH, FF) {

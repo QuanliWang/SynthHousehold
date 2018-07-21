@@ -251,7 +251,7 @@ struct HeadAtGroupLevelHHSampler : public Worker
                                                  lambdas, lambda_columns, omegaT.begin(),
                                                  phi.begin(), pi.begin(),d.begin(),
                                                  nHouseholds, householdsize, FF, SS,maxdd,p,
-                                                 currrentbatchbase + begin,n_lambdas, HeadAtGroupLevel);
+                                                 currrentbatchbase + begin,n_lambdas, HeadAtGroupLevel, 1);
   }
 };
 
