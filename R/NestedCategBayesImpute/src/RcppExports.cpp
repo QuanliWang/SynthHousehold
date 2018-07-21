@@ -248,8 +248,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // sampleM
-NumericVector sampleM(NumericMatrix phi, IntegerMatrix data, NumericMatrix omega, IntegerVector G, IntegerVector serial);
-RcppExport SEXP _NestedCategBayesImpute_sampleM(SEXP phiSEXP, SEXP dataSEXP, SEXP omegaSEXP, SEXP GSEXP, SEXP serialSEXP) {
+IntegerVector sampleM(NumericMatrix phi, IntegerMatrix data, NumericMatrix omega, IntegerVector G, IntegerVector serial, int Parallel);
+RcppExport SEXP _NestedCategBayesImpute_sampleM(SEXP phiSEXP, SEXP dataSEXP, SEXP omegaSEXP, SEXP GSEXP, SEXP serialSEXP, SEXP ParallelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -258,7 +258,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericMatrix >::type omega(omegaSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type G(GSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type serial(serialSEXP);
-    rcpp_result_gen = Rcpp::wrap(sampleM(phi, data, omega, G, serial));
+    Rcpp::traits::input_parameter< int >::type Parallel(ParallelSEXP);
+    rcpp_result_gen = Rcpp::wrap(sampleM(phi, data, omega, G, serial, Parallel));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -517,7 +518,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_samplehouseholds", (DL_FUNC) &_NestedCategBayesImpute_samplehouseholds, 10},
     {"_NestedCategBayesImpute_UpdateLambda", (DL_FUNC) &_NestedCategBayesImpute_UpdateLambda, 4},
     {"_NestedCategBayesImpute_UpdateLambdaWeighted", (DL_FUNC) &_NestedCategBayesImpute_UpdateLambdaWeighted, 5},
-    {"_NestedCategBayesImpute_sampleM", (DL_FUNC) &_NestedCategBayesImpute_sampleM, 5},
+    {"_NestedCategBayesImpute_sampleM", (DL_FUNC) &_NestedCategBayesImpute_sampleM, 6},
     {"_NestedCategBayesImpute_SampleMatrixByColumnC", (DL_FUNC) &_NestedCategBayesImpute_SampleMatrixByColumnC, 3},
     {"_NestedCategBayesImpute_SampleMatrixByRowC", (DL_FUNC) &_NestedCategBayesImpute_SampleMatrixByRowC, 2},
     {"_NestedCategBayesImpute_CheckSZ_batch", (DL_FUNC) &_NestedCategBayesImpute_CheckSZ_batch, 2},

@@ -12,12 +12,16 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
     M_all_weighted <- vector("list",length(struc_weight))
   }
 
+  parallel <- 0
+  if (Parallel) {
+    parallel <- 1
+  }
   for (i in 1:mc$nrun) {
     cat(paste("iteration ", i,"\n", sep = ""))
     t <- proc.time()
 
     G_household <- sampleG(para$phi,orig$IndivDataInCol,para$omega,para$pi,orig$n_i,t(para$HHdata_all[,1:orig$n]),para$lambda)
-    M <- sampleM(para$phi,orig$IndivDataInCol,para$omega,G_household$G,orig$HHserial)
+    M <- sampleM(para$phi,orig$IndivDataInCol,para$omega,G_household$G,orig$HHserial, parallel)
 
     if(weight_option){
       data.extra <- GetImpossibleHouseholds(orig$d,ceiling(orig$n_star_h*struc_weight[-1]), para$lambda,para$omega,para$phi,

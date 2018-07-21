@@ -65,8 +65,8 @@ UpdateLambdaWeighted <- function(HHdata_all, G_all, dHH, FF, struc_weight) {
     .Call('_NestedCategBayesImpute_UpdateLambdaWeighted', PACKAGE = 'NestedCategBayesImpute', HHdata_all, G_all, dHH, FF, struc_weight)
 }
 
-sampleM <- function(phi, data, omega, G, serial) {
-    .Call('_NestedCategBayesImpute_sampleM', PACKAGE = 'NestedCategBayesImpute', phi, data, omega, G, serial)
+sampleM <- function(phi, data, omega, G, serial, Parallel) {
+    .Call('_NestedCategBayesImpute_sampleM', PACKAGE = 'NestedCategBayesImpute', phi, data, omega, G, serial, Parallel)
 }
 
 SampleMatrixByColumnC <- function(data, r, dup) {
