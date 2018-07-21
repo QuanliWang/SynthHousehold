@@ -4,6 +4,7 @@ using namespace Rcpp;
 #include "sampleW.h"
 #include "samplehouseholds.h"
 #include <cstdio>
+#include <algorithm>
 #include "utils.h"
 
 void sampleHHindex(double** lambda, int n_lambdas, int householdsize, double* pi, int FF, double* nextrand, int* hhindexh, int nHouseholds) {
@@ -31,10 +32,7 @@ void sampleIndivMemberIndex(int* data,int* hhindexh, int nHouseholds, int base, 
 
     for (int j = 0; j < householdsize; j++) {
       double rn = *currentrand++;
-      int k;
-      for(k=0;k < SS && rn>currentp[k];k++) //see sampleW for algorithm, currentp allreay cumulitive
-        ;
-      columns[j][i] = k + 1;
+      columns[j][i] = std::distance(currentp, std::lower_bound(currentp, currentp+SS,rn)) + 1;
     }
   }
 }
@@ -55,10 +53,7 @@ void sampleHH_level_data(int* data, int* hhindexh, double* nextrand, int nHouseh
     int group = hhindexh[i]-1;
     double* currentp = lambda_t + group * n_lambda;
     double rn = *currentrand++;
-    int k;
-    for(k=0;k < n_lambda && rn>currentp[k];k++) //see sampleW for algorithm
-      ;
-    columns[0][i] = k + 1;
+    columns[0][i] = std::distance(currentp, std::lower_bound(currentp, currentp+n_lambda,rn)) + 1;
   }
   for (int j = 1; j < householdsize; j++) {
     std::copy(columns[0], columns[0] + nHouseholds, columns[j]);
@@ -120,10 +115,8 @@ void sampleIndiv_level_data(int* data, int* hhindexh, double* nextrand, int nHou
         int group = int(groupindex[j])-1;
         double* cum_curentphi_j = ps[i] + group * n;
         double rn = *currentrand++;
-        int k;
-        for(k=0;k < n && rn>cum_curentphi_j[k];k++) //see sampleW for algorithm
-          ;
-        datacolumns[i+2][j] = k+1; //start at column 2, zero-based
+        //start at column 2, zero-based
+        datacolumns[i+2][j] =  std::distance(cum_curentphi_j, std::lower_bound(cum_curentphi_j, cum_curentphi_j+n,rn)) + 1;
       }
     }
 
@@ -153,8 +146,8 @@ void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,
   //now sampling from each group for each individual memberindexhh
   //do random samples for the same probs at the same time
   int base = (householdsize * DIM + 1);
-  sampleIndivMemberIndex(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand); //parallel version
-  //sampleIndivMemberIndex(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand,0,nHouseholds); serical version
+  //sampleIndivMemberIndex(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand); //parallel version
+  sampleIndivMemberIndex(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand,0,nHouseholds); //serical version
   nextrand += householdsize * nHouseholds;
 
   //generate household level data

@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 #include "sampleW.h"
+#include <algorithm>
 
 
 //  sampleW.cpp
@@ -19,12 +20,8 @@ int samplew(double *p, int n, double d) {
     for (i = 1; i < n;i++) {
         myw[i] = p[i] / dsum + myw[i-1];
     }
-
-    for(k=0;k < n && d>myw[k];k++)
-        ;
     delete [] myw;
-    if (k == n) {k = n-1;}
-     return k+1;
+    return std::distance(myw, std::lower_bound(myw, myw+n,d)) + 1;
 }
 
 void samplew_multi(double *p, int n, double *d,int howmany) {
@@ -42,11 +39,7 @@ void samplew_multi(double *p, int n, double *d,int howmany) {
         myw[i] = p[i] / dsum + myw[i-1];
     }
     for (int h=0; h < howmany; h++) {
-        for(k=0;k < n && d[h]>myw[k];k++)
-            ;
-        if (k == n) {k = n-1;}
-        d[h] = k+1;
-
+        d[h] = std::distance(myw, std::lower_bound(myw, myw+n,d[h])) + 1;
     }
     delete [] myw;
 }
@@ -67,10 +60,7 @@ void samplew_multi2(double *p, int n, double *d, int* result,int howmany) {
         myw[i] = p[i] / dsum + myw[i-1];
     }
     for (int h=0; h < howmany; h++) {
-        for(k=0;k < n && d[h]>myw[k];k++)
-            ;
-        if (k == n) {k = n-1;}
-        result[h] = k+1;
+        result[h] = std::distance(myw, std::lower_bound(myw, myw+n,d[h])) + 1;
     }
     delete [] myw;
 }
