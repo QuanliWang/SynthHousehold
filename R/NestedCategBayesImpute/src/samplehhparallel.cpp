@@ -109,13 +109,15 @@ struct HHIndexSampler : public Worker {
   double* nextrand;
   int* hhindexh;
   int nHouseholds;
+  int HeadAtGroupLevel;
 
   double* pi_lambda_last = NULL;
   HHIndexSampler(double** lambda, int n_lambdas, int householdsize, double* pi, int FF,
-                 double* nextrand, int* hhindexh, int nHouseholds)
+                 double* nextrand, int* hhindexh, int nHouseholds,int HeadAtGroupLevel)
     :lambda(lambda),n_lambdas(n_lambdas),householdsize(householdsize),pi(pi),FF(FF),
-     nextrand(nextrand),hhindexh(hhindexh),nHouseholds(nHouseholds) {
-    double* currentlambdacolumn = lambda[n_lambdas-1] + (householdsize - 1) * FF; //column hh_size-1, addjusted to zero based
+     nextrand(nextrand),hhindexh(hhindexh),nHouseholds(nHouseholds), HeadAtGroupLevel(HeadAtGroupLevel) {
+    int addjusted = HeadAtGroupLevel==0 ? (householdsize - 1 -1) : (householdsize - 1);
+    double* currentlambdacolumn = lambda[n_lambdas-1] + addjusted * FF; //column hh_size-1, addjusted to zero based
     pi_lambda_last = new double[FF];
     //note that now household size start from 1, instead of 2
     for (int i = 0; i < FF; i++) {
@@ -138,8 +140,8 @@ struct HHIndexSampler : public Worker {
 };
 
 void sampleHHindexParallel(double** lambda, int n_lambdas, int householdsize, double* pi,
-                           int FF, double* nextrand, int* hhindexh, int nHouseholds) {
-  HHIndexSampler worker(lambda, n_lambdas, householdsize, pi, FF, nextrand, hhindexh, nHouseholds);
+                           int FF, double* nextrand, int* hhindexh, int nHouseholds,int HeadAtGroupLevel) {
+  HHIndexSampler worker(lambda, n_lambdas, householdsize, pi, FF, nextrand, hhindexh, nHouseholds, HeadAtGroupLevel);
   parallelFor(0, nHouseholds, worker);
 
 }
@@ -199,14 +201,16 @@ struct HeadAtGroupLevelHHSampler : public Worker
   // destination matrix
   RMatrix<int> data;
   NumericVector r; //at most this many
+  int HeadAtGroupLevel;
 
   // initialize with source and destination
   HeadAtGroupLevelHHSampler(NumericMatrix phi, NumericMatrix omega,
                             NumericVector pi,IntegerVector d,
                             List lambda,
                             int currrentbatchbase, int householdsize,
-                            IntegerMatrix data)
-    : phi(phi), omega(omega), pi(pi), d(d), lambda(lambda), currrentbatchbase(currrentbatchbase), householdsize(householdsize),data(data) {
+                            IntegerMatrix data, int HeadAtGroupLevel)
+    : phi(phi), omega(omega), pi(pi), d(d), lambda(lambda), currrentbatchbase(currrentbatchbase),
+      householdsize(householdsize),data(data),HeadAtGroupLevel(HeadAtGroupLevel) {
     FF = omega.nrow();
     SS = omega.ncol();
     p = d.length();
@@ -243,20 +247,21 @@ struct HeadAtGroupLevelHHSampler : public Worker
   // take the square root of the range of elements requested
   void operator()(std::size_t begin, std::size_t end) {
     int nHouseholds = end - begin;
-    ::sampleHouseholds_imp_HHhead_at_group_level(data.begin() + begin * ncol, r.begin() +  begin * ncol,
+    ::sampleHouseholds_imp(data.begin() + begin * ncol, r.begin() +  begin * ncol,
                                                  lambdas, lambda_columns, omegaT.begin(),
                                                  phi.begin(), pi.begin(),d.begin(),
-                                                 nHouseholds, householdsize, FF, SS,maxdd,p, currrentbatchbase + begin,n_lambdas);
+                                                 nHouseholds, householdsize, FF, SS,maxdd,p,
+                                                 currrentbatchbase + begin,n_lambdas, HeadAtGroupLevel);
   }
 };
 
 // [[Rcpp::export]]
-IntegerMatrix sampleHH_HHhead_at_group_level(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
+IntegerMatrix sampleHH(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
                                              IntegerVector d, List lambda,
-                                             int currrentbatch, int nHouseholds,  int householdsize) {
+                                             int currrentbatch, int nHouseholds,  int householdsize, int HeadAtGroupLevel) {
   int DIM = 2 + d.length() + lambda.length() - 1;
   IntegerMatrix data(nHouseholds, DIM * householdsize + householdsize  + 1);
-  HeadAtGroupLevelHHSampler worker(phi, omega, pi, d, lambda, currrentbatch*nHouseholds, householdsize, data);
+  HeadAtGroupLevelHHSampler worker(phi, omega, pi, d, lambda, currrentbatch*nHouseholds, householdsize, data, HeadAtGroupLevel);
   parallelFor(0, data.nrow(), worker);
   //worker.cleanup();
   return data;

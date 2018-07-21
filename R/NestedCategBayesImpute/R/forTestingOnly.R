@@ -12,14 +12,14 @@ GenerateDataR <- function(hh_size,lambda, omega, phi,pi, d, batches_done,
     batch.index <- batch.index + 1
     #generate a batch of 10K household
     if (HHhead_at_group_level) {
-      data_to_check <- samplehouseholds_HHhead_at_group_level(phi,omega, pi, d, lambda,
-                                                             batch.index+batches_done, blocksize,hh_size)
-      data_to_check1 <- sampleHH_HHhead_at_group_level(phi,omega, pi, d, lambda,
-                                                       batch.index+batches_done, blocksize,hh_size)
+      data_to_check <- samplehouseholds(phi,omega, pi, d, lambda,
+                                                             batch.index+batches_done, blocksize,hh_size, 1)
+      data_to_check1 <- sampleHH(phi,omega, pi, d, lambda,
+                                                       batch.index+batches_done, blocksize,hh_size,1)
 
       checked_households <- checkconstraints_HHhead_at_group_level(data_to_check,valid_hh_needed-valid_hh_found, hh_size)
     } else {
-      data_to_check <- samplehouseholds(phi,omega, pi, d, lambda,batch.index+batches_done, blocksize,hh_size)
+      data_to_check <- samplehouseholds(phi,omega, pi, d, lambda,batch.index+batches_done, blocksize,hh_size, 0)
       checked_households <- checkconstraints(data_to_check,valid_hh_needed-valid_hh_found, hh_size)
     }
     if (length(checked_households$Households) > 0) {

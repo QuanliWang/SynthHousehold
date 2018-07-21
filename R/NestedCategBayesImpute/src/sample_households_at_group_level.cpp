@@ -7,8 +7,9 @@ using namespace Rcpp;
 #include <algorithm>
 #include "utils.h"
 
-void sampleHHindex(double** lambda, int n_lambdas, int householdsize, double* pi, int FF, double* nextrand, int* hhindexh, int nHouseholds) {
-  double* currentlambdacolumn = lambda[n_lambdas-1] + (householdsize - 1) * FF; //column hh_size-1, addjusted to zero based
+void sampleHHindex(double** lambda, int n_lambdas, int householdsize, double* pi, int FF, double* nextrand, int* hhindexh, int nHouseholds, int HeadAtGroupLevel) {
+  int addjusted = HeadAtGroupLevel==0 ? (householdsize - 1 -1) : (householdsize - 1);
+  double* currentlambdacolumn = lambda[n_lambdas-1] + addjusted * FF; //column hh_size-1, addjusted to zero based
   double* pi_lambda_last = new double[FF];
   //note that now household size start from 1, instead of 2
   for (int i = 0; i < FF; i++) {
@@ -134,13 +135,13 @@ void sampleIndivData(int* data, int* hhindexh, double* nextrand, int nHouseholds
   sampleIndivData(data, hhindexh, nextrand, nHouseholds, ps, d, p, SS, householdsize, DIM, currrentbatchbase, 0, nHouseholds);
 }
 
-void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,
+void sampleHouseholds_imp(int* data, double* rand,
                                                 double** lambda, int* lambda_columns,
                                                 double* omegat, double* phi,
                                                 double *pi, int* d,int nHouseholds,
                                                 int householdsize, int FF,int SS,
                                                 int maxdd, int p,
-                                                int currrentbatchbase,int n_lambdas) {
+                                                int currrentbatchbase,int n_lambdas, int HeadAtGroupLevel) {
 
   //number of columns in the final output
   int DIM = 2 + p + n_lambdas - 1;  //total number of variables
@@ -150,15 +151,15 @@ void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,
   int column = (householdsize * DIM + 1) - 1; //zero-based column
   int* hhindexh = data + column * nHouseholds;
 
-  //sampleHHindexParallel(lambda, n_lambdas, householdsize, pi, FF, nextrand, hhindexh, nHouseholds);
-  sampleHHindex(lambda, n_lambdas, householdsize, pi, FF, nextrand, hhindexh, nHouseholds);
+  //sampleHHindexParallel(lambda, n_lambdas, householdsize, pi, FF, nextrand, hhindexh, nHouseholds, HeadAtGroupLevel);
+  sampleHHindex(lambda, n_lambdas, householdsize, pi, FF, nextrand, hhindexh, nHouseholds, HeadAtGroupLevel);
   nextrand += nHouseholds; //advance nHouseholds random numbers
 
   //now sampling from each group for each individual memberindexhh
   //do random samples for the same probs at the same time
   int base = (householdsize * DIM + 1);
-  //sampleIndivIndexParallel(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand); //parallel version
-  sampleIndivIndex(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand,0,nHouseholds); //serical version
+  //sampleIndivIndexParallel(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand);
+  sampleIndivIndex(data, hhindexh, nHouseholds, base, householdsize, omegat, SS, nextrand,0,nHouseholds);
   nextrand += householdsize * nHouseholds;
 
   //generate household level data

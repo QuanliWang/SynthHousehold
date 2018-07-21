@@ -4,13 +4,10 @@ using namespace Rcpp;
 void sampleHHindex(double** lambda, int n_lambdas, int householdsize, double* pi, int FF, double* nextrand, int* hhindexh, int nHouseholds);
 void sampleHouseholds_imp(int* data, double* rand,  double** lambda, int* lambda_columns, double* omega, double* phi,
                       double *pi, int* d,int nHouseholds, int householdsize, int FF,int SS,
-                      int maxdd, int p, int currrentbatch, int n_lambdas);
-void sampleHouseholds_imp_HHhead_at_group_level(int* data, double* rand,  double** lambda, int* lambda_columns, double* omega, double* phi,
-                          double *pi, int* d,int nHouseholds, int householdsize, int FF,int SS,
-                          int maxdd, int p, int currrentbatchbase, int n_lambdas);
-IntegerMatrix samplehouseholds_HHhead_at_group_level(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
+                      int maxdd, int p, int currrentbatch, int n_lambdas, int HeadAtGroupLevel);
+IntegerMatrix samplehouseholds(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
                                                      IntegerVector d, List lambda,
-                                                     int currrentbatch, int nHouseholds,  int householdsize);
+                                                     int currrentbatch, int nHouseholds,  int householdsize,int HeadAtGroupLevel);
 IntegerMatrix samplehouseholds(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
                                IntegerVector d, List lambda,
                                int currrentbatch, int nHouseholds,  int householdsize);
@@ -20,7 +17,7 @@ void sampleIndivIndex(int* data,int* hhindexh, int nHouseholds, int base, int ho
 void sampleIndivIndexParallel(int* data,int* hhindexh, int nHouseholds, int base, int householdsize,
                             double* omegat, int SS, double* nextrand);
 void sampleHHindexParallel(double** lambda, int n_lambdas, int householdsize, double* pi,
-                           int FF, double* nextrand, int* hhindexh, int nHouseholds);
+                           int FF, double* nextrand, int* hhindexh, int nHouseholds,int HeadAtGroupLevel) ;
 void sampleHHDataParallel(int* data, int* hhindexh, double* nextrand, int nHouseholds, int DIM,
                           double* lambda, int n_lambda, int FF, int householdsize,  int p, int g);
 void sampleIndivDataParallel(int* data, int* hhindexh, double* nextrand, int nHouseholds,
