@@ -50,16 +50,41 @@ struct HHheadConstraintChecker : public Worker {
   }
 };
 
+struct Sum : public Worker {
+  int* input;
+
+  // accumulated value
+  int value;
+
+  // constructors
+  Sum(int* input) : input(input), value(0) {}
+  Sum(const Sum& sum, Split) : input(sum.input),  value(0) {}
+
+  // accumulate just the element of the range I've been asked to
+  void operator()(std::size_t begin, std::size_t end) {
+    value += std::accumulate(input + begin, input + end, 0);
+  }
+
+  // join my value with that of another Sum
+  void join(const Sum& rhs) {
+    value += rhs.value;
+  }
+};
+
+
 int checkconstraints_imp_HHhead_at_group_level(int *data, int *isPossible,int hh_size, int DIM, int nHouseholds, int parallel) {
+  int totalpossible = 0;
+
   if (parallel != 0) {
     HHheadConstraintChecker cc(data, hh_size, DIM, nHouseholds, isPossible);
     parallelFor(0, nHouseholds, cc,GRAINSIZE);
+
+    Sum sum(isPossible);
+    parallelReduce(0, nHouseholds, sum, GRAINSIZE);
+    totalpossible = sum.value;
   } else {
     checkconstraints_imp_HHhead_at_group_level(data, isPossible, hh_size, DIM, nHouseholds, 0, nHouseholds);
-  }
-  int totalpossible = 0; //parallelReduce later?
-  for (int m = 0; m < nHouseholds; m++){
-    totalpossible+= isPossible[m];
+    totalpossible = std::accumulate(isPossible, isPossible + nHouseholds, 0);
   }
   return totalpossible;
 }
