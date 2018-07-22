@@ -275,35 +275,6 @@ int checkconstraints_imp(int *data, int *isPossible,int hh_size, int DIM, int nH
     return totalpossible;
 }
 
-int checkconstraints_imp_HHhead_at_group_level(int *data, int *isPossible,int hh_size, int DIM, int nHouseholds) {
-  int realsize = hh_size + 1;
-  int totalpossible = 0;
-  int *datah = new int[realsize * COL + 1];
-  //column 2, 5, 6 = sex, age and relte //zero-based here
-  int column[COL]; column[0] = 0; column[1] = 3; column[2] = 4;
-
-  for (int m = 1; m <= nHouseholds; m++){
-    //for each household member
-    for (int j = 1; j < realsize; j++) {
-      for (int k = 0; k < COL; k++) { //0 sex, sex,sex,...age,age,age,...relte,relte,relate...
-        datah[k * realsize + j] = data[((j-1) * DIM + column[k]+2) * nHouseholds + (m-1)];
-        if (k+1 == COL) { //relate column
-          datah[k * realsize + j] = datah[k * realsize + j] + 1; //addjust by adding 1
-        }
-      }
-    }
-    datah[realsize] = data[(column[0]+8) * nHouseholds + (m-1)];
-    datah[2 * realsize] = data[(column[1]+8) * nHouseholds + (m-1)];
-    datah[3 * realsize] = 1;
-
-    isPossible[m-1] = isValid(datah, realsize);
-    totalpossible+= isPossible[m-1];
-  }
-
-  delete [] datah;
-  return totalpossible;
-}
-
 // [[Rcpp::export]]
 IntegerVector checkSZ(IntegerMatrix Data_to_check, int h){
   int n0 = Data_to_check.nrow();

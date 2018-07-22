@@ -49,7 +49,7 @@ List GenerateData(int hh_size,List lambda, NumericMatrix omega, NumericMatrix ph
     List checked_households;
     if (HHhead_at_group_level) {
       IntegerMatrix data_to_check = samplehouseholds(phi,omega, pi, d, lambda, batch_index+batches_done, blocksize,hh_size, 1, Parallel);
-      checked_households = checkconstraints_HHhead_at_group_level(data_to_check,valid_hh_needed-valid_hh_found, hh_size);
+      checked_households = checkconstraints_HHhead_at_group_level(data_to_check,valid_hh_needed-valid_hh_found, hh_size, Parallel);
     } else {
       IntegerMatrix data_to_check = samplehouseholds(phi,omega, pi, d, lambda,batch_index+batches_done, blocksize,hh_size, 0, Parallel);
       checked_households = checkconstraints(data_to_check,valid_hh_needed-valid_hh_found, hh_size);

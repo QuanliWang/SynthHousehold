@@ -1,7 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 #include "sampleW.h"
-
+#include "checkconstraints.h"
 // [[Rcpp::depends(RcppParallel)]]
 #include <RcppParallel.h>
 using namespace RcppParallel;
@@ -79,7 +79,7 @@ IntegerVector sampleM(NumericMatrix phi, IntegerMatrix data,
 
   if (Parallel) {
     MSamlpler ms(phi, data, omega, G,serial, rand, indi);
-    parallelFor(0,nIndividuals, ms,100);
+    parallelFor(0,nIndividuals, ms,GRAINSIZE);
   } else {
     int p = data.nrow();
     int FF = omega.nrow();

@@ -29,6 +29,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// checkconstraints_HHhead_at_group_level
+List checkconstraints_HHhead_at_group_level(IntegerMatrix data, int neededpossiblehh, int hh_size, int parallel);
+RcppExport SEXP _NestedCategBayesImpute_checkconstraints_HHhead_at_group_level(SEXP dataSEXP, SEXP neededpossiblehhSEXP, SEXP hh_sizeSEXP, SEXP parallelSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< IntegerMatrix >::type data(dataSEXP);
+    Rcpp::traits::input_parameter< int >::type neededpossiblehh(neededpossiblehhSEXP);
+    Rcpp::traits::input_parameter< int >::type hh_size(hh_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type parallel(parallelSEXP);
+    rcpp_result_gen = Rcpp::wrap(checkconstraints_HHhead_at_group_level(data, neededpossiblehh, hh_size, parallel));
+    return rcpp_result_gen;
+END_RCPP
+}
 // checkconstraints
 List checkconstraints(IntegerMatrix data, int neededpossiblehh, int hh_size);
 RcppExport SEXP _NestedCategBayesImpute_checkconstraints(SEXP dataSEXP, SEXP neededpossiblehhSEXP, SEXP hh_sizeSEXP) {
@@ -39,19 +53,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type neededpossiblehh(neededpossiblehhSEXP);
     Rcpp::traits::input_parameter< int >::type hh_size(hh_sizeSEXP);
     rcpp_result_gen = Rcpp::wrap(checkconstraints(data, neededpossiblehh, hh_size));
-    return rcpp_result_gen;
-END_RCPP
-}
-// checkconstraints_HHhead_at_group_level
-List checkconstraints_HHhead_at_group_level(IntegerMatrix data, int neededpossiblehh, int hh_size);
-RcppExport SEXP _NestedCategBayesImpute_checkconstraints_HHhead_at_group_level(SEXP dataSEXP, SEXP neededpossiblehhSEXP, SEXP hh_sizeSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerMatrix >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< int >::type neededpossiblehh(neededpossiblehhSEXP);
-    Rcpp::traits::input_parameter< int >::type hh_size(hh_sizeSEXP);
-    rcpp_result_gen = Rcpp::wrap(checkconstraints_HHhead_at_group_level(data, neededpossiblehh, hh_size));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -505,8 +506,8 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_checkSZ", (DL_FUNC) &_NestedCategBayesImpute_checkSZ, 2},
     {"_NestedCategBayesImpute_checkSZ2", (DL_FUNC) &_NestedCategBayesImpute_checkSZ2, 2},
+    {"_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level", (DL_FUNC) &_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level, 4},
     {"_NestedCategBayesImpute_checkconstraints", (DL_FUNC) &_NestedCategBayesImpute_checkconstraints, 3},
-    {"_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level", (DL_FUNC) &_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level, 3},
     {"_NestedCategBayesImpute_GenerateData", (DL_FUNC) &_NestedCategBayesImpute_GenerateData, 12},
     {"_NestedCategBayesImpute_GetImpossibleHouseholds", (DL_FUNC) &_NestedCategBayesImpute_GetImpossibleHouseholds, 11},
     {"_NestedCategBayesImpute_groupcount", (DL_FUNC) &_NestedCategBayesImpute_groupcount, 4},

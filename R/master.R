@@ -7,7 +7,7 @@ library(dplyr)
 ### Also set indicator for the weighting/capping option
 options <- list()
 options$HHhead_at_group_level <- TRUE #set to TRUE to move household head to the group level
-options$weight_option <- TRUE #set to FALSE for weighting/capping option. If TRUE, must supply weights
+options$weight_option <- FALSE #set to FALSE for weighting/capping option. If TRUE, must supply weights
 
 source("../GetExampleData.R")
 
@@ -67,25 +67,11 @@ MissData$miss_index <- sort(sample(seq((mc$burn +1),mc$nrun,by=mc$thin),mm,repla
 
 ### Run model
 proc_t <- proc.time()
-#mc <- list(nrun = 200, burn = 50, thin = 5)
+mc <- list(nrun = 200, burn = 50, thin = 5)
 #Rprof()
 library(profvis)
 library(rbenchmark)
 #profvis({
-benchmark("serial" = {ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
-                                                ExampleData$individual_variable_index,
-                                                ExampleData$household_variable_index,
-                                                options$HHhead_at_group_level,options$weight_option,struc_weight,MissData, Parallel = FALSE)},
-           "parallel" = {ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
-                                                  ExampleData$individual_variable_index,
-                                                  ExampleData$household_variable_index,
-                                                  options$HHhead_at_group_level,options$weight_option,struc_weight,MissData, Parallel = TRUE)},
-          replications = 5,
-          columns = c("test", "replications", "elapsed",
-                      "relative", "user.self", "sys.self"))
-
-
-
 ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
                          ExampleData$individual_variable_index,
                          ExampleData$household_variable_index,
@@ -96,17 +82,21 @@ ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
 total_time <- (proc.time() - proc_t)[["elapsed"]]
 total_time
 
+
+benchmark("serial" = {ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
+                                               ExampleData$individual_variable_index,
+                                               ExampleData$household_variable_index,
+                                               options$HHhead_at_group_level,options$weight_option,struc_weight,MissData, Parallel = FALSE)},
+          "parallel" = {ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
+                                                 ExampleData$individual_variable_index,
+                                                 ExampleData$household_variable_index,
+                                                 options$HHhead_at_group_level,options$weight_option,struc_weight,MissData, Parallel = TRUE)},
+          replications = 5,
+          columns = c("test", "replications", "elapsed",
+                      "relative", "user.self", "sys.self"))
+
 #summaryRprof()
 
-#proc_t <- proc.time()
-##profvis({
-#  ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
-#                           ExampleData$individual_variable_index,
-#                           ExampleData$household_variable_index,
-#                           options$HHhead_at_group_level,options$weight_option,struc_weight,MissData,Parallel = FALSE)
-##})
-#total_time <- (proc.time() - proc_t)[["elapsed"]]
-#total_time
 
 
 ### View first few lines of the first synthetic data.

@@ -1,6 +1,7 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 #include "sampleW.h"
+#include "checkconstraints.h"
 
 // [[Rcpp::depends(RcppParallel)]]
 #include <RcppParallel.h>
@@ -121,7 +122,7 @@ List sampleG(NumericMatrix phi, IntegerMatrix data,
 
   if (Parallel) {
     GSamlpler gs(phi, data, omega, pi, ni, HHdata, lambda, rand, group, indi);
-    parallelFor(0, n, gs,100);
+    parallelFor(0, n, gs,GRAINSIZE);
   } else {
     int p = data.nrow();
     int FF = omega.nrow();

@@ -9,12 +9,12 @@ checkSZ2 <- function(Data_to_check, h) {
     .Call('_NestedCategBayesImpute_checkSZ2', PACKAGE = 'NestedCategBayesImpute', Data_to_check, h)
 }
 
-checkconstraints <- function(data, neededpossiblehh, hh_size) {
-    .Call('_NestedCategBayesImpute_checkconstraints', PACKAGE = 'NestedCategBayesImpute', data, neededpossiblehh, hh_size)
+checkconstraints_HHhead_at_group_level <- function(data, neededpossiblehh, hh_size, parallel) {
+    .Call('_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level', PACKAGE = 'NestedCategBayesImpute', data, neededpossiblehh, hh_size, parallel)
 }
 
-checkconstraints_HHhead_at_group_level <- function(data, neededpossiblehh, hh_size) {
-    .Call('_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level', PACKAGE = 'NestedCategBayesImpute', data, neededpossiblehh, hh_size)
+checkconstraints <- function(data, neededpossiblehh, hh_size) {
+    .Call('_NestedCategBayesImpute_checkconstraints', PACKAGE = 'NestedCategBayesImpute', data, neededpossiblehh, hh_size)
 }
 
 GenerateData <- function(hh_size, lambda, omega, phi, pi, d, batches_done, valid_hh_needed, blocksize, synindex, HHhead_at_group_level, Parallel) {
