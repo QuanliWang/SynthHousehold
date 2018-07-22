@@ -20,7 +20,7 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
     cat(paste("iteration ", i,"\n", sep = ""))
     t <- proc.time()
 
-    G_household <- sampleG(para$phi,orig$IndivDataInCol,para$omega,para$pi,orig$n_i,t(para$HHdata_all[,1:orig$n]),para$lambda)
+    G_household <- sampleG(para$phi,orig$IndivDataInCol,para$omega,para$pi,orig$n_i,t(para$HHdata_all[,1:orig$n]),para$lambda,parallel)
     M <- sampleM(para$phi,orig$IndivDataInCol,para$omega,G_household$G,orig$HHserial, parallel)
 
     if(weight_option){

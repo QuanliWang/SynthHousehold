@@ -79,15 +79,19 @@ ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
 
 #Rprof(NULL)
 total_time <- (proc.time() - proc_t)[["elapsed"]]
+total_time
 
 #summaryRprof()
 
-profvis({
+proc_t <- proc.time()
+#profvis({
   ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
                            ExampleData$individual_variable_index,
                            ExampleData$household_variable_index,
                            options$HHhead_at_group_level,options$weight_option,struc_weight,MissData,Parallel = TRUE)
-})
+#})
+total_time <- (proc.time() - proc_t)[["elapsed"]]
+total_time
 
 
 ### View first few lines of the first synthetic data.

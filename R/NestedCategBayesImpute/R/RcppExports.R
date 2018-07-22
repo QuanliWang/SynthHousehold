@@ -41,8 +41,8 @@ UpdateAlpha <- function(aa, ab, u) {
     .Call('_NestedCategBayesImpute_UpdateAlpha', PACKAGE = 'NestedCategBayesImpute', aa, ab, u)
 }
 
-sampleG <- function(phi, data, omega, pi, ni, HHdata, lambda) {
-    .Call('_NestedCategBayesImpute_sampleG', PACKAGE = 'NestedCategBayesImpute', phi, data, omega, pi, ni, HHdata, lambda)
+sampleG <- function(phi, data, omega, pi, ni, HHdata, lambda, Parallel) {
+    .Call('_NestedCategBayesImpute_sampleG', PACKAGE = 'NestedCategBayesImpute', phi, data, omega, pi, ni, HHdata, lambda, Parallel)
 }
 
 sampleHH <- function(phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize, HeadAtGroupLevel) {

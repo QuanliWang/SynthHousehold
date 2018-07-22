@@ -151,8 +151,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // sampleG
-List sampleG(NumericMatrix phi, IntegerMatrix data, NumericMatrix omega, NumericVector pi, IntegerVector ni, IntegerMatrix HHdata, List lambda);
-RcppExport SEXP _NestedCategBayesImpute_sampleG(SEXP phiSEXP, SEXP dataSEXP, SEXP omegaSEXP, SEXP piSEXP, SEXP niSEXP, SEXP HHdataSEXP, SEXP lambdaSEXP) {
+List sampleG(NumericMatrix phi, IntegerMatrix data, NumericMatrix omega, NumericVector pi, IntegerVector ni, IntegerMatrix HHdata, List lambda, int Parallel);
+RcppExport SEXP _NestedCategBayesImpute_sampleG(SEXP phiSEXP, SEXP dataSEXP, SEXP omegaSEXP, SEXP piSEXP, SEXP niSEXP, SEXP HHdataSEXP, SEXP lambdaSEXP, SEXP ParallelSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -163,7 +163,8 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type ni(niSEXP);
     Rcpp::traits::input_parameter< IntegerMatrix >::type HHdata(HHdataSEXP);
     Rcpp::traits::input_parameter< List >::type lambda(lambdaSEXP);
-    rcpp_result_gen = Rcpp::wrap(sampleG(phi, data, omega, pi, ni, HHdata, lambda));
+    Rcpp::traits::input_parameter< int >::type Parallel(ParallelSEXP);
+    rcpp_result_gen = Rcpp::wrap(sampleG(phi, data, omega, pi, ni, HHdata, lambda, Parallel));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -512,7 +513,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_groupcount1D", (DL_FUNC) &_NestedCategBayesImpute_groupcount1D, 2},
     {"_NestedCategBayesImpute_UpdateBeta", (DL_FUNC) &_NestedCategBayesImpute_UpdateBeta, 3},
     {"_NestedCategBayesImpute_UpdateAlpha", (DL_FUNC) &_NestedCategBayesImpute_UpdateAlpha, 3},
-    {"_NestedCategBayesImpute_sampleG", (DL_FUNC) &_NestedCategBayesImpute_sampleG, 7},
+    {"_NestedCategBayesImpute_sampleG", (DL_FUNC) &_NestedCategBayesImpute_sampleG, 8},
     {"_NestedCategBayesImpute_sampleHH", (DL_FUNC) &_NestedCategBayesImpute_sampleHH, 9},
     {"_NestedCategBayesImpute_households2individuals", (DL_FUNC) &_NestedCategBayesImpute_households2individuals, 2},
     {"_NestedCategBayesImpute_samplehouseholds", (DL_FUNC) &_NestedCategBayesImpute_samplehouseholds, 10},
