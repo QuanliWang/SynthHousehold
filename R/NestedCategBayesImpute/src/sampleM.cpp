@@ -36,7 +36,7 @@ struct MSamlpler : public Worker
   //input
   RMatrix<double> phi;
   RMatrix<int> data;
-   RMatrix<double> omega;
+  RMatrix<double> omega;
   RVector<int> G;
   RVector<int> serial;
   RVector<double> rand;
@@ -51,7 +51,6 @@ struct MSamlpler : public Worker
   int SS;
   int maxDDtp;
   int maxdd;
-
 
   // initialize with source and destination
   MSamlpler(const NumericMatrix phi, const IntegerMatrix data, const NumericMatrix omega, const IntegerVector G,
@@ -80,7 +79,7 @@ IntegerVector sampleM(NumericMatrix phi, IntegerMatrix data,
 
   if (Parallel) {
     MSamlpler ms(phi, data, omega, G,serial, rand, indi);
-    parallelFor(0,nIndividuals, ms);
+    parallelFor(0,nIndividuals, ms,100);
   } else {
     int p = data.nrow();
     int FF = omega.nrow();

@@ -39,7 +39,7 @@ struct IndivDataSampler : public Worker {
 void sampleIndivDataParallel(int* data, int* hhindexh, double* nextrand, int nHouseholds,
                              double** ps, int* d, int p, int SS,int householdsize, int DIM,int currrentbatchbase) {
   IndivDataSampler worker(data, hhindexh, nextrand, nHouseholds, ps, d, p, SS, householdsize, DIM, currrentbatchbase);
-  parallelFor(0, nHouseholds, worker);
+  parallelFor(0, nHouseholds, worker,100);
 }
 
 struct HHDataSampler : public Worker {
@@ -95,7 +95,7 @@ struct HHDataSampler : public Worker {
 void sampleHHDataParallel(int* data, int* hhindexh, double* nextrand, int nHouseholds, int DIM,  double* lambda, int n_lambda,
                           int FF, int householdsize,  int p, int g) {
   HHDataSampler worker(data, hhindexh, nextrand,nHouseholds, DIM,  lambda, n_lambda, FF, householdsize, p, g);
-  parallelFor(0, nHouseholds, worker);
+  parallelFor(0, nHouseholds, worker,100);
 
 }
 
@@ -142,7 +142,7 @@ struct HHIndexSampler : public Worker {
 void sampleHHindexParallel(double** lambda, int n_lambdas, int householdsize, double* pi,
                            int FF, double* nextrand, int* hhindexh, int nHouseholds,int HeadAtGroupLevel) {
   HHIndexSampler worker(lambda, n_lambdas, householdsize, pi, FF, nextrand, hhindexh, nHouseholds, HeadAtGroupLevel);
-  parallelFor(0, nHouseholds, worker);
+  parallelFor(0, nHouseholds, worker,100);
 
 }
 
@@ -169,7 +169,7 @@ void sampleIndivIndexParallel(int* data,int* hhindexh, int nHouseholds, int base
                             double* omegat, int SS, double* nextrand) {
   //Rcout << "parallel mode" << std::endl;
   IndivIndexSampler worker(data, hhindexh, nHouseholds, base, householdsize,omegat, SS, nextrand);
-  parallelFor(0, nHouseholds, worker);
+  parallelFor(0, nHouseholds, worker,100);
 
 }
 
@@ -262,7 +262,7 @@ IntegerMatrix sampleHH(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
   int DIM = 2 + d.length() + lambda.length() - 1;
   IntegerMatrix data(nHouseholds, DIM * householdsize + householdsize  + 1);
   HeadAtGroupLevelHHSampler worker(phi, omega, pi, d, lambda, currrentbatch*nHouseholds, householdsize, data, HeadAtGroupLevel);
-  parallelFor(0, data.nrow(), worker);
+  parallelFor(0, data.nrow(), worker,1000);
   //worker.cleanup();
   return data;
 }
