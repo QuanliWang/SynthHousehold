@@ -15,3 +15,33 @@ forMichael/*
 
 
 Matlab/Monica/ACSsimulation_size2size3size4_10000HHs_060715output.mat
+
+R/NestedCategBayesImpute/G_household.RData
+
+*.RData
+
+*.out
+
+*.Rprofvis
+
+R/testing/test_generateData.R
+
+R/testing/test_getimpossiblehouseholds.R
+
+R/testing/test_sampleLambda.R
+
+R/testing/test_sampleMissing.R
+
+R/testing/test_samplePhi.R
+
+R/testing/test_updateomega.R
+
+R/testing/test1.R
+
+R/testing/testRowColumn.R
+
+*.out
+
+*.Rprofvis
+
+R/NestedCategBayesImpute/afterCountingGroups_20180713.Rprofvis
