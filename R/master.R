@@ -32,8 +32,8 @@ if(options$weight_option){
 
 ### Set mcmc parameters
 
-mc <- list(nrun = 1000, burn = 500, thin = 5)
-#mc <- list(nrun = 10000, burn = 5000, thin = 5)
+#mc <- list(nrun = 1000, burn = 500, thin = 5)
+mc <- list(nrun = 20000, burn = 10000, thin = 5)
 mc$eff.sam <- (mc$nrun-mc$burn)/mc$thin
 
 ### Set number of categories for each household level variable
@@ -59,11 +59,10 @@ output <- initOutput(orig,hyper,mc)
 
 
 ### Set number of synthetic data and the mcmc indexes for them
-mm <- 50
+mm <- 20
 synindex <- NULL
-MissData$miss_index <- sort(sample(seq((mc$burn +1),mc$nrun,by=mc$thin),mm,replace=F))
-#round(seq((mc$burn +1),mc$burn$nrun,length.out=mm))
-
+MissData$miss_index <- round(seq((mc$burn +1),mc$nrun,length.out=mm))
+#sort(sample(seq((mc$burn +1),mc$nrun,by=mc$thin),mm,replace=F))
 
 ### Run model
 proc_t <- proc.time()
@@ -79,7 +78,7 @@ total_time
 
 
 ### View first few lines of the first synthetic data.
-head((ModelResults$synData)[[1]]) # Remember that the relate variable has been recoded to 11 levels
+head((ModelResults$impData)[[1]]) # Remember that the relate variable has been recoded to 11 levels
 
 
 ### Some posterior summaries and plots
@@ -125,38 +124,38 @@ summary(S_occupied_max)
 ###################################################################################
 
 
-#save synthetic data
+#save synthetic or imputed data
 writeFun <- function(LL){
   for(i in 1:length(LL)){
     if(options$HHhead_at_group_level){
       if(options$weight_option){
-        write.table(LL[[i]],paste0("synData_newFormat_weighted",i,".txt"),row.names = F,col.names = F)
+        write.table(LL[[i]],paste0("Results/impData_newFormat_weighted",i,".txt"),row.names = F,col.names = T)
       } else {
-        write.table(LL[[i]],paste0("synData_newFormat",i,".txt"),row.names = F,col.names = F)
+        write.table(LL[[i]],paste0("Results/impData_newFormat",i,".txt"),row.names = F,col.names = T)
       }
     } else {
       if(options$weight_option){
-        write.table(LL[[i]],paste0("synData_oldFormat_weighted",i,".txt"),row.names = F,col.names = F)
+        write.table(LL[[i]],paste0("Results/impData_oldFormat_weighted",i,".txt"),row.names = F,col.names = T)
       } else {
-        write.table(LL[[i]],paste0("synData_oldFormat",i,".txt"),row.names = F,col.names = F)
+        write.table(LL[[i]],paste0("Results/impData_oldFormat",i,".txt"),row.names = F,col.names = T)
       }
     }
   }
 }
-writeFun(ModelResults$synData)
+writeFun(ModelResults$impData)
 
 #save computational time
 if(options$HHhead_at_group_level){
   if(options$weight_option){
-    write.table(total_time,"total_time_newFormat_weighted.txt",row.names = F,col.names = F)
+    write.table(total_time,"Results/total_time_newFormat_weighted.txt",row.names = F,col.names = T)
   } else {
-    write.table(total_time,"total_time_newFormat.txt",row.names = F,col.names = F)
+    write.table(total_time,"Results/total_time_newFormat.txt",row.names = F,col.names = T)
   }
 } else {
   if(options$weight_option){
-    write.table(total_time,"total_time_oldFormat_weighted.txt",row.names = F,col.names = F)
+    write.table(total_time,"Results/total_time_oldFormat_weighted.txt",row.names = F,col.names = T)
   } else {
-    write.table(total_time,"total_time_oldFormat.txt",row.names = F,col.names = F)
+    write.table(total_time,"Results/total_time_oldFormat.txt",row.names = F,col.names = T)
   }
 }
 
