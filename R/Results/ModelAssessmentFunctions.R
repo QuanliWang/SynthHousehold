@@ -311,7 +311,9 @@ GetHouseData <- function(CombinedData){
 
 GetIndivData <- function(CombinedData){
   Indiv <- CombinedData[,c("sex","race","hisp","age","relate")]
-  Indiv$relate <- Indiv$relate + 1 #Recode relate from 1-12 to 2-13
+  if(min(Indiv$relate)==1){
+    Indiv$relate <- Indiv$relate + 1 #Recode relate from 1-12 to 2-13
+  }
   Indiv <- as.data.frame(Indiv)
   colnames(Indiv) <- c("Gender","Race","Hisp","Age","Relate")
   return(Indiv)

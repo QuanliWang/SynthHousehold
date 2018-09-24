@@ -32,8 +32,12 @@ writeFun(ModelResults$impData)
 
 ###### 2: Load original dataset with no missing values
 TrueSample <- list();
-TrueSample$House <- read.table("Data_house_truth.txt",header=TRUE)
-TrueSample$Indiv <- read.table("Data_indiv_truth.txt",header=TRUE)
+#TrueSample$House <- read.table("Data_house_truth.txt",header=TRUE)
+#TrueSample$Indiv <- read.table("Data_indiv_truth.txt",header=TRUE)
+TrueData <- read.table("origdata_EI_truth.txt",header=TRUE)
+TrueSample$House <- GetHouseData(TrueData)
+TrueSample$Indiv <- GetIndivData(TrueData)
+remove(TrueData)
 
 
 ###### 3: Load imputed datasets
@@ -41,7 +45,9 @@ GlobalPara <- list()
 GlobalPara$mm <- mm
 Model <- list();
 Model$House <- NULL; Model$Indiv <- NULL
-if(options$weight_option){
+#weight_option <- options$weight_option
+weight_option <- TRUE
+if(weight_option){
   for(i in 1:GlobalPara$mm){
     ImputedData <- read.table(paste0("impData_newFormat_weighted",i,".txt"),header = T)
     Model$House <- rbind(Model$House, GetHouseData(ImputedData))
