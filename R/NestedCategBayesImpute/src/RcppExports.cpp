@@ -491,17 +491,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// parallelMatrixSqrt
-NumericMatrix parallelMatrixSqrt(NumericMatrix x);
-RcppExport SEXP _NestedCategBayesImpute_parallelMatrixSqrt(SEXP xSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type x(xSEXP);
-    rcpp_result_gen = Rcpp::wrap(parallelMatrixSqrt(x));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_checkSZ", (DL_FUNC) &_NestedCategBayesImpute_checkSZ, 2},
@@ -536,7 +525,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_UpdatePi", (DL_FUNC) &_NestedCategBayesImpute_UpdatePi, 3},
     {"_NestedCategBayesImpute_UpdatePiWeighted", (DL_FUNC) &_NestedCategBayesImpute_UpdatePiWeighted, 4},
     {"_NestedCategBayesImpute_sampleW_multi", (DL_FUNC) &_NestedCategBayesImpute_sampleW_multi, 2},
-    {"_NestedCategBayesImpute_parallelMatrixSqrt", (DL_FUNC) &_NestedCategBayesImpute_parallelMatrixSqrt, 1},
     {NULL, NULL, 0}
 };
 

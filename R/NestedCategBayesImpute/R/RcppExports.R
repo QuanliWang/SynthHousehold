@@ -129,7 +129,3 @@ sampleW_multi <- function(p, d) {
     .Call('_NestedCategBayesImpute_sampleW_multi', PACKAGE = 'NestedCategBayesImpute', p, d)
 }
 
-parallelMatrixSqrt <- function(x) {
-    .Call('_NestedCategBayesImpute_parallelMatrixSqrt', PACKAGE = 'NestedCategBayesImpute', x)
-}
-

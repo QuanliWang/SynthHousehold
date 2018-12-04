@@ -1,7 +1,6 @@
 #include <Rcpp.h>
 using namespace Rcpp;
 
-#include "MersenneTwister.h"
 #include "SpecialFunctions.h"
 
 // [[Rcpp::export]]
