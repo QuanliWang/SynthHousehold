@@ -78,95 +78,18 @@ MissData$miss_index <- round(seq((mc$burn +1),mc$nrun,length.out=mm))
 
 ### Run model
 proc_t <- proc.time()
-#ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
-#                         ExampleData$individual_variable_index,
-#                         ExampleData$household_variable_index,
-#                         options$HHhead_at_group_level,options$weight_option,struc_weight,MissData,ErrorData,Parallel=FALSE)
-
 ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
                          ExampleData$individual_variable_index,
                          ExampleData$household_variable_index,
-                         options$HHhead_at_group_level,options$weight_option,struc_weight,MissData,Parallel=FALSE)
+                         options$HHhead_at_group_level,options$weight_option,struc_weight,MissData,ErrorData,Parallel=FALSE)
+
+#ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
+#                         ExampleData$individual_variable_index,
+#                         ExampleData$household_variable_index,
+#                         options$HHhead_at_group_level,options$weight_option,struc_weight,MissData,Parallel=FALSE)
 
 total_time <- (proc.time() - proc_t)[["elapsed"]]
 total_time
 
 
-
-### View first few lines of the first synthetic data.
-head((ModelResults$impData)[[1]]) # Remember that the relate variable has been recoded to 11 levels
-
-
-### Some posterior summaries and plots
-library(coda)
-names(ModelResults$output)
-dim(ModelResults$output$alphaout)
-alpha_output <- mcmc(ModelResults$output$alphaout)
-plot(alpha_output)
-summary(alpha_output)
-
-dim(ModelResults$output$betaout)
-beta_output <- mcmc(ModelResults$output$betaout)
-plot(beta_output)
-summary(beta_output)
-
-dim(ModelResults$output$nout)
-total_households <-mcmc(ModelResults$output$nout)
-plot(total_households)
-summary(total_households)
-
-dim(ModelResults$output$elapsed_time)
-time_per_iteration <-mcmc(ModelResults$output$elapsed_time)
-plot(time_per_iteration)
-summary(time_per_iteration)
-
-dim(ModelResults$output$F_occupied)
-F_occupied <-mcmc(ModelResults$output$F_occupied)
-plot(F_occupied)
-summary(F_occupied)
-
-dim(ModelResults$output$S_occupied_max)
-S_occupied_max <-mcmc(ModelResults$output$S_occupied_max)
-plot(S_occupied_max)
-summary(S_occupied_max)
-
-###################################################################################
-####################################### END #######################################
-###################################################################################
-
-
-#save synthetic or imputed data
-writeFun <- function(LL){
-  for(i in 1:length(LL)){
-    if(options$HHhead_at_group_level){
-      if(options$weight_option){
-        write.table(LL[[i]],paste0("Results/impData_newFormat_weighted",i,".txt"),row.names = F,col.names = T)
-      } else {
-        write.table(LL[[i]],paste0("Results/impData_newFormat",i,".txt"),row.names = F,col.names = T)
-      }
-    } else {
-      if(options$weight_option){
-        write.table(LL[[i]],paste0("Results/impData_oldFormat_weighted",i,".txt"),row.names = F,col.names = T)
-      } else {
-        write.table(LL[[i]],paste0("Results/impData_oldFormat",i,".txt"),row.names = F,col.names = T)
-      }
-    }
-  }
-}
-writeFun(ModelResults$impData)
-
-#save computational time
-if(options$HHhead_at_group_level){
-  if(options$weight_option){
-    write.table(total_time,"Results/total_time_newFormat_weighted.txt",row.names = F,col.names = T)
-  } else {
-    write.table(total_time,"Results/total_time_newFormat.txt",row.names = F,col.names = T)
-  }
-} else {
-  if(options$weight_option){
-    write.table(total_time,"Results/total_time_oldFormat_weighted.txt",row.names = F,col.names = T)
-  } else {
-    write.table(total_time,"Results/total_time_oldFormat.txt",row.names = F,col.names = T)
-  }
-}
 

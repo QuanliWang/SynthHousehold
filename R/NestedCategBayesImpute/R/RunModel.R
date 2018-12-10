@@ -219,7 +219,7 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
       cat(paste("total number of rejected households sampled for missing data is ", sum(MissData$n_0_reject), "\n", sep = ''))
     }
     if (!is.null(ErrorData)) {
-      if (ErrorData$hasMissingData){
+      if (ErrorData$hasErrorData){
         cat(paste("total number of rejected households sampled for faulty data is ", sum(ErrorData$n_0_reject), "\n", sep = ''))
       }
     }
