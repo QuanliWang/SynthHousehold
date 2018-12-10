@@ -124,31 +124,33 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
     para$beta <- UpdateBeta(hyper$ba,hyper$bb,para$v)
 
     #update erroneous data, E -- the error indicators and epsilon
-    if (ErrorData$hasErrorData){
-      ErrorData$n_batch_imp_sum <- ErrorData$n_batch_imp_sum + ceiling(ErrorData$n_0_reject*ErrorData$prop_batch)
-      ErrorData$n_batch_imp <- ceiling(ErrorData$n_batch_imp_sum/i) + 1 #no. of batches of imputations to sample
-      ErrorData$n_0_reject[] <- 0
-      ErrorData$X_house <- ErrorData$Y_house
-      ErrorData$X_indiv <- ErrorData$Y_indiv
-      ErrorData$origdata <- orig$origdata
-      ErrorData <- SampleTrueResponse(ErrorData,orig,para,G_household,M)
-      ErrorData$n_0_reject <- ErrorData$n_0_reject
+    if (!is.null(ErrorData)) {
+      if (ErrorData$hasErrorData){
+        ErrorData$n_batch_imp_sum <- ErrorData$n_batch_imp_sum + ceiling(ErrorData$n_0_reject*ErrorData$prop_batch)
+        ErrorData$n_batch_imp <- ceiling(ErrorData$n_batch_imp_sum/i) + 1 #no. of batches of imputations to sample
+        ErrorData$n_0_reject[] <- 0
+        ErrorData$X_house <- ErrorData$Y_house
+        ErrorData$X_indiv <- ErrorData$Y_indiv
+        ErrorData$origdata <- orig$origdata
+        ErrorData <- SampleTrueResponse(ErrorData,orig,para,G_household,M)
+        ErrorData$n_0_reject <- ErrorData$n_0_reject
 
-      orig$origdata <- as.matrix(ErrorData$origdata)
-      HHrowIndex <- c(1, cumsum(orig$n_i)+1)
-      orig$HHdataorigT <- t(orig$origdata[HHrowIndex[1:orig$n],household_variable_index])
-      orig$IndivDataInCol <- t(orig$origdata[,individual_variable_index])
-      para$HHdata_all <- orig$HHdataorigT
+        orig$origdata <- as.matrix(ErrorData$origdata)
+        HHrowIndex <- c(1, cumsum(orig$n_i)+1)
+        orig$HHdataorigT <- t(orig$origdata[HHrowIndex[1:orig$n],household_variable_index])
+        orig$IndivDataInCol <- t(orig$origdata[,individual_variable_index])
+        para$HHdata_all <- orig$HHdataorigT
 
-      #error indicators
-      ErrorData$E_house <- data.matrix(ErrorData$X_house)-data.matrix(ErrorData$Y_house)
-      ErrorData$E_house[ErrorData$E_house!=0] <- 1
-      ErrorData$E_indiv <- data.matrix(ErrorData$X_indiv)-data.matrix(ErrorData$Y_indiv)
-      ErrorData$E_indiv[ErrorData$E_indiv!=0] <- 1
+        #error indicators
+        ErrorData$E_house <- data.matrix(ErrorData$X_house)-data.matrix(ErrorData$Y_house)
+        ErrorData$E_house[ErrorData$E_house!=0] <- 1
+        ErrorData$E_indiv <- data.matrix(ErrorData$X_indiv)-data.matrix(ErrorData$Y_indiv)
+        ErrorData$E_indiv[ErrorData$E_indiv!=0] <- 1
 
-      #epsilon
-      ErrorData$epsilon_house <- SampleEpsilonHouse(ErrorData)
-      ErrorData$epsilon_indiv <- SampleEpsilonIndiv(ErrorData)
+        #epsilon
+        ErrorData$epsilon_house <- SampleEpsilonHouse(ErrorData)
+        ErrorData$epsilon_indiv <- SampleEpsilonIndiv(ErrorData)
+      }
     }
 
 
@@ -176,7 +178,7 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
     #head(MissData$household)
 
     #save imputed data
-    if (MissData$hasMissingData | ErrorData$hasErrorData){
+    if (MissData$hasMissingData || (!is.null(ErrorData) && ErrorData$hasErrorData)){
       if (is.element(i,MissData$miss_index)){
         impData[[which(MissData$miss_index ==i)]] <- MissData$household
       }
@@ -200,8 +202,10 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
     cat(paste("number of occupied household classes is ", F_occup, "\n", sep = ''))
     cat(paste("max number of occupied individual classes is ", S_occup, "\n", sep = ''))
 
-    cat(paste("epsilon_indiv:", round(ErrorData$epsilon_indiv,3), "\n", sep = ''))
-    cat(paste("epsilon_house:", round(ErrorData$epsilon_house,3), "\n", sep = ''))
+    if (!is.null(ErrorData)) {
+      cat(paste("epsilon_indiv:", round(ErrorData$epsilon_indiv,3), "\n", sep = ''))
+      cat(paste("epsilon_house:", round(ErrorData$epsilon_house,3), "\n", sep = ''))
+    }
 
     total_household <- sum(c(orig$n,para$hh_size_new))
     if(weight_option){
@@ -214,8 +218,10 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
     if (MissData$hasMissingData){
       cat(paste("total number of rejected households sampled for missing data is ", sum(MissData$n_0_reject), "\n", sep = ''))
     }
-    if (ErrorData$hasMissingData){
-      cat(paste("total number of rejected households sampled for faulty data is ", sum(ErrorData$n_0_reject), "\n", sep = ''))
+    if (!is.null(ErrorData)) {
+      if (ErrorData$hasMissingData){
+        cat(paste("total number of rejected households sampled for faulty data is ", sum(ErrorData$n_0_reject), "\n", sep = ''))
+      }
     }
     cat(paste("elapsed time = ", (proc.time() - t)[["elapsed"]], "\n\n", sep = ' '))
 

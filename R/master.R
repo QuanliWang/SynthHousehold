@@ -78,10 +78,15 @@ MissData$miss_index <- round(seq((mc$burn +1),mc$nrun,length.out=mm))
 
 ### Run model
 proc_t <- proc.time()
+#ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
+#                         ExampleData$individual_variable_index,
+#                         ExampleData$household_variable_index,
+#                         options$HHhead_at_group_level,options$weight_option,struc_weight,MissData,ErrorData,Parallel=FALSE)
+
 ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
                          ExampleData$individual_variable_index,
                          ExampleData$household_variable_index,
-                         options$HHhead_at_group_level,options$weight_option,struc_weight,MissData,ErrorData,Parallel=FALSE)
+                         options$HHhead_at_group_level,options$weight_option,struc_weight,MissData,Parallel=FALSE)
 
 total_time <- (proc.time() - proc_t)[["elapsed"]]
 total_time
@@ -109,11 +114,6 @@ dim(ModelResults$output$nout)
 total_households <-mcmc(ModelResults$output$nout)
 plot(total_households)
 summary(total_households)
-
-dim(ModelResults$output$extrasize)
-impossible_households <-mcmc(ModelResults$output$extrasize)
-plot(impossible_households)
-summary(impossible_households)
 
 dim(ModelResults$output$elapsed_time)
 time_per_iteration <-mcmc(ModelResults$output$elapsed_time)
