@@ -36,8 +36,8 @@ if(options$weight_option){
 
 ### Set mcmc parameters
 
-#mc <- list(nrun = 1000, burn = 500, thin = 5)
-mc <- list(nrun = 10000, burn = 5000, thin = 5)
+mc <- list(nrun = 1000, burn = 500, thin = 5)
+#mc <- list(nrun = 10000, burn = 5000, thin = 5)
 mc$eff.sam <- (mc$nrun-mc$burn)/mc$thin
 
 ### Set number of categories for each household level variable
@@ -78,15 +78,15 @@ MissData$miss_index <- round(seq((mc$burn +1),mc$nrun,length.out=mm))
 
 ### Run model
 proc_t <- proc.time()
-ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
-                         ExampleData$individual_variable_index,
-                         ExampleData$household_variable_index,
-                         options$HHhead_at_group_level,options$weight_option,struc_weight,MissData,ErrorData,Parallel=FALSE)
-
 #ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
 #                         ExampleData$individual_variable_index,
 #                         ExampleData$household_variable_index,
-#                         options$HHhead_at_group_level,options$weight_option,struc_weight,MissData,Parallel=FALSE)
+#                         options$HHhead_at_group_level,options$weight_option,struc_weight,MissData,ErrorData,Parallel=FALSE)
+
+ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
+                         ExampleData$individual_variable_index,
+                         ExampleData$household_variable_index,
+                         options$HHhead_at_group_level,options$weight_option,struc_weight,MissData,Parallel=FALSE)
 
 total_time <- (proc.time() - proc_t)[["elapsed"]]
 total_time

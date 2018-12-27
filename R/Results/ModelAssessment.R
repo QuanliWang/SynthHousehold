@@ -27,14 +27,16 @@ writeFun <- function(LL){
     }
   }
 }
-writeFun(ModelResults$impData)
+if(WriteNewResults){
+  writeFun(ModelResults$impData)
+}
 
 
 ###### 2: Load original dataset with no missing values
 TrueSample <- list();
 #TrueSample$House <- read.table("Data_house_truth.txt",header=TRUE)
 #TrueSample$Indiv <- read.table("Data_indiv_truth.txt",header=TRUE)
-TrueData <- read.table("origdata_EI_truth.txt",header=TRUE)
+TrueData <- read.table("origdata_truth.txt",header=TRUE)
 TrueSample$House <- GetHouseData(TrueData)
 TrueSample$Indiv <- GetIndivData(TrueData)
 remove(TrueData)
@@ -45,8 +47,8 @@ GlobalPara <- list()
 GlobalPara$mm <- mm
 Model <- list();
 Model$House <- NULL; Model$Indiv <- NULL
-#weight_option <- options$weight_option
-weight_option <- TRUE
+#weight_option <- weight_option
+weight_option <- FALSE
 if(weight_option){
   for(i in 1:GlobalPara$mm){
     ImputedData <- read.table(paste0("impData_newFormat_weighted",i,".txt"),header = T)
@@ -122,15 +124,15 @@ ModelResults <- GetOtherProbsMI(Model$House,Model$Indiv,GlobalPara,GlobalPara$sa
 par(mfrow=c(1,3),oma=c(2,0,0,0))
 plot(TrueSampleResults$MarginalProb,ModelResults$MarginalProb,
      pch = 2,col="red", las=2, main ="Marginal",
-     xlab = "Sample Estimate", ylab = "Average From 50 Imputed Datasets",xlim = c(0,1.0),ylim = c(0,1.0))
+     xlab = "Sample Estimate", ylab = paste0("Average From ",GlobalPara$mm," Imputed Datasets"),xlim = c(0,1.0),ylim = c(0,1.0))
 abline(a=0, b=1,lty = 1, lwd = 1);
 plot(TrueSampleResults$BivariateProb,ModelResults$BivariateProb,
      pch = 2,col="darkblue", las=2, main ="Bivariate",
-     xlab = "Sample Estimate", ylab = "Average From 50 Imputed Datasets",xlim = c(0,1.0),ylim = c(0,1.0))
+     xlab = "Sample Estimate", ylab = paste0("Average From ",GlobalPara$mm," Imputed Datasets"),xlim = c(0,1.0),ylim = c(0,1.0))
 abline(a=0, b=1,lty = 1, lwd = 1);
 plot(TrueSampleResults$TrivariateProb,ModelResults$TrivariateProb,
      pch = 2,col="darkgreen", las=2, main ="Trivariate",
-     xlab = "Sample Estimate", ylab = "Average From 50 Imputed Datasets",xlim = c(0,1.0),ylim = c(0,1.0))
+     xlab = "Sample Estimate", ylab = paste0("Average From ",GlobalPara$mm," Imputed Datasets"),xlim = c(0,1.0),ylim = c(0,1.0))
 abline(a=0, b=1,lty = 1, lwd = 1)
 #dev.off()
 

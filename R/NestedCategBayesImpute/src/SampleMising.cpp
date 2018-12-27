@@ -121,13 +121,13 @@ IntegerMatrix SampleNonStructureZerosHouseC(IntegerMatrix household,
 
 // [[Rcpp::export]]
 IntegerMatrix SampleNonStructureZerosIndivC(IntegerMatrix household,
-                                           LogicalMatrix NA_indiv_missing_status,
-                                           IntegerVector indiv_non_szv_index_raw,
-                                           IntegerVector phi_m_g_index,
-                                           IntegerVector indiv_non_szv_index,
-                                           NumericMatrix para_phi,
-                                           IntegerVector orig_d,
-                                           IntegerVector orig_maxd) {
+                                            LogicalMatrix NA_indiv_missing_status,
+                                            IntegerVector indiv_non_szv_index_raw,
+                                            IntegerVector phi_m_g_index,
+                                            IntegerVector indiv_non_szv_index,
+                                            NumericMatrix para_phi,
+                                            IntegerVector orig_d,
+                                            int orig_maxd) {
   for (int count = 0; count < indiv_non_szv_index_raw.length(); count++) {
     int k = indiv_non_szv_index_raw[count] - 1; //index into raw data
     int real_k = indiv_non_szv_index[count] - 1; //index into invividual level variables
@@ -135,8 +135,9 @@ IntegerMatrix SampleNonStructureZerosIndivC(IntegerMatrix household,
     for (int i = 0; i < NA_indiv_missing_status.rows(); i++) {
       if (NA_indiv_missing_status(i,real_k)) {
         int col = phi_m_g_index[i];
-        int offset = (real_k-1)* orig_maxd[0];
-        household(i,k) = samplew(para_phi.column(col -1).begin() + offset, orig_d[real_k], r[i]);
+        int offset = real_k* orig_maxd;
+        NumericVector c = para_phi.column(col -1);
+        household(i,k) = samplew(c.begin() + offset, orig_d[real_k], r[i]);
       }
     }
   }
@@ -166,7 +167,7 @@ List SampleMissing_impC(List MissData, List para, List orig,List G_household, In
                                             as<IntegerVector>(MissData["indiv_non_szv_index_raw"]),
                                             phi_m_g_index,
                                             as<IntegerVector>(MissData["indiv_non_szv_index"]),
-                                            phi,d,maxd);
+                                            phi,d,maxd[0]);
   household = SampleNonStructureZerosHouseC(household,
                                             NA_house_missing_status,
                                             as<IntegerVector>(MissData["house_non_szv_index_raw"]),

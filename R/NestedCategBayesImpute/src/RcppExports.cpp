@@ -344,7 +344,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // SampleNonStructureZerosIndivC
-IntegerMatrix SampleNonStructureZerosIndivC(IntegerMatrix household, LogicalMatrix NA_indiv_missing_status, IntegerVector indiv_non_szv_index_raw, IntegerVector phi_m_g_index, IntegerVector indiv_non_szv_index, NumericMatrix para_phi, IntegerVector orig_d, IntegerVector orig_maxd);
+IntegerMatrix SampleNonStructureZerosIndivC(IntegerMatrix household, LogicalMatrix NA_indiv_missing_status, IntegerVector indiv_non_szv_index_raw, IntegerVector phi_m_g_index, IntegerVector indiv_non_szv_index, NumericMatrix para_phi, IntegerVector orig_d, int orig_maxd);
 RcppExport SEXP _NestedCategBayesImpute_SampleNonStructureZerosIndivC(SEXP householdSEXP, SEXP NA_indiv_missing_statusSEXP, SEXP indiv_non_szv_index_rawSEXP, SEXP phi_m_g_indexSEXP, SEXP indiv_non_szv_indexSEXP, SEXP para_phiSEXP, SEXP orig_dSEXP, SEXP orig_maxdSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
@@ -356,7 +356,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< IntegerVector >::type indiv_non_szv_index(indiv_non_szv_indexSEXP);
     Rcpp::traits::input_parameter< NumericMatrix >::type para_phi(para_phiSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type orig_d(orig_dSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type orig_maxd(orig_maxdSEXP);
+    Rcpp::traits::input_parameter< int >::type orig_maxd(orig_maxdSEXP);
     rcpp_result_gen = Rcpp::wrap(SampleNonStructureZerosIndivC(household, NA_indiv_missing_status, indiv_non_szv_index_raw, phi_m_g_index, indiv_non_szv_index, para_phi, orig_d, orig_maxd));
     return rcpp_result_gen;
 END_RCPP
