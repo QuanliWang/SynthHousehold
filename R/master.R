@@ -36,8 +36,8 @@ if(options$weight_option){
 
 ### Set mcmc parameters
 
-mc <- list(nrun = 1000, burn = 500, thin = 5)
-#mc <- list(nrun = 10000, burn = 5000, thin = 5)
+#mc <- list(nrun = 1000, burn = 500, thin = 5)
+mc <- list(nrun = 10000, burn = 5000, thin = 5)
 mc$eff.sam <- (mc$nrun-mc$burn)/mc$thin
 
 ### Set number of categories for each household level variable
