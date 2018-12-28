@@ -1,7 +1,7 @@
 PrepareData <- function(options) {
-### Use data included in package; prepare data and specify variable indexes
+  ### Use data included in package; prepare data and specify variable indexes
   if (options$HHhead_at_group_level) {
-    orig.file <- system.file("extdata","origdata_EI.txt",package="NestedCategBayesImpute")
+    orig.file <- system.file("extdata","origdata.txt",package="NestedCategBayesImpute")
     orig.data <- read.table(orig.file,header = TRUE, sep = " ")
     orig.data$relate <- orig.data$relate - 1L #recode relate variable to 11 levels
     household.size <- as.data.frame(table(orig.data$Hhindex))

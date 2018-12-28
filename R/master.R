@@ -64,32 +64,29 @@ output <- initOutput(orig,hyper,mc)
 
 
 ### Set number of synthetic data and the mcmc indexes for them
-mm <- 20
+mm <- 50
 synindex <- NULL
 MissData$miss_index <- round(seq((mc$burn +1),mc$nrun,length.out=mm))
-#sort(sample(seq((mc$burn +1),mc$nrun,by=mc$thin),mm,replace=F))
-
-
-#individual_variable_index <- ExampleData$individual_variable_index
-#household_variable_index <- ExampleData$household_variable_index
-#HHhead_at_group_level <- options$HHhead_at_group_level
-#weight_option <- options$weight_option
-#Parallel=FALSE
 
 ### Run model
-proc_t <- proc.time()
+
+ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
+                         ExampleData$individual_variable_index,
+                         ExampleData$household_variable_index,
+                         options$HHhead_at_group_level,options$weight_option,struc_weight,MissData,Parallel = TRUE)
+
 #ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
 #                         ExampleData$individual_variable_index,
 #                         ExampleData$household_variable_index,
 #                         options$HHhead_at_group_level,options$weight_option,struc_weight,MissData,ErrorData,Parallel=FALSE)
 
-ModelResults <- RunModel(orig,mc,hyper,para,output,synindex,
-                         ExampleData$individual_variable_index,
-                         ExampleData$household_variable_index,
-                         options$HHhead_at_group_level,options$weight_option,struc_weight,MissData,Parallel=FALSE)
 
-total_time <- (proc.time() - proc_t)[["elapsed"]]
-total_time
+setwd("../Results")
+WriteNewResults <- TRUE
+source("ModelAssessment.R")
+round(CompareProbs[order(TrueSampleResults$OtherProb,decreasing = TRUE),],3)
+
+
 
 
 
