@@ -56,28 +56,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// GenerateData
-List GenerateData(int hh_size, List lambda, NumericMatrix omega, NumericMatrix phi, NumericVector pi, IntegerVector d, int batches_done, int valid_hh_needed, int blocksize, int synindex, bool HHhead_at_group_level, int Parallel);
-RcppExport SEXP _NestedCategBayesImpute_GenerateData(SEXP hh_sizeSEXP, SEXP lambdaSEXP, SEXP omegaSEXP, SEXP phiSEXP, SEXP piSEXP, SEXP dSEXP, SEXP batches_doneSEXP, SEXP valid_hh_neededSEXP, SEXP blocksizeSEXP, SEXP synindexSEXP, SEXP HHhead_at_group_levelSEXP, SEXP ParallelSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type hh_size(hh_sizeSEXP);
-    Rcpp::traits::input_parameter< List >::type lambda(lambdaSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type omega(omegaSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type phi(phiSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type pi(piSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type d(dSEXP);
-    Rcpp::traits::input_parameter< int >::type batches_done(batches_doneSEXP);
-    Rcpp::traits::input_parameter< int >::type valid_hh_needed(valid_hh_neededSEXP);
-    Rcpp::traits::input_parameter< int >::type blocksize(blocksizeSEXP);
-    Rcpp::traits::input_parameter< int >::type synindex(synindexSEXP);
-    Rcpp::traits::input_parameter< bool >::type HHhead_at_group_level(HHhead_at_group_levelSEXP);
-    Rcpp::traits::input_parameter< int >::type Parallel(ParallelSEXP);
-    rcpp_result_gen = Rcpp::wrap(GenerateData(hh_size, lambda, omega, phi, pi, d, batches_done, valid_hh_needed, blocksize, synindex, HHhead_at_group_level, Parallel));
-    return rcpp_result_gen;
-END_RCPP
-}
 // GetImpossibleHouseholds
 List GetImpossibleHouseholds(IntegerVector d, IntegerVector n_star_h, List lambda, NumericMatrix omega, NumericMatrix phi, NumericVector pi, int blocksize, int n, int synindex, bool HHhead_at_group_level, bool Parallel);
 RcppExport SEXP _NestedCategBayesImpute_GetImpossibleHouseholds(SEXP dSEXP, SEXP n_star_hSEXP, SEXP lambdaSEXP, SEXP omegaSEXP, SEXP phiSEXP, SEXP piSEXP, SEXP blocksizeSEXP, SEXP nSEXP, SEXP synindexSEXP, SEXP HHhead_at_group_levelSEXP, SEXP ParallelSEXP) {
@@ -265,105 +243,9 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// SampleMatrixByColumnC
-IntegerVector SampleMatrixByColumnC(NumericMatrix data, NumericVector r, IntegerVector dup);
-RcppExport SEXP _NestedCategBayesImpute_SampleMatrixByColumnC(SEXP dataSEXP, SEXP rSEXP, SEXP dupSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type r(rSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type dup(dupSEXP);
-    rcpp_result_gen = Rcpp::wrap(SampleMatrixByColumnC(data, r, dup));
-    return rcpp_result_gen;
-END_RCPP
-}
-// SampleMatrixByRowC
-NumericVector SampleMatrixByRowC(NumericMatrix data, NumericVector r);
-RcppExport SEXP _NestedCategBayesImpute_SampleMatrixByRowC(SEXP dataSEXP, SEXP rSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type data(dataSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type r(rSEXP);
-    rcpp_result_gen = Rcpp::wrap(SampleMatrixByRowC(data, r));
-    return rcpp_result_gen;
-END_RCPP
-}
-// CheckSZ_batch
-IntegerVector CheckSZ_batch(IntegerMatrix X_house, IntegerMatrix X_indiv);
-RcppExport SEXP _NestedCategBayesImpute_CheckSZ_batch(SEXP X_houseSEXP, SEXP X_indivSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerMatrix >::type X_house(X_houseSEXP);
-    Rcpp::traits::input_parameter< IntegerMatrix >::type X_indiv(X_indivSEXP);
-    rcpp_result_gen = Rcpp::wrap(CheckSZ_batch(X_house, X_indiv));
-    return rcpp_result_gen;
-END_RCPP
-}
-// SampleMissingForOneHousehold_batch
-List SampleMissingForOneHousehold_batch(IntegerVector another_index, IntegerMatrix X_house_s_prop, IntegerMatrix X_indiv_s_prop, IntegerVector house_szv_index, LogicalMatrix NA_house_missing_status, IntegerVector indiv_szv_index, LogicalMatrix NA_indiv_missing_status, List lambda, NumericMatrix phi, int G_household_G_s, IntegerVector index, IntegerVector orig_d, int orig_maxd, int batch);
-RcppExport SEXP _NestedCategBayesImpute_SampleMissingForOneHousehold_batch(SEXP another_indexSEXP, SEXP X_house_s_propSEXP, SEXP X_indiv_s_propSEXP, SEXP house_szv_indexSEXP, SEXP NA_house_missing_statusSEXP, SEXP indiv_szv_indexSEXP, SEXP NA_indiv_missing_statusSEXP, SEXP lambdaSEXP, SEXP phiSEXP, SEXP G_household_G_sSEXP, SEXP indexSEXP, SEXP orig_dSEXP, SEXP orig_maxdSEXP, SEXP batchSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerVector >::type another_index(another_indexSEXP);
-    Rcpp::traits::input_parameter< IntegerMatrix >::type X_house_s_prop(X_house_s_propSEXP);
-    Rcpp::traits::input_parameter< IntegerMatrix >::type X_indiv_s_prop(X_indiv_s_propSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type house_szv_index(house_szv_indexSEXP);
-    Rcpp::traits::input_parameter< LogicalMatrix >::type NA_house_missing_status(NA_house_missing_statusSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type indiv_szv_index(indiv_szv_indexSEXP);
-    Rcpp::traits::input_parameter< LogicalMatrix >::type NA_indiv_missing_status(NA_indiv_missing_statusSEXP);
-    Rcpp::traits::input_parameter< List >::type lambda(lambdaSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type phi(phiSEXP);
-    Rcpp::traits::input_parameter< int >::type G_household_G_s(G_household_G_sSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type index(indexSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type orig_d(orig_dSEXP);
-    Rcpp::traits::input_parameter< int >::type orig_maxd(orig_maxdSEXP);
-    Rcpp::traits::input_parameter< int >::type batch(batchSEXP);
-    rcpp_result_gen = Rcpp::wrap(SampleMissingForOneHousehold_batch(another_index, X_house_s_prop, X_indiv_s_prop, house_szv_index, NA_house_missing_status, indiv_szv_index, NA_indiv_missing_status, lambda, phi, G_household_G_s, index, orig_d, orig_maxd, batch));
-    return rcpp_result_gen;
-END_RCPP
-}
-// SampleNonStructureZerosHouseC
-IntegerMatrix SampleNonStructureZerosHouseC(IntegerMatrix household, LogicalMatrix NA_house_missing_status, IntegerVector house_non_szv_index_raw, IntegerVector house_non_szv_index, List para_lambda, IntegerVector G_household_G, IntegerVector orig_n_i);
-RcppExport SEXP _NestedCategBayesImpute_SampleNonStructureZerosHouseC(SEXP householdSEXP, SEXP NA_house_missing_statusSEXP, SEXP house_non_szv_index_rawSEXP, SEXP house_non_szv_indexSEXP, SEXP para_lambdaSEXP, SEXP G_household_GSEXP, SEXP orig_n_iSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerMatrix >::type household(householdSEXP);
-    Rcpp::traits::input_parameter< LogicalMatrix >::type NA_house_missing_status(NA_house_missing_statusSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type house_non_szv_index_raw(house_non_szv_index_rawSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type house_non_szv_index(house_non_szv_indexSEXP);
-    Rcpp::traits::input_parameter< List >::type para_lambda(para_lambdaSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type G_household_G(G_household_GSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type orig_n_i(orig_n_iSEXP);
-    rcpp_result_gen = Rcpp::wrap(SampleNonStructureZerosHouseC(household, NA_house_missing_status, house_non_szv_index_raw, house_non_szv_index, para_lambda, G_household_G, orig_n_i));
-    return rcpp_result_gen;
-END_RCPP
-}
-// SampleNonStructureZerosIndivC
-IntegerMatrix SampleNonStructureZerosIndivC(IntegerMatrix household, LogicalMatrix NA_indiv_missing_status, IntegerVector indiv_non_szv_index_raw, IntegerVector phi_m_g_index, IntegerVector indiv_non_szv_index, NumericMatrix para_phi, IntegerVector orig_d, int orig_maxd);
-RcppExport SEXP _NestedCategBayesImpute_SampleNonStructureZerosIndivC(SEXP householdSEXP, SEXP NA_indiv_missing_statusSEXP, SEXP indiv_non_szv_index_rawSEXP, SEXP phi_m_g_indexSEXP, SEXP indiv_non_szv_indexSEXP, SEXP para_phiSEXP, SEXP orig_dSEXP, SEXP orig_maxdSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< IntegerMatrix >::type household(householdSEXP);
-    Rcpp::traits::input_parameter< LogicalMatrix >::type NA_indiv_missing_status(NA_indiv_missing_statusSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type indiv_non_szv_index_raw(indiv_non_szv_index_rawSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type phi_m_g_index(phi_m_g_indexSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type indiv_non_szv_index(indiv_non_szv_indexSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type para_phi(para_phiSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type orig_d(orig_dSEXP);
-    Rcpp::traits::input_parameter< int >::type orig_maxd(orig_maxdSEXP);
-    rcpp_result_gen = Rcpp::wrap(SampleNonStructureZerosIndivC(household, NA_indiv_missing_status, indiv_non_szv_index_raw, phi_m_g_index, indiv_non_szv_index, para_phi, orig_d, orig_maxd));
-    return rcpp_result_gen;
-END_RCPP
-}
-// SampleMissing_impC
-List SampleMissing_impC(List MissData, List para, List orig, List G_household, IntegerVector M, List hyper);
-RcppExport SEXP _NestedCategBayesImpute_SampleMissing_impC(SEXP MissDataSEXP, SEXP paraSEXP, SEXP origSEXP, SEXP G_householdSEXP, SEXP MSEXP, SEXP hyperSEXP) {
+// SampleMissing
+List SampleMissing(List MissData, List para, List orig, List G_household, IntegerVector M, List hyper);
+RcppExport SEXP _NestedCategBayesImpute_SampleMissing(SEXP MissDataSEXP, SEXP paraSEXP, SEXP origSEXP, SEXP G_householdSEXP, SEXP MSEXP, SEXP hyperSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -373,7 +255,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< List >::type G_household(G_householdSEXP);
     Rcpp::traits::input_parameter< IntegerVector >::type M(MSEXP);
     Rcpp::traits::input_parameter< List >::type hyper(hyperSEXP);
-    rcpp_result_gen = Rcpp::wrap(SampleMissing_impC(MissData, para, orig, G_household, M, hyper));
+    rcpp_result_gen = Rcpp::wrap(SampleMissing(MissData, para, orig, G_household, M, hyper));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -497,7 +379,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_checkSZ2", (DL_FUNC) &_NestedCategBayesImpute_checkSZ2, 2},
     {"_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level", (DL_FUNC) &_NestedCategBayesImpute_checkconstraints_HHhead_at_group_level, 4},
     {"_NestedCategBayesImpute_checkconstraints", (DL_FUNC) &_NestedCategBayesImpute_checkconstraints, 3},
-    {"_NestedCategBayesImpute_GenerateData", (DL_FUNC) &_NestedCategBayesImpute_GenerateData, 12},
     {"_NestedCategBayesImpute_GetImpossibleHouseholds", (DL_FUNC) &_NestedCategBayesImpute_GetImpossibleHouseholds, 11},
     {"_NestedCategBayesImpute_groupcount", (DL_FUNC) &_NestedCategBayesImpute_groupcount, 4},
     {"_NestedCategBayesImpute_groupcount1D", (DL_FUNC) &_NestedCategBayesImpute_groupcount1D, 2},
@@ -510,13 +391,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_UpdateLambda", (DL_FUNC) &_NestedCategBayesImpute_UpdateLambda, 4},
     {"_NestedCategBayesImpute_UpdateLambdaWeighted", (DL_FUNC) &_NestedCategBayesImpute_UpdateLambdaWeighted, 5},
     {"_NestedCategBayesImpute_sampleM", (DL_FUNC) &_NestedCategBayesImpute_sampleM, 6},
-    {"_NestedCategBayesImpute_SampleMatrixByColumnC", (DL_FUNC) &_NestedCategBayesImpute_SampleMatrixByColumnC, 3},
-    {"_NestedCategBayesImpute_SampleMatrixByRowC", (DL_FUNC) &_NestedCategBayesImpute_SampleMatrixByRowC, 2},
-    {"_NestedCategBayesImpute_CheckSZ_batch", (DL_FUNC) &_NestedCategBayesImpute_CheckSZ_batch, 2},
-    {"_NestedCategBayesImpute_SampleMissingForOneHousehold_batch", (DL_FUNC) &_NestedCategBayesImpute_SampleMissingForOneHousehold_batch, 14},
-    {"_NestedCategBayesImpute_SampleNonStructureZerosHouseC", (DL_FUNC) &_NestedCategBayesImpute_SampleNonStructureZerosHouseC, 7},
-    {"_NestedCategBayesImpute_SampleNonStructureZerosIndivC", (DL_FUNC) &_NestedCategBayesImpute_SampleNonStructureZerosIndivC, 8},
-    {"_NestedCategBayesImpute_SampleMissing_impC", (DL_FUNC) &_NestedCategBayesImpute_SampleMissing_impC, 6},
+    {"_NestedCategBayesImpute_SampleMissing", (DL_FUNC) &_NestedCategBayesImpute_SampleMissing, 6},
     {"_NestedCategBayesImpute_UpdateOmega", (DL_FUNC) &_NestedCategBayesImpute_UpdateOmega, 4},
     {"_NestedCategBayesImpute_UpdateOmegaWeighted", (DL_FUNC) &_NestedCategBayesImpute_UpdateOmegaWeighted, 5},
     {"_NestedCategBayesImpute_gammarand", (DL_FUNC) &_NestedCategBayesImpute_gammarand, 3},

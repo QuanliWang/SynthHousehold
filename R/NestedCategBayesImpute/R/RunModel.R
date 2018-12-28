@@ -163,7 +163,7 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
       MissData$household <- as.matrix(orig$origdata)
       #sample non structural zeros variables for everyone at once
       storage.mode(MissData$household) <- "integer" #very important if used to do in place update
-      MissData <- SampleMissing_impC(MissData,para,orig,G_household,M,hyper)
+      MissData <- SampleMissing(MissData,para,orig,G_household,M,hyper)
       MissData$household <- as.data.frame(MissData$household)
 
       #MissData <- SampleMissing(MissData,para,orig,G_household,M,hyper)

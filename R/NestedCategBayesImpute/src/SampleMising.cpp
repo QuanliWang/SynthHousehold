@@ -1,6 +1,5 @@
 #include "sampleW.h"
 
-// [[Rcpp::export]]
 IntegerVector CheckSZ_batch(IntegerMatrix X_house, IntegerMatrix X_indiv) {
   if (X_house.ncol() != 6) {
     Rcout << "Household matrix must have 6 columns" << std::endl;
@@ -31,7 +30,6 @@ IntegerVector CheckSZ_batch(IntegerMatrix X_house, IntegerMatrix X_indiv) {
   return checkSZ2(comb_to_check,household_size);
 }
 
-// [[Rcpp::export]]
 List SampleMissingForOneHousehold_batch(IntegerVector another_index,
                                         IntegerMatrix X_house_s_prop, IntegerMatrix X_indiv_s_prop,
                                         IntegerVector house_szv_index, LogicalMatrix NA_house_missing_status,
@@ -88,7 +86,6 @@ List SampleMissingForOneHousehold_batch(IntegerVector another_index,
 }
 
 
-// [[Rcpp::export]]
 IntegerMatrix SampleNonStructureZerosHouseC(IntegerMatrix household,
                                             LogicalMatrix NA_house_missing_status,
                                             IntegerVector house_non_szv_index_raw,
@@ -119,7 +116,6 @@ IntegerMatrix SampleNonStructureZerosHouseC(IntegerMatrix household,
   return(household);
 }
 
-// [[Rcpp::export]]
 IntegerMatrix SampleNonStructureZerosIndivC(IntegerMatrix household,
                                             LogicalMatrix NA_indiv_missing_status,
                                             IntegerVector indiv_non_szv_index_raw,
@@ -146,7 +142,7 @@ IntegerMatrix SampleNonStructureZerosIndivC(IntegerMatrix household,
 }
 
 // [[Rcpp::export]]
-List SampleMissing_impC(List MissData, List para, List orig,List G_household, IntegerVector M, List hyper) {
+List SampleMissing(List MissData, List para, List orig,List G_household, IntegerVector M, List hyper) {
   IntegerVector G_Individuals =  G_household["G_Individuals"];
   IntegerVector G = G_household["G"];
   int hyper_SS = hyper["SS"];

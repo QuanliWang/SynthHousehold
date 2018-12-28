@@ -2,8 +2,7 @@
 #include "sampleW.h"
 using namespace Rcpp;
 
-// [[Rcpp::export]]
-IntegerVector SampleMatrixByColumnC(NumericMatrix data, NumericVector r, IntegerVector dup) {
+IntegerVector SampleMatrixByColumn(NumericMatrix data, NumericVector r, IntegerVector dup) {
   int howmany = dup[0];
   int n = data.nrow();
   int nIndividuals = data.ncol();
@@ -23,8 +22,7 @@ IntegerVector SampleMatrixByColumnC(NumericMatrix data, NumericVector r, Integer
   return samples;
 }
 
-// [[Rcpp::export]]
-NumericVector SampleMatrixByRowC(NumericMatrix data, NumericVector r) {
+NumericVector SampleMatrixByRow(NumericMatrix data, NumericVector r) {
   int nIndividuals = data.nrow();
   int n = data.ncol();
   if (r.length() != nIndividuals) {
