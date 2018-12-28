@@ -132,7 +132,7 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
         ErrorData$X_house <- ErrorData$Y_house
         ErrorData$X_indiv <- ErrorData$Y_indiv
         ErrorData$origdata <- orig$origdata
-        ErrorData <- SampleTrueResponse(ErrorData,orig,para,G_household,M)
+        ErrorData <- SampleTrueResponse(ErrorData,orig,para,G_household,M,hyper)
         ErrorData$n_0_reject <- ErrorData$n_0_reject
 
         orig$origdata <- as.matrix(ErrorData$origdata)

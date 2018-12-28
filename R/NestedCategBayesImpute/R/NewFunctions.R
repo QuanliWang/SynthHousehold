@@ -69,7 +69,7 @@ SetErrorPara_EI <- function(orig,var_in_error_house,var_in_error_indiv,imp_batch
 
 
 ## Function to sample true responses for a given household
-SampleTrueResponse_h <- function(ErrorData,orig,para,G_household,M,sss){
+SampleTrueResponse_h <- function(ErrorData,orig,para,G_household,M,sss,hyper){
   p <- orig$p; q <- ncol(ErrorData$Y_house);
   house_index <- ErrorData$house_index
   Y_house <- ErrorData$Y_house; Y_indiv <- ErrorData$Y_indiv
@@ -186,11 +186,11 @@ SampleTrueResponse_h <- function(ErrorData,orig,para,G_household,M,sss){
 
 
 ## Function to sample true responses
-SampleTrueResponse <- function(ErrorData,orig,para,G_household,M){
+SampleTrueResponse <- function(ErrorData,orig,para,G_household,M,hyper){
 
   ErrorData$n_0_reject <- ErrorData$n_0_reject;
   for(sss in ErrorData$z_i_index_house){
-    ErrorData_h <- SampleTrueResponse_h(ErrorData,orig,para,G_household,M,sss)
+    ErrorData_h <- SampleTrueResponse_h(ErrorData,orig,para,G_household,M,sss,hyper)
     ErrorData$X_house[sss,] <- ErrorData_h$X_house
     ErrorData$origdata[which(ErrorData$house_index==sss),ErrorData$var_in_error_house] <-
     rep(ErrorData_h$X_house[ErrorData$var_in_error_house],each=sum(ErrorData$house_index==sss))
