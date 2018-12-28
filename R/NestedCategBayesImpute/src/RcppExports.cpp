@@ -147,25 +147,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// sampleHH
-IntegerMatrix sampleHH(NumericMatrix phi, NumericMatrix omega, NumericVector pi, IntegerVector d, List lambda, int currrentbatch, int nHouseholds, int householdsize, int HeadAtGroupLevel);
-RcppExport SEXP _NestedCategBayesImpute_sampleHH(SEXP phiSEXP, SEXP omegaSEXP, SEXP piSEXP, SEXP dSEXP, SEXP lambdaSEXP, SEXP currrentbatchSEXP, SEXP nHouseholdsSEXP, SEXP householdsizeSEXP, SEXP HeadAtGroupLevelSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericMatrix >::type phi(phiSEXP);
-    Rcpp::traits::input_parameter< NumericMatrix >::type omega(omegaSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type pi(piSEXP);
-    Rcpp::traits::input_parameter< IntegerVector >::type d(dSEXP);
-    Rcpp::traits::input_parameter< List >::type lambda(lambdaSEXP);
-    Rcpp::traits::input_parameter< int >::type currrentbatch(currrentbatchSEXP);
-    Rcpp::traits::input_parameter< int >::type nHouseholds(nHouseholdsSEXP);
-    Rcpp::traits::input_parameter< int >::type householdsize(householdsizeSEXP);
-    Rcpp::traits::input_parameter< int >::type HeadAtGroupLevel(HeadAtGroupLevelSEXP);
-    rcpp_result_gen = Rcpp::wrap(sampleHH(phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize, HeadAtGroupLevel));
-    return rcpp_result_gen;
-END_RCPP
-}
 // households2individuals
 IntegerMatrix households2individuals(IntegerMatrix data, int hh_size);
 RcppExport SEXP _NestedCategBayesImpute_households2individuals(SEXP dataSEXP, SEXP hh_sizeSEXP) {
@@ -385,7 +366,6 @@ static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_UpdateBeta", (DL_FUNC) &_NestedCategBayesImpute_UpdateBeta, 3},
     {"_NestedCategBayesImpute_UpdateAlpha", (DL_FUNC) &_NestedCategBayesImpute_UpdateAlpha, 3},
     {"_NestedCategBayesImpute_sampleG", (DL_FUNC) &_NestedCategBayesImpute_sampleG, 8},
-    {"_NestedCategBayesImpute_sampleHH", (DL_FUNC) &_NestedCategBayesImpute_sampleHH, 9},
     {"_NestedCategBayesImpute_households2individuals", (DL_FUNC) &_NestedCategBayesImpute_households2individuals, 2},
     {"_NestedCategBayesImpute_samplehouseholds", (DL_FUNC) &_NestedCategBayesImpute_samplehouseholds, 10},
     {"_NestedCategBayesImpute_UpdateLambda", (DL_FUNC) &_NestedCategBayesImpute_UpdateLambda, 4},

@@ -41,10 +41,6 @@ sampleG <- function(phi, data, omega, pi, ni, HHdata, lambda, Parallel) {
     .Call('_NestedCategBayesImpute_sampleG', PACKAGE = 'NestedCategBayesImpute', phi, data, omega, pi, ni, HHdata, lambda, Parallel)
 }
 
-sampleHH <- function(phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize, HeadAtGroupLevel) {
-    .Call('_NestedCategBayesImpute_sampleHH', PACKAGE = 'NestedCategBayesImpute', phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize, HeadAtGroupLevel)
-}
-
 households2individuals <- function(data, hh_size) {
     .Call('_NestedCategBayesImpute_households2individuals', PACKAGE = 'NestedCategBayesImpute', data, hh_size)
 }
