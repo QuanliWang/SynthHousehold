@@ -234,4 +234,11 @@ List SampleMissing(List MissData, List para, List orig,List G_household, Integer
   return(MissData);
 }
 
+IntegerVector sampleW_multi(NumericVector p, NumericVector d) {
+  int howmany = d.length();
+  IntegerVector samples(howmany);
+  int n = p.length();
+  samplew_multi2(p.begin(), n, d.begin(), samples.begin(), howmany);
+  return samples;
+}
 

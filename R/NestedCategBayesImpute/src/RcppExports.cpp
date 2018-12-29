@@ -269,19 +269,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// gammarand
-NumericVector gammarand(int n, double shape, double rate);
-RcppExport SEXP _NestedCategBayesImpute_gammarand(SEXP nSEXP, SEXP shapeSEXP, SEXP rateSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type n(nSEXP);
-    Rcpp::traits::input_parameter< double >::type shape(shapeSEXP);
-    Rcpp::traits::input_parameter< double >::type rate(rateSEXP);
-    rcpp_result_gen = Rcpp::wrap(gammarand(n, shape, rate));
-    return rcpp_result_gen;
-END_RCPP
-}
 // UpdatePhi
 NumericMatrix UpdatePhi(IntegerMatrix data, IntegerMatrix M_all, int FF, int SS, IntegerVector d, int maxd);
 RcppExport SEXP _NestedCategBayesImpute_UpdatePhi(SEXP dataSEXP, SEXP M_allSEXP, SEXP FFSEXP, SEXP SSSEXP, SEXP dSEXP, SEXP maxdSEXP) {
@@ -342,18 +329,6 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
-// sampleW_multi
-IntegerVector sampleW_multi(NumericVector p, NumericVector d);
-RcppExport SEXP _NestedCategBayesImpute_sampleW_multi(SEXP pSEXP, SEXP dSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< NumericVector >::type p(pSEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type d(dSEXP);
-    rcpp_result_gen = Rcpp::wrap(sampleW_multi(p, d));
-    return rcpp_result_gen;
-END_RCPP
-}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_checkSZ", (DL_FUNC) &_NestedCategBayesImpute_checkSZ, 2},
@@ -374,12 +349,10 @@ static const R_CallMethodDef CallEntries[] = {
     {"_NestedCategBayesImpute_SampleMissing", (DL_FUNC) &_NestedCategBayesImpute_SampleMissing, 6},
     {"_NestedCategBayesImpute_UpdateOmega", (DL_FUNC) &_NestedCategBayesImpute_UpdateOmega, 4},
     {"_NestedCategBayesImpute_UpdateOmegaWeighted", (DL_FUNC) &_NestedCategBayesImpute_UpdateOmegaWeighted, 5},
-    {"_NestedCategBayesImpute_gammarand", (DL_FUNC) &_NestedCategBayesImpute_gammarand, 3},
     {"_NestedCategBayesImpute_UpdatePhi", (DL_FUNC) &_NestedCategBayesImpute_UpdatePhi, 6},
     {"_NestedCategBayesImpute_UpdatePhiWeighted", (DL_FUNC) &_NestedCategBayesImpute_UpdatePhiWeighted, 7},
     {"_NestedCategBayesImpute_UpdatePi", (DL_FUNC) &_NestedCategBayesImpute_UpdatePi, 3},
     {"_NestedCategBayesImpute_UpdatePiWeighted", (DL_FUNC) &_NestedCategBayesImpute_UpdatePiWeighted, 4},
-    {"_NestedCategBayesImpute_sampleW_multi", (DL_FUNC) &_NestedCategBayesImpute_sampleW_multi, 2},
     {NULL, NULL, 0}
 };
 

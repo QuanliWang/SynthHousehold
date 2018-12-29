@@ -73,10 +73,6 @@ UpdateOmegaWeighted <- function(beta, M_all, FF, SS, struc_weight) {
     .Call('_NestedCategBayesImpute_UpdateOmegaWeighted', PACKAGE = 'NestedCategBayesImpute', beta, M_all, FF, SS, struc_weight)
 }
 
-gammarand <- function(n, shape, rate) {
-    .Call('_NestedCategBayesImpute_gammarand', PACKAGE = 'NestedCategBayesImpute', n, shape, rate)
-}
-
 UpdatePhi <- function(data, M_all, FF, SS, d, maxd) {
     .Call('_NestedCategBayesImpute_UpdatePhi', PACKAGE = 'NestedCategBayesImpute', data, M_all, FF, SS, d, maxd)
 }
@@ -91,9 +87,5 @@ UpdatePi <- function(alpha, G_all, FF) {
 
 UpdatePiWeighted <- function(alpha, G_all, FF, struc_weight) {
     .Call('_NestedCategBayesImpute_UpdatePiWeighted', PACKAGE = 'NestedCategBayesImpute', alpha, G_all, FF, struc_weight)
-}
-
-sampleW_multi <- function(p, d) {
-    .Call('_NestedCategBayesImpute_sampleW_multi', PACKAGE = 'NestedCategBayesImpute', p, d)
 }
 
