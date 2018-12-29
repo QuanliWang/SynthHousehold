@@ -8,7 +8,8 @@ Michael: Edit here
 %%  ~~ A concise (1-5 lines) description of what the function does. ~~
 }
 \usage{
-SetErrorPara_EI(orig, var_in_error_house, var_in_error_indiv, imp_batch, error_batch, prop_batch)
+SetErrorPara_EI(orig, var_in_error_house, var_in_error_indiv,
+                imp_batch, error_batch, prop_batch)
 }
 %- maybe also 'usage' for other objects documented here.
 \arguments{
