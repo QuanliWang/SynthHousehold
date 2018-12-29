@@ -142,7 +142,8 @@ IntegerMatrix SampleNonStructureZerosIndivC(IntegerMatrix household,
 }
 
 // [[Rcpp::export]]
-List SampleMissing(List MissData, List para, List orig,List G_household, IntegerVector M, List hyper) {
+List SampleMissing(List MissData, List para, List orig,List G_household,
+                   IntegerVector M, List hyper) {
   IntegerVector G_Individuals =  G_household["G_Individuals"];
   IntegerVector G = G_household["G"];
   int hyper_SS = hyper["SS"];

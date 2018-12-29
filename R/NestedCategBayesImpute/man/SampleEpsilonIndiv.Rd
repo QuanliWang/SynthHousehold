@@ -28,9 +28,3 @@ Michael: Edit Here
 %% ...
 }
 
-\examples{
-Michael: Edit Here
-##---- Should be DIRECTLY executable !! ----
-##-- ==>  Define data, use random,
-##--	or do  help(data=index)  for the standard data sets.
-}
