@@ -24,8 +24,8 @@ MissData$prop_batch <- 1.2
 orig <- initData(MissData)
 
 ### Set parameters for faulty data
-ErrorData <- SetErrorPara_EI(orig,var_in_error_house=c("headsex","headage"),var_in_error_indiv=c("sex","age","relate"),
-                             imp_batch=1000,error_batch=10,prop_batch=1.2)
+#ErrorData <- SetErrorPara_EI(orig,var_in_error_house=c("headsex","headage"),var_in_error_indiv=c("sex","age","relate"),
+#                             imp_batch=1000,error_batch=10,prop_batch=1.2)
 
 ### Supply weights; one for each household size
 if(options$weight_option){
