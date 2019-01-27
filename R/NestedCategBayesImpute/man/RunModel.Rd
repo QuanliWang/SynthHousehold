@@ -9,7 +9,7 @@ Run the mcmc sampler for the model.
 \usage{
 RunModel(orig,mc,hyper,para,output,synindex,individual_variable_index,
     household_variable_index,HHhead_at_group_level,weight_option,struc_weight,MissData,
-    ErrorData,Parallel)
+    Parallel)
 }
 \arguments{
   \item{orig}{A list object including all the necessary data variables needed by the sampler.; output of the \verb{initData} function.}
@@ -24,7 +24,6 @@ RunModel(orig,mc,hyper,para,output,synindex,individual_variable_index,
   \item{weight_option}{Logical indicator for whether or not to cap the number of impossible households to sample and re-weight the multinomial counts within each latent class back to the expected truth. Set to TRUE to use the weigthting option nd FALSE otherwise.}
   \item{struc_weight}{Vector specifying the weights to be used for each household size. The weights must be ordered by household sizes and no household must be excluded.}
   \item{MissData}{A list that stores all the info related to missing data. Default to NULL for no missing data.}
-  \item{ErrorData}{A list that stores all the info related to Edit Inputation data. Default to NULL for Edit Inputation data.}
   \item{Parallel}{
   Logical indicator for running the function in parallel mode.
 }

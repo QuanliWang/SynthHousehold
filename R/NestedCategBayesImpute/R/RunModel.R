@@ -1,7 +1,8 @@
 
 
 RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_index,household_variable_index,
-                     HHhead_at_group_level,weight_option,struc_weight,MissData=NULL,ErrorData=NULL,Parallel=FALSE){
+                     HHhead_at_group_level,weight_option,struc_weight,MissData=NULL,Parallel=FALSE){
+  ErrorData <- NULL
   synData <- list()
   impData <- list()
 
@@ -132,7 +133,7 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
         ErrorData$X_house <- ErrorData$Y_house
         ErrorData$X_indiv <- ErrorData$Y_indiv
         ErrorData$origdata <- orig$origdata
-        ErrorData <- SampleTrueResponse(ErrorData,orig,para,G_household,M,hyper)
+        ErrorData <- .SampleTrueResponse(ErrorData,orig,para,G_household,M,hyper)
         ErrorData$n_0_reject <- ErrorData$n_0_reject
 
         orig$origdata <- as.matrix(ErrorData$origdata)
@@ -148,8 +149,8 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
         ErrorData$E_indiv[ErrorData$E_indiv!=0] <- 1
 
         #epsilon
-        ErrorData$epsilon_house <- SampleEpsilonHouse(ErrorData)
-        ErrorData$epsilon_indiv <- SampleEpsilonIndiv(ErrorData)
+        ErrorData$epsilon_house <- .SampleEpsilonHouse(ErrorData)
+        ErrorData$epsilon_indiv <- .SampleEpsilonIndiv(ErrorData)
       }
     }
 

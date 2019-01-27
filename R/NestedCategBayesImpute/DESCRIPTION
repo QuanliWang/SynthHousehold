@@ -1,8 +1,8 @@
 Package: NestedCategBayesImpute
 Type: Package
 Title: Modeling and Generating Synthetic Versions of Nested Categorical Data in the Presence of Impossible Combinations
-Version: 1.2.0
-Date: 2018-12-28
+Version: 1.2.1
+Date: 2019-01-28
 Author: Quanli Wang, Olanrewaju Akande, Jingchen Hu, Jerry Reiter and Andres Barrientos
 Maintainer: Quanli Wang <quanliwang20@hotmail.com>
 Description: This tool set provides a set of functions to fit the nested Dirichlet process mixture of products of multinomial distributions (NDPMPM) model for nested categorical household data in the presence of impossible combinations. It has direct applications in generating synthetic nested household data.
@@ -11,5 +11,4 @@ LazyData: TRUE
 Imports: stats, coda, dplyr, Rcpp (>= 0.12.0), RcppParallel
 LinkingTo: Rcpp, RcppParallel
 SystemRequirements: GNU make
-URL: https://arxiv.org/abs/1412.2282
 

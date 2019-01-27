@@ -1,6 +1,5 @@
 
-
-SetErrorPara_EI <- function(orig,var_in_error_house,var_in_error_indiv,imp_batch,error_batch,prop_batch){
+.SetErrorPara_EI <- function(orig,var_in_error_house,var_in_error_indiv,imp_batch,error_batch,prop_batch){
   z_i <- matrix(0,ncol=1,nrow=orig$n)
   Y_house <- data.frame(t(orig$HHdataorigT)); rownames(Y_house) <- NULL
   Y_indiv <- data.frame(t(orig$IndivDataInCol));
@@ -69,7 +68,7 @@ SetErrorPara_EI <- function(orig,var_in_error_house,var_in_error_indiv,imp_batch
 
 
 ## Function to sample true responses for a given household
-SampleTrueResponse_h <- function(ErrorData,orig,para,G_household,M,sss,hyper){
+.SampleTrueResponse_h <- function(ErrorData,orig,para,G_household,M,sss,hyper){
   p <- orig$p; q <- ncol(ErrorData$Y_house);
   house_index <- ErrorData$house_index
   Y_house <- ErrorData$Y_house; Y_indiv <- ErrorData$Y_indiv
@@ -186,11 +185,11 @@ SampleTrueResponse_h <- function(ErrorData,orig,para,G_household,M,sss,hyper){
 
 
 ## Function to sample true responses
-SampleTrueResponse <- function(ErrorData,orig,para,G_household,M,hyper){
+.SampleTrueResponse <- function(ErrorData,orig,para,G_household,M,hyper){
 
   ErrorData$n_0_reject <- ErrorData$n_0_reject;
   for(sss in ErrorData$z_i_index_house){
-    ErrorData_h <- SampleTrueResponse_h(ErrorData,orig,para,G_household,M,sss,hyper)
+    ErrorData_h <- .SampleTrueResponse_h(ErrorData,orig,para,G_household,M,sss,hyper)
     ErrorData$X_house[sss,] <- ErrorData_h$X_house
     ErrorData$origdata[which(ErrorData$house_index==sss),ErrorData$var_in_error_house] <-
     rep(ErrorData_h$X_house[ErrorData$var_in_error_house],each=sum(ErrorData$house_index==sss))
@@ -205,7 +204,7 @@ SampleTrueResponse <- function(ErrorData,orig,para,G_household,M,hyper){
 
 
 ## Function to sample household epsilon
-SampleEpsilonHouse <- function(ErrorData){
+.SampleEpsilonHouse <- function(ErrorData){
   a_epsilon_house_star <- ErrorData$a_epsilon_house +
     colSums(ErrorData$E_house[ErrorData$z_i_index_house,ErrorData$var_in_error_index_house])
   b_epsilon_house_star <- ErrorData$b_epsilon_house + length(ErrorData$z_i_index_house) -
@@ -217,7 +216,7 @@ SampleEpsilonHouse <- function(ErrorData){
 
 
 ## Function to sample individual epsilon
-SampleEpsilonIndiv <- function(ErrorData){
+.SampleEpsilonIndiv <- function(ErrorData){
   a_epsilon_indiv_star <- ErrorData$a_epsilon_indiv +
     colSums(ErrorData$E_indiv[ErrorData$z_i_index_indiv,ErrorData$var_in_error_index_indiv])
   b_epsilon_indiv_star <- ErrorData$b_epsilon_indiv + length(ErrorData$z_i_index_indiv) -
