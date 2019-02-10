@@ -17,10 +17,6 @@ checkconstraints <- function(data, neededpossiblehh, hh_size) {
     .Call('_NestedCategBayesImpute_checkconstraints', PACKAGE = 'NestedCategBayesImpute', data, neededpossiblehh, hh_size)
 }
 
-GenerateData <- function(hh_size, lambda, omega, phi, pi, d, batches_done, valid_hh_needed, blocksize, synindex, HHhead_at_group_level, Parallel) {
-    .Call('_NestedCategBayesImpute_GenerateData', PACKAGE = 'NestedCategBayesImpute', hh_size, lambda, omega, phi, pi, d, batches_done, valid_hh_needed, blocksize, synindex, HHhead_at_group_level, Parallel)
-}
-
 GetImpossibleHouseholds <- function(d, n_star_h, lambda, omega, phi, pi, blocksize, n, synindex, HHhead_at_group_level, Parallel) {
     .Call('_NestedCategBayesImpute_GetImpossibleHouseholds', PACKAGE = 'NestedCategBayesImpute', d, n_star_h, lambda, omega, phi, pi, blocksize, n, synindex, HHhead_at_group_level, Parallel)
 }
@@ -45,10 +41,6 @@ sampleG <- function(phi, data, omega, pi, ni, HHdata, lambda, Parallel) {
     .Call('_NestedCategBayesImpute_sampleG', PACKAGE = 'NestedCategBayesImpute', phi, data, omega, pi, ni, HHdata, lambda, Parallel)
 }
 
-sampleHH <- function(phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize, HeadAtGroupLevel) {
-    .Call('_NestedCategBayesImpute_sampleHH', PACKAGE = 'NestedCategBayesImpute', phi, omega, pi, d, lambda, currrentbatch, nHouseholds, householdsize, HeadAtGroupLevel)
-}
-
 households2individuals <- function(data, hh_size) {
     .Call('_NestedCategBayesImpute_households2individuals', PACKAGE = 'NestedCategBayesImpute', data, hh_size)
 }
@@ -69,32 +61,8 @@ sampleM <- function(phi, data, omega, G, serial, Parallel) {
     .Call('_NestedCategBayesImpute_sampleM', PACKAGE = 'NestedCategBayesImpute', phi, data, omega, G, serial, Parallel)
 }
 
-SampleMatrixByColumnC <- function(data, r, dup) {
-    .Call('_NestedCategBayesImpute_SampleMatrixByColumnC', PACKAGE = 'NestedCategBayesImpute', data, r, dup)
-}
-
-SampleMatrixByRowC <- function(data, r) {
-    .Call('_NestedCategBayesImpute_SampleMatrixByRowC', PACKAGE = 'NestedCategBayesImpute', data, r)
-}
-
-CheckSZ_batch <- function(X_house, X_indiv) {
-    .Call('_NestedCategBayesImpute_CheckSZ_batch', PACKAGE = 'NestedCategBayesImpute', X_house, X_indiv)
-}
-
-SampleMissingForOneHousehold_batch <- function(another_index, X_house_s_prop, X_indiv_s_prop, house_szv_index, NA_house_missing_status, indiv_szv_index, NA_indiv_missing_status, lambda, phi, G_household_G_s, index, orig_d, orig_maxd, batch) {
-    .Call('_NestedCategBayesImpute_SampleMissingForOneHousehold_batch', PACKAGE = 'NestedCategBayesImpute', another_index, X_house_s_prop, X_indiv_s_prop, house_szv_index, NA_house_missing_status, indiv_szv_index, NA_indiv_missing_status, lambda, phi, G_household_G_s, index, orig_d, orig_maxd, batch)
-}
-
-SampleNonStructureZerosHouseC <- function(household, NA_house_missing_status, house_non_szv_index_raw, house_non_szv_index, para_lambda, G_household_G, orig_n_i) {
-    .Call('_NestedCategBayesImpute_SampleNonStructureZerosHouseC', PACKAGE = 'NestedCategBayesImpute', household, NA_house_missing_status, house_non_szv_index_raw, house_non_szv_index, para_lambda, G_household_G, orig_n_i)
-}
-
-SampleNonStructureZerosIndivC <- function(household, NA_indiv_missing_status, indiv_non_szv_index_raw, phi_m_g_index, indiv_non_szv_index, para_phi, orig_d, orig_maxd) {
-    .Call('_NestedCategBayesImpute_SampleNonStructureZerosIndivC', PACKAGE = 'NestedCategBayesImpute', household, NA_indiv_missing_status, indiv_non_szv_index_raw, phi_m_g_index, indiv_non_szv_index, para_phi, orig_d, orig_maxd)
-}
-
-SampleMissing_impC <- function(MissData, para, orig, G_household, M, hyper) {
-    .Call('_NestedCategBayesImpute_SampleMissing_impC', PACKAGE = 'NestedCategBayesImpute', MissData, para, orig, G_household, M, hyper)
+SampleMissing <- function(MissData, para, orig, G_household, M, hyper) {
+    .Call('_NestedCategBayesImpute_SampleMissing', PACKAGE = 'NestedCategBayesImpute', MissData, para, orig, G_household, M, hyper)
 }
 
 UpdateOmega <- function(beta, M_all, FF, SS) {
@@ -103,10 +71,6 @@ UpdateOmega <- function(beta, M_all, FF, SS) {
 
 UpdateOmegaWeighted <- function(beta, M_all, FF, SS, struc_weight) {
     .Call('_NestedCategBayesImpute_UpdateOmegaWeighted', PACKAGE = 'NestedCategBayesImpute', beta, M_all, FF, SS, struc_weight)
-}
-
-gammarand <- function(n, shape, rate) {
-    .Call('_NestedCategBayesImpute_gammarand', PACKAGE = 'NestedCategBayesImpute', n, shape, rate)
 }
 
 UpdatePhi <- function(data, M_all, FF, SS, d, maxd) {
@@ -123,9 +87,5 @@ UpdatePi <- function(alpha, G_all, FF) {
 
 UpdatePiWeighted <- function(alpha, G_all, FF, struc_weight) {
     .Call('_NestedCategBayesImpute_UpdatePiWeighted', PACKAGE = 'NestedCategBayesImpute', alpha, G_all, FF, struc_weight)
-}
-
-sampleW_multi <- function(p, d) {
-    .Call('_NestedCategBayesImpute_sampleW_multi', PACKAGE = 'NestedCategBayesImpute', p, d)
 }
 

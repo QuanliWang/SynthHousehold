@@ -85,12 +85,4 @@ void samplew_multi2(double *p, int n, double *d, int* result,int howmany) {
     delete [] myw;
 }
 
-// [[Rcpp::export]]
-IntegerVector sampleW_multi(NumericVector p, NumericVector d) {
-  int howmany = d.length();
-  IntegerVector samples(howmany);
-  int n = p.length();
-  samplew_multi2(p.begin(), n, d.begin(), samples.begin(), howmany);
-  return samples;
-}
 

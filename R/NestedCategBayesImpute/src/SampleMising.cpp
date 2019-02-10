@@ -1,6 +1,5 @@
 #include "sampleW.h"
 
-// [[Rcpp::export]]
 IntegerVector CheckSZ_batch(IntegerMatrix X_house, IntegerMatrix X_indiv) {
   if (X_house.ncol() != 6) {
     Rcout << "Household matrix must have 6 columns" << std::endl;
@@ -31,7 +30,6 @@ IntegerVector CheckSZ_batch(IntegerMatrix X_house, IntegerMatrix X_indiv) {
   return checkSZ2(comb_to_check,household_size);
 }
 
-// [[Rcpp::export]]
 List SampleMissingForOneHousehold_batch(IntegerVector another_index,
                                         IntegerMatrix X_house_s_prop, IntegerMatrix X_indiv_s_prop,
                                         IntegerVector house_szv_index, LogicalMatrix NA_house_missing_status,
@@ -88,7 +86,6 @@ List SampleMissingForOneHousehold_batch(IntegerVector another_index,
 }
 
 
-// [[Rcpp::export]]
 IntegerMatrix SampleNonStructureZerosHouseC(IntegerMatrix household,
                                             LogicalMatrix NA_house_missing_status,
                                             IntegerVector house_non_szv_index_raw,
@@ -119,15 +116,14 @@ IntegerMatrix SampleNonStructureZerosHouseC(IntegerMatrix household,
   return(household);
 }
 
-// [[Rcpp::export]]
 IntegerMatrix SampleNonStructureZerosIndivC(IntegerMatrix household,
-                                           LogicalMatrix NA_indiv_missing_status,
-                                           IntegerVector indiv_non_szv_index_raw,
-                                           IntegerVector phi_m_g_index,
-                                           IntegerVector indiv_non_szv_index,
-                                           NumericMatrix para_phi,
-                                           IntegerVector orig_d,
-                                           IntegerVector orig_maxd) {
+                                            LogicalMatrix NA_indiv_missing_status,
+                                            IntegerVector indiv_non_szv_index_raw,
+                                            IntegerVector phi_m_g_index,
+                                            IntegerVector indiv_non_szv_index,
+                                            NumericMatrix para_phi,
+                                            IntegerVector orig_d,
+                                            int orig_maxd) {
   for (int count = 0; count < indiv_non_szv_index_raw.length(); count++) {
     int k = indiv_non_szv_index_raw[count] - 1; //index into raw data
     int real_k = indiv_non_szv_index[count] - 1; //index into invividual level variables
@@ -135,8 +131,9 @@ IntegerMatrix SampleNonStructureZerosIndivC(IntegerMatrix household,
     for (int i = 0; i < NA_indiv_missing_status.rows(); i++) {
       if (NA_indiv_missing_status(i,real_k)) {
         int col = phi_m_g_index[i];
-        int offset = (real_k-1)* orig_maxd[0];
-        household(i,k) = samplew(para_phi.column(col -1).begin() + offset, orig_d[real_k], r[i]);
+        int offset = real_k* orig_maxd;
+        NumericVector c = para_phi.column(col -1);
+        household(i,k) = samplew(c.begin() + offset, orig_d[real_k], r[i]);
       }
     }
   }
@@ -145,7 +142,8 @@ IntegerMatrix SampleNonStructureZerosIndivC(IntegerMatrix household,
 }
 
 // [[Rcpp::export]]
-List SampleMissing_impC(List MissData, List para, List orig,List G_household, IntegerVector M, List hyper) {
+List SampleMissing(List MissData, List para, List orig,List G_household,
+                   IntegerVector M, List hyper) {
   IntegerVector G_Individuals =  G_household["G_Individuals"];
   IntegerVector G = G_household["G"];
   int hyper_SS = hyper["SS"];
@@ -166,7 +164,7 @@ List SampleMissing_impC(List MissData, List para, List orig,List G_household, In
                                             as<IntegerVector>(MissData["indiv_non_szv_index_raw"]),
                                             phi_m_g_index,
                                             as<IntegerVector>(MissData["indiv_non_szv_index"]),
-                                            phi,d,maxd);
+                                            phi,d,maxd[0]);
   household = SampleNonStructureZerosHouseC(household,
                                             NA_house_missing_status,
                                             as<IntegerVector>(MissData["house_non_szv_index_raw"]),
@@ -237,125 +235,11 @@ List SampleMissing_impC(List MissData, List para, List orig,List G_household, In
   return(MissData);
 }
 
-/*
- * SampleMissing_imp <- function(MissData,para,orig,G_household,M,hyper){
-
- MissData$household <- SampleNonStructureZerosIndivC(MissData$household, MissData$NA_indiv_missing_status,
-                                                     MissData$indiv_non_szv_index_raw,
-(M + (G_household$G_Individuals-1)*hyper$SS),
-MissData$indiv_non_szv_index,para$phi,orig$d,orig$maxd)
-MissData$household <- SampleNonStructureZerosHouseC(MissData$household, MissData$NA_house_missing_status,
-                                                    MissData$house_non_szv_index_raw,
-MissData$house_non_szv_index,para$lambda, G_household$G,
-orig$n_i)
-
-for(s in MissData$miss_Hhindex){
-another_index <- MissData$miss_Hh_invidual_index[[s]] #the row index for all family members
-n_indiv <- length(another_index)
-X_house_s_prop <- MissData$household[rep(another_index[1],MissData$n_batch_imp[s]), MissData$household_variable_index]
-X_indiv_s_prop <- MissData$household[rep(another_index,   MissData$n_batch_imp[s]), MissData$individual_variable_index]
-
-index <- M[another_index] + (G_household$G[s]-1)*hyper$SS
-OneHousehold <- SampleMissingForOneHousehold_batch(another_index,X_house_s_prop, X_indiv_s_prop,
-                                                   MissData$house_szv_index, MissData$NA_house_missing_status,
-MissData$indiv_szv_index, MissData$NA_indiv_missing_status,
-para$lambda,para$phi,G_household$G[s], index,
-orig$d,orig$maxd,
-MissData$n_batch_imp[s])
-
-MissData$n_0_reject[s] <- MissData$n_0_reject[s] + OneHousehold$n_0_reject
-MissData$household[another_index,MissData$household_variable_index] <-
-rep(OneHousehold$X_house_s_prop[OneHousehold$first_valid,],each=n_indiv)
-MissData$household[another_index,MissData$individual_variable_index] <-
-OneHousehold$X_indiv_s_prop[((OneHousehold$first_valid-1)*n_indiv+1) : (OneHousehold$first_valid*n_indiv),]
+IntegerVector sampleW_multi(NumericVector p, NumericVector d) {
+  int howmany = d.length();
+  IntegerVector samples(howmany);
+  int n = p.length();
+  samplew_multi2(p.begin(), n, d.begin(), samples.begin(), howmany);
+  return samples;
 }
-return(MissData)
-}
- */
-/*
-SampleNonStructureZerosIndiv <- function(household, NA_indiv_missing_status,
-                                         indiv_non_szv_index_raw, phi_m_g_index,
-                                         indiv_non_szv_index,para_phi,
-                                         orig_d, orig_maxd) {
-  for (count in 1: length(indiv_non_szv_index_raw)) {
-    k <- indiv_non_szv_index_raw[count] #index into raw data
-    real_k <- indiv_non_szv_index[count] #index into invividual level variables
-    is_na_hwm_k <- NA_indiv_missing_status[,real_k]
-    if(any(is_na_hwm_k)){
-      pr_X_miss_p <- para_phi[((1:orig_d[real_k]) + (real_k-1)* orig_maxd), phi_m_g_index[is_na_hwm_k]]
-      household[is_na_hwm_k,k] <- SampleMatrixByColumnC(pr_X_miss_p,runif(ncol(pr_X_miss_p)),1)
-    }
-  }
-  return(household)
-}
- */
-
-/*
-## All missing data realated code should stay in this file
-CheckSZ_HV_batch <- function(X_house, X_indiv, relate_index, household_size) {
-  X_indiv_orig <- X_indiv
-  X_indiv_orig[,relate_index] <- X_indiv_orig[,relate_index] + 1 #recode relate
-  comb_to_check <- X_house[,-1]
-  comb_to_check[,relate_index] <- 1 #Set relate to 1
-  comb_to_check <- cbind(comb_to_check,matrix(t(X_indiv_orig),nrow=dim(X_house)[1],byrow=TRUE))
-  check_counter <- checkSZ2(comb_to_check,household_size)
-  return(check_counter)
-}*/
-
-/*
- SampleMissingForOneHousehold_batch <- function(another_index,X_house_s_prop, X_indiv_s_prop,
-                                                house_szv_index, NA_house_missing_status,
-indiv_szv_index, NA_indiv_missing_status,
-lambda,phi,G_household_G_s, index,
-orig_d,orig_maxd,
-batch) {
-n_0_reject = 0;
-first_valid <- 0
-while(first_valid == 0){
-for(real_k in house_szv_index){
-if(NA_house_missing_status[another_index[1],real_k]) {
-X_house_s_prop[,real_k] <- sampleW_multi(lambda[[real_k]][G_household_G_s,],runif(batch))
-}
-}
-for(real_k in indiv_szv_index){
-NA_current_indiv <- NA_indiv_missing_status[another_index,real_k]
-if (any(NA_current_indiv)) {
-pr_X_indiv_k <- phi[((1:orig_d[real_k]) + (real_k-1)*orig_maxd), index[NA_current_indiv]]
-if (is.matrix(pr_X_indiv_k)) {
-temp <- SampleMatrixByColumnC(pr_X_indiv_k,runif(batch * ncol(pr_X_indiv_k)), batch)
-} else {
-temp <- sampleW_multi(pr_X_indiv_k,runif(batch))
-}
-X_indiv_s_prop[rep(NA_current_indiv,batch),real_k] <- temp
-}
-}
-
-#Check edit rules; Need to make this part more general, very specific for this data and assumes head is
-#at the household level
-first_valid <- CheckSZ_batch(X_house_s_prop, X_indiv_s_prop)
-if (first_valid > 0) {
-n_0_reject <- n_0_reject + first_valid - 1
-} else {
-n_0_reject <- n_0_reject + batch
-}
-}
-return(list(n_0_reject = n_0_reject, first_valid = first_valid,
-            X_house_s_prop = X_house_s_prop, X_indiv_s_prop = X_indiv_s_prop))
-}
-*/
-/*
- * SampleMatrixByRowR1 <- function(pmat, r) {
- return(rowSums(r>t(apply(pmat,1,cumsum))) + 1L)
-}
-
-SampleMatrixByColumnR1 <- function(pmat, r) {
-return(colSums(sweep(apply(pmat,2,cumsum),2, r, "<") ) + 1L );
-}
-
-SampleMatrixByRowR <- function(pmat) {
-return(rowSums(runif(nrow(pmat))>t(apply(pmat,1,cumsum))) + 1L)
-}
-SampleMatrixByColumnR <- function(pmat) {
-return(colSums(sweep(apply(pmat,2,cumsum),2, runif(ncol(pmat)), "<") ) + 1L );
-}*/
 

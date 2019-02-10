@@ -1,6 +1,8 @@
 
+
 RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_index,household_variable_index,
-                     HHhead_at_group_level,weight_option,struc_weight,MissData = NULL, Parallel = FALSE){
+                     HHhead_at_group_level,weight_option,struc_weight,MissData=NULL,Parallel=FALSE){
+  ErrorData <- NULL
   synData <- list()
   impData <- list()
 
@@ -16,6 +18,7 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
   if (Parallel) {
     parallel <- 1
   }
+
   for (i in 1:mc$nrun) {
     cat(paste("iteration ", i,"\n", sep = ""))
     t <- proc.time()
@@ -121,15 +124,47 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
     #update beta
     para$beta <- UpdateBeta(hyper$ba,hyper$bb,para$v)
 
+    #update erroneous data, E -- the error indicators and epsilon
+    if (!is.null(ErrorData)) {
+      if (ErrorData$hasErrorData){
+        ErrorData$n_batch_imp_sum <- ErrorData$n_batch_imp_sum + ceiling(ErrorData$n_0_reject*ErrorData$prop_batch)
+        ErrorData$n_batch_imp <- ceiling(ErrorData$n_batch_imp_sum/i) + 1 #no. of batches of imputations to sample
+        ErrorData$n_0_reject[] <- 0
+        ErrorData$X_house <- ErrorData$Y_house
+        ErrorData$X_indiv <- ErrorData$Y_indiv
+        ErrorData$origdata <- orig$origdata
+        ErrorData <- .SampleTrueResponse(ErrorData,orig,para,G_household,M,hyper)
+        ErrorData$n_0_reject <- ErrorData$n_0_reject
+
+        orig$origdata <- as.matrix(ErrorData$origdata)
+        HHrowIndex <- c(1, cumsum(orig$n_i)+1)
+        orig$HHdataorigT <- t(orig$origdata[HHrowIndex[1:orig$n],household_variable_index])
+        orig$IndivDataInCol <- t(orig$origdata[,individual_variable_index])
+        para$HHdata_all <- orig$HHdataorigT
+
+        #error indicators
+        ErrorData$E_house <- data.matrix(ErrorData$X_house)-data.matrix(ErrorData$Y_house)
+        ErrorData$E_house[ErrorData$E_house!=0] <- 1
+        ErrorData$E_indiv <- data.matrix(ErrorData$X_indiv)-data.matrix(ErrorData$Y_indiv)
+        ErrorData$E_indiv[ErrorData$E_indiv!=0] <- 1
+
+        #epsilon
+        ErrorData$epsilon_house <- .SampleEpsilonHouse(ErrorData)
+        ErrorData$epsilon_indiv <- .SampleEpsilonIndiv(ErrorData)
+      }
+    }
+
+
     #update missing data
-    if (MissData$hasMissingData) {
+    if (MissData$hasMissingData){
       MissData$n_batch_imp_sum <- MissData$n_batch_imp_sum + ceiling(MissData$n_0_reject*MissData$prop_batch)
       MissData$n_batch_imp <- ceiling(MissData$n_batch_imp_sum/i) + 1 #no. of batches of imputations to sample
       MissData$n_0_reject[] <- 0
-      MissData$household <- as.matrix(MissData$household)
+      #MissData$household <- as.matrix(MissData$household)
+      MissData$household <- as.matrix(orig$origdata)
       #sample non structural zeros variables for everyone at once
       storage.mode(MissData$household) <- "integer" #very important if used to do in place update
-      MissData <- SampleMissing_impC(MissData,para,orig,G_household,M,hyper)
+      MissData <- SampleMissing(MissData,para,orig,G_household,M,hyper)
       MissData$household <- as.data.frame(MissData$household)
 
       #MissData <- SampleMissing(MissData,para,orig,G_household,M,hyper)
@@ -138,6 +173,13 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
       orig$HHdataorigT <- t(MissData$household[HHrowIndex[1:orig$n],household_variable_index])
       orig$IndivDataInCol <- t(MissData$household[,individual_variable_index])
       para$HHdata_all <- orig$HHdataorigT
+    }
+
+    #head(MissData$household_with_miss)
+    #head(MissData$household)
+
+    #save imputed data
+    if (MissData$hasMissingData || (!is.null(ErrorData) && ErrorData$hasErrorData)){
       if (is.element(i,MissData$miss_index)){
         impData[[which(MissData$miss_index ==i)]] <- MissData$household
       }
@@ -161,6 +203,11 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
     cat(paste("number of occupied household classes is ", F_occup, "\n", sep = ''))
     cat(paste("max number of occupied individual classes is ", S_occup, "\n", sep = ''))
 
+    if (!is.null(ErrorData)) {
+      cat(paste("epsilon_indiv:", round(ErrorData$epsilon_indiv,3), "\n", sep = ''))
+      cat(paste("epsilon_house:", round(ErrorData$epsilon_house,3), "\n", sep = ''))
+    }
+
     total_household <- sum(c(orig$n,para$hh_size_new))
     if(weight_option){
       cat(paste("total number of households (capped) sampled is ", total_household, "\n", sep = ''))
@@ -168,6 +215,14 @@ RunModel <- function(orig,mc,hyper,para,output,synindex,individual_variable_inde
       cat(paste("true (estimated) total number of households is ", est_total_household, "\n", sep = ''))
     } else {
       cat(paste("total number of households sampled is ", total_household, "\n", sep = ''))
+    }
+    if (MissData$hasMissingData){
+      cat(paste("total number of rejected households sampled for missing data is ", sum(MissData$n_0_reject), "\n", sep = ''))
+    }
+    if (!is.null(ErrorData)) {
+      if (ErrorData$hasErrorData){
+        cat(paste("total number of rejected households sampled for faulty data is ", sum(ErrorData$n_0_reject), "\n", sep = ''))
+      }
     }
     cat(paste("elapsed time = ", (proc.time() - t)[["elapsed"]], "\n\n", sep = ' '))
 

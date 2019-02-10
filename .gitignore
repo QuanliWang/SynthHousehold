@@ -45,3 +45,4 @@ R/testing/testRowColumn.R
 *.Rprofvis
 
 R/NestedCategBayesImpute/afterCountingGroups_20180713.Rprofvis
+.DS_Store

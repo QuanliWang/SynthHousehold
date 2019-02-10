@@ -2,7 +2,6 @@
 using namespace Rcpp;
 #include "SpecialFunctions.h"
 
-// [[Rcpp::export]]
 NumericVector gammarand(int n, double shape, double rate) {
   MTRand mt;
   mt.seed();
@@ -111,42 +110,5 @@ NumericMatrix UpdatePhiWeighted(List data, List M_all, int FF, int SS, IntegerVe
   }
   return phi;
 }
-
-
-/*
-UpdatePhiWeighted <- function(data, M_all, FF, SS, p, d, maxd, struc_weight) {
-  phi <- array(0,dim = c(maxd,p, FF*SS))
-
-  groupIndex <- lapply(M_all,function(x) SS*(x[1,]-1)+x[2,])
-  for (j in 1:p) {
-
-    phicount <- 0
-    for(w_i in 1:length(struc_weight)){
-      data_w_i <- data[[w_i]]
-      phicount <- phicount + (groupcount(groupIndex[[w_i]], data_w_i[j,], FF*SS, d[j]) / struc_weight[w_i])
-    }
-
-    phi_j <- apply(phicount, c(1,2), function(x) rgamma(1,x+1,1))
-      phi[1:d[j], j,] <- apply(phi_j, 1, function(x) x / sum(x))
-  }
-  dim(phi) <- c(maxd*p,FF * SS) #reshape to a 2D matrix
-    return(phi)
-}
-*/
-
-/*
-UpdatePhi <- function(data, M_all, FF, SS, d, maxd) {
-  p <- length(d)
-  phi <- array(0,dim = c(maxd,p, FF*SS))
-  groupIndex <- SS*(M_all[1,]-1)+M_all[2,]
-  for (j in 1:p) {
-    phicount <- groupcount(groupIndex, data[j,], FF*SS, d[j])
-    phi_j <- samplePhi(phicount);
-    phi[1:d[j], j,] <- apply(phi_j, 1, function(x) x / sum(x))
-  }
-  dim(phi) <- c(maxd*p,FF * SS) #reshape to a 2D matrix
-    return(phi)
-}
- */
 
 

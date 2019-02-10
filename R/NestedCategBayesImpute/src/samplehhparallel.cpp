@@ -256,7 +256,6 @@ struct HeadAtGroupLevelHHSampler : public Worker
   }
 };
 
-// [[Rcpp::export]]
 IntegerMatrix sampleHH(NumericMatrix phi, NumericMatrix omega, NumericVector pi,
                                              IntegerVector d, List lambda,
                                              int currrentbatch, int nHouseholds,  int householdsize, int HeadAtGroupLevel) {
